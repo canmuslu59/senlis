@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
             super(c);
             setLayerType(View.LAYER_TYPE_SOFTWARE,null);
             selectedNotes.add("Vanilya"); selectedNotes.add("Gül"); selectedNotes.add("Bergamot");
-            int[] ids={R.drawable.screen_home,R.drawable.screen_mood,R.drawable.screen_notes,R.drawable.screen_budget,R.drawable.screen_results,R.drawable.screen_detail};
+            int[] ids={R.drawable.screen_home,R.drawable.screen_mood,R.drawable.screen_notes,R.drawable.screen_budget};
             for(int i=0;i<ids.length;i++) screens[i]=BitmapFactory.decodeResource(getResources(),ids[i]);
         }
 
@@ -117,7 +117,9 @@ public class MainActivity extends Activity {
 
         @Override protected void onDraw(Canvas c){
             super.onDraw(c);
-            if(page<=5){drawPhotoScreen(c);return;}
+            if(page<=3){drawPhotoScreen(c);return;}
+            if(page==4){drawResults(c);return;}
+            if(page==5){drawDetail(c);return;}
             if(page==6)drawFavorites(c); else if(page==7)drawSearch(c); else drawProfile(c);
         }
 
@@ -128,11 +130,62 @@ public class MainActivity extends Activity {
             if(page==1)drawMoodSelection(c);
             if(page==2)drawNoteSelections(c);
             if(page==3)drawBudgetSelection(c);
-            if(page==5){
-                RectF r=nrect(.055f,.914f,.945f,.978f);round(c,r,22,Color.rgb(250,235,207));
-                txt(c,"Benzer Kokuları Gör   →",r.centerX(),r.centerY()+d(5),15,Color.rgb(27,20,14),Paint.Align.CENTER,false,true);
-                if(favorite)txt(c,"♥",getWidth()*.918f,getHeight()*.074f,25,CREAM,Paint.Align.CENTER,false,false);
+        }
+
+        void drawResults(Canvas c){
+            header(c,"Sana Özel Öneriler","Tercihlerine en uygun parfümler.");
+            String[] tabs={"Senin için","Kadın","Niş","En Popüler"};
+            float x=d(22), ty=d(156);
+            for(int i=0;i<tabs.length;i++){
+                p.setTextSize(d(11)); float w=p.measureText(tabs[i])+d(28);
+                RectF tr=new RectF(x,ty,x+w,ty+d(34));
+                round(c,tr,17,i==0?CREAM:PANEL2);
+                txt(c,tabs[i],tr.centerX(),tr.centerY()+d(4),11,i==0?Color.rgb(35,25,17):CREAM,Paint.Align.CENTER,false,i==0);
+                x=tr.right+d(7);
             }
+            int y=204;
+            for(int i=0;i<4;i++){
+                String[] pf=perfumes[i];
+                RectF r=new RectF(d(18),d(y),getWidth()-d(18),d(y+116)); round(c,r,19,PANEL);
+                RectF pic=new RectF(r.left+d(10),r.top+d(10),r.left+d(94),r.bottom-d(10));
+                Paint gg=new Paint();gg.setShader(new LinearGradient(pic.left,pic.top,pic.right,pic.bottom,Color.rgb(87,52,27),Color.rgb(229,179,92),Shader.TileMode.CLAMP));c.drawRoundRect(pic,d(14),d(14),gg);
+                txt(c,"♢",pic.centerX(),pic.centerY()+d(13),37,Color.rgb(42,26,17),Paint.Align.CENTER,false,true);
+                txt(c,pf[0],r.left+d(108),r.top+d(24),10,MUTED,Paint.Align.LEFT,false,false);
+                txt(c,pf[1],r.left+d(108),r.top+d(49),16,CREAM,Paint.Align.LEFT,true,true);
+                txt(c,"★ "+pf[3]+"   "+pf[2],r.left+d(108),r.top+d(74),10,GOLD,Paint.Align.LEFT,false,false);
+                txt(c,(i==0?"%96":"%"+(93-i*3))+" eşleşme",r.left+d(108),r.bottom-d(18),11,CREAM,Paint.Align.LEFT,false,true);
+                txt(c,"♡",r.right-d(23),r.top+d(34),22,CREAM,Paint.Align.CENTER,false,false);
+                y+=128;
+            }
+            drawBottomNav(c,0);
+        }
+
+        void drawDetail(Canvas c){
+            p.setColor(BG);c.drawRect(0,0,getWidth(),getHeight(),p);
+            Paint glow=new Paint();glow.setShader(new RadialGradient(getWidth()/2f,d(215),d(190),Color.rgb(121,73,30),Color.rgb(14,10,7),Shader.TileMode.CLAMP));c.drawCircle(getWidth()/2f,d(215),d(210),glow);
+            txt(c,"‹",d(22),d(48),34,CREAM,Paint.Align.LEFT,false,false);
+            txt(c,favorite?"♥":"♡",getWidth()-d(24),d(47),27,CREAM,Paint.Align.RIGHT,false,false);
+            RectF bottle=new RectF(getWidth()/2f-d(65),d(78),getWidth()/2f+d(65),d(270));
+            Paint bg=new Paint();bg.setShader(new LinearGradient(bottle.left,bottle.top,bottle.right,bottle.bottom,Color.rgb(241,188,83),Color.rgb(95,54,24),Shader.TileMode.CLAMP));c.drawRoundRect(bottle,d(25),d(25),bg);stroke(c,bottle,25,Color.rgb(248,218,155),1.2f);
+            RectF cap=new RectF(getWidth()/2f-d(30),d(49),getWidth()/2f+d(30),d(102));round(c,cap,9,Color.rgb(18,15,13));
+            txt(c,"SENLIS",bottle.centerX(),bottle.centerY()+d(9),11,Color.rgb(62,35,18),Paint.Align.CENTER,true,true);
+            RectF card=new RectF(d(16),d(300),getWidth()-d(16),getHeight()-d(23));round(c,card,27,Color.rgb(250,242,225));
+            txt(c,"Yves Saint Laurent Libre",card.left+d(18),card.top+d(36),22,Color.rgb(35,27,21),Paint.Align.LEFT,true,true);
+            txt(c,"Kadın • EDP",card.left+d(18),card.top+d(61),12,Color.rgb(92,75,61),Paint.Align.LEFT,false,false);
+            txt(c,"★ 4.8  (1.2K)",card.right-d(18),card.top+d(61),12,Color.rgb(189,118,0),Paint.Align.RIGHT,false,true);
+            txt(c,"%96 SENLIS eşleşmesi",card.left+d(18),card.top+d(92),14,Color.rgb(113,72,28),Paint.Align.LEFT,false,true);
+            txt(c,"Öne çıkan notalar",card.left+d(18),card.top+d(130),15,Color.rgb(35,27,21),Paint.Align.LEFT,false,true);
+            String[] ns={"Lavanta","Portakal Çiçeği","Vanilya","Sandal Ağacı"};
+            float nx=card.left+d(18);
+            for(String n:ns){
+                p.setTextSize(d(10));float w=p.measureText(n)+d(22);
+                RectF cr=new RectF(nx,card.top+d(145),nx+w,card.top+d(181));round(c,cr,18,Color.rgb(239,223,194));
+                txt(c,n,cr.centerX(),cr.centerY()+d(4),10,Color.rgb(62,47,35),Paint.Align.CENTER,false,false);nx=cr.right+d(6);
+            }
+            txt(c,"Özgür, cesur ve zarif bir karakter. Çiçeksi ve sıcak",card.left+d(18),card.top+d(220),12,Color.rgb(66,54,43),Paint.Align.LEFT,false,false);
+            txt(c,"notalarıyla gün boyu dengeli, modern bir iz bırakır.",card.left+d(18),card.top+d(241),12,Color.rgb(66,54,43),Paint.Align.LEFT,false,false);
+            RectF btn=new RectF(card.left+d(16),card.bottom-d(70),card.right-d(16),card.bottom-d(17));round(c,btn,25,Color.rgb(244,196,115));
+            txt(c,"Benzer Kokuları Gör   →",btn.centerX(),btn.centerY()+d(5),14,Color.rgb(38,28,20),Paint.Align.CENTER,false,true);
         }
 
         RectF nrect(float l,float t,float r,float b){return new RectF(getWidth()*l,getHeight()*t,getWidth()*r,getHeight()*b);}
