@@ -24,11 +24,11 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android 35
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Check Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/platforms" | tail -20
+          ls "$ANDROID_HOME/build-tools" | tail -20
 
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
