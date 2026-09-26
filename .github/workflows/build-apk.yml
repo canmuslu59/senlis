@@ -7,8 +7,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,30 +25,50 @@ jobs:
         with:
           gradle-version: '8.11.1'
 
-      - name: Check Android SDK
+      - name: Check local Android environment
+        shell: powershell
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          ls "$ANDROID_HOME/platforms" | tail -20
-          ls "$ANDROID_HOME/build-tools" | tail -20
+          Write-Host "JAVA_HOME=$env:JAVA_HOME"
+          Write-Host "ANDROID_HOME=$env:ANDROID_HOME"
+          java -version
+          gradle --version
+          if (-not $env:ANDROID_HOME) {
+            throw "ANDROID_HOME is not set on the self-hosted runner."
+          }
+          if (-not (Test-Path "$env:ANDROID_HOME\platforms\android-35")) {
+            throw "Android SDK platform 35 is missing on the self-hosted runner."
+          }
 
       - name: Decode premium UI assets
+        shell: powershell
         run: |
-          mkdir -p app/src/main/res/drawable
-          for f in ui-assets/*.b64; do
-            n=$(basename "$f" .b64)
-            base64 -d "$f" > "app/src/main/res/drawable/$n.jpg"
-          done
-          ls -lh app/src/main/res/drawable
+          New-Item -ItemType Directory -Force -Path "app\src\main\res\drawable" | Out-Null
+          Get-ChildItem "ui-assets\*.b64" | ForEach-Object {
+            $name = [System.IO.Path]::GetFileNameWithoutExtension($_.Name)
+            $raw = (Get-Content $_.FullName -Raw).Trim()
+            [System.IO.File]::WriteAllBytes(
+              "app\src\main\res\drawable\$name.jpg",
+              [System.Convert]::FromBase64String($raw)
+            )
+          }
+          Get-ChildItem "app\src\main\res\drawable"
 
       - name: Build debug APK
-        run: gradle :app:assembleDebug --stacktrace
+        shell: powershell
+        run: |
+          gradle :app:assembleDebug --stacktrace
 
-      - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk SENLIS-v0.2.0-beta.apk
+      - name: Prepare APK
+        shell: powershell
+        run: |
+          Copy-Item "app\build\outputs\apk\debug\app-debug.apk" "SENLIS-v0.2.0-beta.apk" -Force
+          (Get-FileHash "SENLIS-v0.2.0-beta.apk" -Algorithm SHA256).Hash | Out-File "SENLIS-v0.2.0-beta.sha256"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: SENLIS-v0.2.0-beta
-          path: SENLIS-v0.1.0-alpha.apk
+          path: |
+            SENLIS-v0.2.0-beta.apk
+            SENLIS-v0.2.0-beta.sha256
           retention-days: 7
