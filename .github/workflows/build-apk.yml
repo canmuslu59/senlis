@@ -30,15 +30,24 @@ jobs:
           ls "$ANDROID_HOME/platforms" | tail -20
           ls "$ANDROID_HOME/build-tools" | tail -20
 
+      - name: Decode premium UI assets
+        run: |
+          mkdir -p app/src/main/res/drawable
+          for f in ui-assets/*.b64; do
+            n=$(basename "$f" .b64)
+            base64 -d "$f" > "app/src/main/res/drawable/$n.jpg"
+          done
+          ls -lh app/src/main/res/drawable
+
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
 
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk SENLIS-v0.1.0-alpha.apk
+        run: cp app/build/outputs/apk/debug/app-debug.apk SENLIS-v0.2.0-beta.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: SENLIS-v0.1.0-alpha
+          name: SENLIS-v0.2.0-beta
           path: SENLIS-v0.1.0-alpha.apk
           retention-days: 7
