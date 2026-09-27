@@ -25,6 +25,7 @@ public final class ProfileStore {
         prefs.edit().putBoolean("reminder", reminder).putBoolean("newsPush", news).apply();
     }
     public String lovedProducts() { return prefs.getString("lovedProducts", ""); }
+    public Set<String> lovedIds() { return getSet("lovedIds"); }
     public boolean favourite(String id) { return prefs.getBoolean("favourite_" + id, false); }
     public String privateNote(String id) { return prefs.getString("note_" + id, ""); }
 
@@ -44,7 +45,7 @@ public final class ProfileStore {
             budget > 0 ? budget : null);
     }
 
-    public void save(MatchEngine.Profile profile, String lovedProducts) {
+    public void save(MatchEngine.Profile profile, String lovedProducts, Set<String> lovedIds) {
         prefs.edit()
             .putStringSet("notes", new HashSet<>(profile.likedNotes))
             .putStringSet("avoided", new HashSet<>(profile.avoidedNotes))
@@ -54,6 +55,7 @@ public final class ProfileStore {
             .putInt("intensity", profile.intensity)
             .putInt("budget", profile.budgetMax == null ? 0 : profile.budgetMax)
             .putString("lovedProducts", lovedProducts.trim())
+            .putStringSet("lovedIds", new HashSet<>(lovedIds))
             .putBoolean("complete", true)
             .apply();
     }

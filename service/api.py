@@ -95,6 +95,11 @@ def handle(method, path, query, data, headers):
     if method == 'GET' and path == '/v1/editor/products':
         require_editor()
         return {'items': db.product_queue()}
+    if method == 'POST' and path == '/v1/editor/products':
+        require_editor()
+        return {'id': db.import_brand_verified(data.get('name'), data.get('brand'),
+            data.get('kind'), data.get('source_url', ''), data.get('notes'),
+            data.get('family'), data.get('verified_at'), data.get('variants'))}
     if method == 'GET' and path == '/v1/editor/reports':
         require_editor()
         return {'items': db.report_queue()}

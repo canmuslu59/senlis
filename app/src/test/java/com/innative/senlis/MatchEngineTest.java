@@ -9,7 +9,8 @@ public final class MatchEngineTest {
         dislikedNoteExcludesProduct();
         unknownPriceDoesNotCountAsBudgetMatch();
         nonmatchingKnownDimensionsAreExplained();
-        System.out.println("MatchEngineTest: 5 passed");
+        lovedCanonicalProductContributesOnlyKnownNotes();
+        System.out.println("MatchEngineTest: 6 passed");
     }
 
     private static void emptyProfileHasNoScore() {
@@ -49,6 +50,16 @@ public final class MatchEngineTest {
         MatchEngine.Result result = MatchEngine.score(profile, product(null));
         check(result.percent != null, "Three known dimensions permit a score");
         check(result.reasons.size() >= 3, "Negative and partial contributions need explanations");
+    }
+
+    private static void lovedCanonicalProductContributesOnlyKnownNotes() {
+        MatchEngine.Profile profile = new MatchEngine.Profile(
+            Set.of("yasemin"), Set.of(), Set.of(), Set.of(), Set.of(), 0, null,
+            Set.of("vanilya", "yasemin"));
+        MatchEngine.Result result = MatchEngine.score(profile, product(null));
+        check(result.percent != null, "Two explicit signals with source-backed notes permit a score");
+        check(result.reasons.stream().anyMatch(x -> x.contains("kayıtlı kokularla")),
+            "Loved-product similarity needs an explanation");
     }
 
     private static MatchEngine.Fragrance product(Integer price) {

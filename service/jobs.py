@@ -97,7 +97,6 @@ def send_fcm(token, title, body, data):
 
 def deliver(db, timestamp=None, sender=send_fcm):
     timestamp = timestamp or datetime.now(timezone.utc).isoformat()
-    articles = db.news(1)
     count = 0
     for user in db.subscribers():
         if not user['fcm_token']:
@@ -106,10 +105,10 @@ def deliver(db, timestamp=None, sender=send_fcm):
             day = local_day_due(user['timezone'], timestamp, hour)
             if not enabled or not day:
                 continue
-            if kind == 'news' and not articles:
-                LOG.warning('No editor-verified article; news notification withheld for %s', day)
+            article = db.unsent_news(user['id'], timestamp) if kind == 'news' else None
+            if kind == 'news' and not article:
+                LOG.warning('No fresh, unsent editor-verified article; news push withheld for %s', day)
                 continue
-            article = articles[0] if kind == 'news' else None
             if not db.claim_delivery(user['id'], kind, day, article['id'] if article else None):
                 continue
             title = 'SENLIS koku hatırlatması' if kind == 'reminder' else article['source_name'] + ' · Koku haberi'

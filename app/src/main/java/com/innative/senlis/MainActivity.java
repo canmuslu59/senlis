@@ -54,7 +54,7 @@ public final class MainActivity extends Activity {
     private ApiClient api;
     private String catalogueError = "Katalog yükleniyor…";
     private final Set<String> moods = new HashSet<>(), notes = new HashSet<>(), avoided = new HashSet<>(),
-        families = new HashSet<>(), occasions = new HashSet<>();
+        families = new HashSet<>(), occasions = new HashSet<>(), lovedIds = new HashSet<>();
     private String lovedProducts = "";
     private int intensity = 0, budget = 0, step = 0, tab = 0;
     private MatchEngine.Fragrance selected;
@@ -83,6 +83,7 @@ public final class MainActivity extends Activity {
         restoreSet(state, "avoided", avoided);
         restoreSet(state, "families", families);
         restoreSet(state, "occasions", occasions);
+        restoreSet(state, "lovedIds", lovedIds);
         lovedProducts = state.getString("lovedProducts", lovedProducts);
         intensity = state.getInt("intensity", intensity);
         budget = state.getInt("budget", budget);
@@ -112,6 +113,7 @@ public final class MainActivity extends Activity {
         state.putStringArrayList("avoided", new ArrayList<>(avoided));
         state.putStringArrayList("families", new ArrayList<>(families));
         state.putStringArrayList("occasions", new ArrayList<>(occasions));
+        state.putStringArrayList("lovedIds", new ArrayList<>(lovedIds));
         state.putString("lovedProducts", lovedProducts);
         state.putInt("intensity", intensity);
         state.putInt("budget", budget);
@@ -134,12 +136,16 @@ public final class MainActivity extends Activity {
         intensity = p.intensity;
         budget = p.budgetMax == null ? 0 : p.budgetMax;
         lovedProducts = store.lovedProducts();
+        lovedIds.clear(); lovedIds.addAll(store.lovedIds());
     }
 
     private MatchEngine.Profile currentProfile() {
+        Set<String> lovedNotes = new HashSet<>();
+        for (MatchEngine.Fragrance f : Catalogue.ITEMS)
+            if (lovedIds.contains(f.id)) lovedNotes.addAll(f.notes);
         return new MatchEngine.Profile(new HashSet<>(notes), new HashSet<>(avoided),
             new HashSet<>(families), new HashSet<>(moods), new HashSet<>(occasions),
-            intensity, budget == 0 ? null : budget);
+            intensity, budget == 0 ? null : budget, lovedNotes);
     }
 
     private void loadCatalogue(String query, boolean searchResults) {
@@ -247,12 +253,28 @@ public final class MainActivity extends Activity {
             loved.setGravity(Gravity.TOP);
             loved.addTextChangedListener(watch(s -> lovedProducts = s));
             body.addView(loved);
+            addSpace(body, 18);
+            body.addView(label("KATALOGDAN SEVDİĞİN ÜRÜNLER", 12, GOLD, true));
+            addSpace(body, 8);
+            if (Catalogue.ITEMS.isEmpty()) body.addView(label("Kaynaklı ürünler yüklenince burada seçebilirsin.", 13, MUTED, false));
+            for (MatchEngine.Fragrance fragrance : Catalogue.ITEMS) {
+                TextView choice = chip(fragrance.name, lovedIds.contains(fragrance.id));
+                choice.setOnClickListener(v -> {
+                    if (!lovedIds.add(fragrance.id)) lovedIds.remove(fragrance.id);
+                    boolean active = lovedIds.contains(fragrance.id);
+                    choice.setBackground(round(active ? GOLD : CARD, 13, active ? 0 : 0xFF6D5640));
+                    choice.setTextColor(active ? INK : CREAM);
+                });
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+                lp.bottomMargin = dp(7);
+                body.addView(choice, lp);
+            }
             addSpace(body, 26);
             body.addView(label("SEVDİĞİN KOKU AİLELERİ", 12, GOLD, true));
             addSpace(body, 12);
             options(body, FAMILIES, families, 2);
             addSpace(body, 18);
-            body.addView(label("Yazdığın adlar otomatik ürün kimliğine bağlanmaz; yanlış eşleşme puanını etkilemez.", 13, MUTED, false));
+            body.addView(label("Yazdığın serbest adlar otomatik eşleşmez; yalnızca katalogdan seçtiklerin ortak nota puanına katılır.", 13, MUTED, false));
         } else if (step == 3) {
             heading(body, "Nelerden uzak duralım?", "Seçtiğin notaları içeren örnekleri önermeyiz.");
             addSpace(body, 18);
@@ -292,7 +314,7 @@ public final class MainActivity extends Activity {
 
         root.addView(button(step == 4 ? "Kokularımı Keşfet  →" : "Devam Et  →", () -> {
             if (step < 4) { step++; showStep(); }
-            else { store.save(currentProfile(), lovedProducts); editing = false; showTab(0); }
+            else { store.save(currentProfile(), lovedProducts, lovedIds); editing = false; showTab(0); }
         }, true));
         present(root);
     }
@@ -401,12 +423,12 @@ public final class MainActivity extends Activity {
         field.addTextChangedListener(watch(value -> {
             try {
                 String request = value.trim();
-                api.get("/v1/products?limit=50&q=" + URLEncoder.encode(request, "UTF-8"), (body, error) -> {
+                api.get("/v1/products?limit=50&q=" + URLEncoder.encode(request, "UTF-8"), (response, error) -> {
                     if (!field.getText().toString().trim().equals(request)) return;
                     results.removeAllViews();
                     if (error != null) { notice(results, "BAĞLANTI SORUNU", error); return; }
                     List<MatchEngine.Fragrance> found = new ArrayList<>();
-                    JSONArray array = body.optJSONArray("items");
+                    JSONArray array = response.optJSONArray("items");
                     if (array != null) for (int i = 0; i < array.length(); i++)
                         if (array.optJSONObject(i) != null) found.add(Catalogue.parse(array.optJSONObject(i)));
                     addProducts(results, found, false);
@@ -530,6 +552,8 @@ public final class MainActivity extends Activity {
         summary(body, "Kullanım anları", occasions);
         body.addView(label("Sevdiğin parfümler", 15, GOLD, true));
         body.addView(label(lovedProducts.isEmpty() ? "Henüz eklenmedi" : lovedProducts, 15, CREAM, false));
+        for (MatchEngine.Fragrance fragrance : Catalogue.ITEMS)
+            if (lovedIds.contains(fragrance.id)) body.addView(label("✦ " + fragrance.name, 14, CREAM, false));
         addSpace(body, 22);
         body.addView(button("Tercihlerimi Düzenle  →", () -> { editing = true; step = 0; showStep(); }, true));
         addSpace(body, 12);
@@ -761,6 +785,15 @@ public final class MainActivity extends Activity {
         sheet.addView(title(f.name, 31, INK));
         sheet.addView(label((product == null ? "" : product.optString("brand") + " · ") + f.type +
             (f.family == null ? "" : " · " + f.family), 15, 0xFF715849, false));
+        JSONArray variants = product == null ? null : product.optJSONArray("variants");
+        if (variants != null && variants.length() > 0) {
+            List<String> labels = new ArrayList<>();
+            for (int i = 0; i < variants.length(); i++) {
+                JSONObject variant = variants.optJSONObject(i);
+                if (variant != null) labels.add(variant.optString("label"));
+            }
+            sheet.addView(label("Doğrulanan boylar: " + TextUtils.join(" · ", labels), 13, 0xFF715849, false));
+        }
         addSpace(sheet, 14);
         sheet.addView(label(match.excluded ? "Tercihlerinle uyumsuz" : match.percent == null ? "Yeterli eşleşme verisi yok" :
             "%" + match.percent + " tahmini eşleşme", 20, 0xFF835018, true));

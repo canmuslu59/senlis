@@ -1,6 +1,7 @@
 """Install the actual hosted APK and inspect native screens on an emulator."""
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -9,6 +10,18 @@ import xml.etree.ElementTree as ET
 
 APK, OUT = sys.argv[1:3]
 os.makedirs(OUT, exist_ok=True)
+
+
+def sdk_tool(name):
+    installed = shutil.which(name)
+    if installed:
+        return installed
+    home = os.environ.get('ANDROID_HOME') or os.environ.get('ANDROID_SDK_ROOT', '')
+    for version in ('35.0.0', '34.0.0'):
+        path = os.path.join(home, 'build-tools', version, name)
+        if os.path.exists(path):
+            return path
+    raise FileNotFoundError(name)
 
 
 def command(*args):
@@ -43,11 +56,11 @@ def tap(text, label):
 
 
 try:
-    manifest = command('aapt', 'dump', 'badging', APK)
+    manifest = command(sdk_tool('aapt'), 'dump', 'badging', APK)
     assert "name='com.innative.senlis.preview'" in manifest
     assert "sdkVersion:'23'" in manifest
     assert "targetSdkVersion:'35'" in manifest
-    command('apksigner', 'verify', '--min-sdk-version', '23', APK)
+    command(sdk_tool('apksigner'), 'verify', '--min-sdk-version', '23', APK)
     command('adb', 'install', '-r', APK)
     command('adb', 'shell', 'pm', 'clear', 'com.innative.senlis.preview')
     command('adb', 'shell', 'am', 'start', '-W', '-n', 'com.innative.senlis.preview/com.innative.senlis.MainActivity')

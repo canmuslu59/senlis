@@ -67,6 +67,11 @@ CREATE TABLE IF NOT EXISTS products (
  id TEXT PRIMARY KEY, code TEXT UNIQUE, name TEXT NOT NULL, brand TEXT NOT NULL,
  kind TEXT NOT NULL, reviewed INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL);
 CREATE INDEX IF NOT EXISTS products_name ON products(name);
+CREATE TABLE IF NOT EXISTS product_variants (
+ id TEXT PRIMARY KEY, product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+ size_ml INTEGER, concentration TEXT, label TEXT NOT NULL,
+ source_url TEXT NOT NULL, observed_at TEXT NOT NULL,
+ UNIQUE(product_id,label));
 CREATE TABLE IF NOT EXISTS product_sources (
  product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
  field TEXT NOT NULL, source_name TEXT NOT NULL, source_url TEXT NOT NULL,
@@ -191,7 +196,8 @@ class Store:
                 ON s.product_id=p.id AND s.field='name' WHERE p.reviewed=0
                 ORDER BY p.updated_at DESC LIMIT 100'''))
 
-    def import_brand_verified(self, name, brand, kind, source_url, notes, family=None, verified_at=None):
+    def import_brand_verified(self, name, brand, kind, source_url, notes, family=None,
+                              verified_at=None, variants=None):
         """Human-reviewed official brand facts; no invented barcode, price or imagery."""
         if kind not in ('perfume', 'body_mist') or not source_url.startswith('https://') or not name or not brand:
             raise ValueError('official product identity required')
@@ -211,6 +217,17 @@ class Store:
             self.verified_fact(product_id, 'notes', notes, source_url, brand, verified_at)
         if family:
             self.verified_fact(product_id, 'family', family, source_url, brand, verified_at)
+        for variant in variants or []:
+            size = variant.get('size_ml')
+            concentration = variant.get('concentration')
+            label = variant.get('label', '')
+            if not isinstance(size, int) or size <= 0 or not label:
+                raise ValueError('verified variant needs size and label')
+            with self.connect() as conn:
+                self.query(conn, '''INSERT INTO product_variants(id,product_id,size_ml,concentration,label,source_url,observed_at)
+                    VALUES(?,?,?,?,?,?,?) ON CONFLICT(product_id,label) DO NOTHING''',
+                    (uuid.uuid5(uuid.NAMESPACE_URL, source_url + '#' + label).hex, product_id,
+                     size, concentration, label, source_url, verified_at))
         return product_id
 
     def catalogue(self, search='', limit=20, offset=0):
@@ -247,6 +264,9 @@ class Store:
             result['provenance'] += [{'field': f['field'], 'source_name': f['source_name'],
                 'source_url': f['source_url'], 'observed_at': f['verified_at'], 'license': 'source-linked fact'}
                 for f in facts]
+            result['variants'] = self.many(self.query(conn, '''SELECT id,label,size_ml,concentration,
+                source_url,observed_at FROM product_variants WHERE product_id=? ORDER BY size_ml''',
+                (product_id,)))
             return result
 
     def verified_fact(self, product_id, field, value, source_url, source_name, verified_at=None):
@@ -402,11 +422,14 @@ class Store:
     def publish_news(self, title, url, source_name, reviewed, published_at=None):
         if not reviewed or len(title.strip()) < 8 or not url.startswith('https://') or len(source_name.strip()) < 3:
             raise ValueError('editorial review and HTTPS source required')
+        publication = datetime.fromisoformat(published_at) if published_at else datetime.now(timezone.utc)
+        if publication.tzinfo is None or publication > datetime.now(timezone.utc) + timedelta(minutes=5):
+            raise ValueError('valid published_at timestamp required')
         article_id = uuid.uuid4().hex
         with self.connect() as conn:
             self.query(conn, '''INSERT INTO articles(id,title,url,source_name,published_at,reviewed,created_at)
                 VALUES(?,?,?,?,?,1,?) ON CONFLICT(url) DO NOTHING''',
-                (article_id, title.strip(), url, source_name.strip(), published_at or now(), now()))
+                (article_id, title.strip(), url, source_name.strip(), publication.isoformat(), now()))
         return article_id
 
     def news_candidate(self, title, url, source_name):
@@ -426,6 +449,15 @@ class Store:
         with self.connect() as conn:
             return self.many(self.query(conn, '''SELECT id,title,url,source_name,published_at FROM articles
                 WHERE reviewed=1 ORDER BY published_at DESC LIMIT ?''', (max(1, min(50, int(limit))),)))
+
+    def unsent_news(self, user_id, utc_iso):
+        cutoff = (datetime.fromisoformat(utc_iso) - timedelta(days=7)).isoformat()
+        with self.connect() as conn:
+            return self.one(self.query(conn, '''SELECT a.id,a.title,a.url,a.source_name,a.published_at
+                FROM articles a WHERE a.reviewed=1 AND a.published_at>=? AND a.published_at<=?
+                AND NOT EXISTS (SELECT 1 FROM deliveries d WHERE d.user_id=? AND d.kind='news'
+                AND d.article_id=a.id AND d.status IN ('claimed','sent'))
+                ORDER BY a.published_at DESC LIMIT 1''', (cutoff, utc_iso, user_id)))
 
     def claim_delivery(self, user_id, kind, local_date, article_id=None):
         with self.connect() as conn:

@@ -12,6 +12,7 @@ OFFICIAL_PRODUCTS = [
         'notes': ['antep fıstığı', 'badem', 'heliotrop', 'yasemin', 'vanilya', 'tuzlu karamel', 'sandal ağacı'],
         'family': None,
         'verified_at': '2026-09-27T00:00:00+00:00',
+        'variants': [{'label': '90 ml', 'size_ml': 90}, {'label': '240 ml', 'size_ml': 240}],
     },
     {
         'name': 'Cheirosa 68 Beija Flor Perfume Mist', 'brand': 'Sol de Janeiro', 'kind': 'body_mist',
@@ -19,6 +20,7 @@ OFFICIAL_PRODUCTS = [
         'notes': ['ejder meyvesi', 'liçi', 'yasemin', 'hibiskus', 'vanilya', 'misk'],
         'family': 'çiçeksi',
         'verified_at': '2026-09-27T00:00:00+00:00',
+        'variants': [{'label': '90 ml', 'size_ml': 90}, {'label': '240 ml', 'size_ml': 240}],
     },
     {
         'name': 'Libre Eau de Parfum', 'brand': 'Yves Saint Laurent Beauty', 'kind': 'perfume',
@@ -26,6 +28,9 @@ OFFICIAL_PRODUCTS = [
         'notes': ['lavanta', 'portakal çiçeği', 'misk', 'vanilya'],
         'family': 'çiçeksi',
         'verified_at': '2026-09-27T00:00:00+00:00',
+        'variants': [{'label': '30 ml EDP', 'size_ml': 30, 'concentration': 'EDP'},
+                     {'label': '50 ml EDP', 'size_ml': 50, 'concentration': 'EDP'},
+                     {'label': '90 ml EDP', 'size_ml': 90, 'concentration': 'EDP'}],
     },
     {
         'name': 'Peony & Blush Suede Cologne', 'brand': 'Jo Malone London', 'kind': 'perfume',
@@ -33,6 +38,9 @@ OFFICIAL_PRODUCTS = [
         'notes': ['şakayık', 'kırmızı elma', 'yasemin', 'gül', 'süet'],
         'family': 'çiçeksi',
         'verified_at': '2026-09-27T00:00:00+00:00',
+        'variants': [{'label': '30 ml Cologne', 'size_ml': 30, 'concentration': 'Cologne'},
+                     {'label': '50 ml Cologne', 'size_ml': 50, 'concentration': 'Cologne'},
+                     {'label': '100 ml Cologne', 'size_ml': 100, 'concentration': 'Cologne'}],
     },
 ]
 

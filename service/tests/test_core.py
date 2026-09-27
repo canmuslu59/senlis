@@ -86,6 +86,7 @@ class StoreTests(unittest.TestCase):
             self.assertTrue(detail['notes'])
             self.assertIsNone(detail['price'])
             self.assertEqual(detail['rating']['count'], 0)
+            self.assertTrue(detail['variants'])
 
     def test_delivery_needs_article_and_sends_once(self):
         user, _ = self.db.register('a@example.test', 'long password 123')
@@ -95,10 +96,13 @@ class StoreTests(unittest.TestCase):
         instant = '2026-09-27T10:05:00+00:00'  # Istanbul 13:05
         self.assertEqual(deliver(self.db, instant, sender), 1)
         self.assertEqual(sent[0][3]['kind'], 'reminder')
-        self.db.publish_news('Kaynaklı ürün duyurusu', 'https://example.com/news', 'Official source', True)
+        self.db.publish_news('Kaynaklı ürün duyurusu', 'https://example.com/news', 'Official source', True,
+                             published_at=instant)
         self.assertEqual(deliver(self.db, instant, sender), 1)
         self.assertEqual(deliver(self.db, instant, sender), 0)
         self.assertEqual(sent[-1][3]['url'], 'https://example.com/news')
+        self.assertEqual(deliver(self.db, '2026-09-28T10:05:00+00:00', sender), 1)
+        self.assertEqual(sent[-1][3]['kind'], 'reminder')
 
 
 if __name__ == '__main__':

@@ -12,11 +12,19 @@ public final class MatchEngine {
 
     public static final class Profile {
         public final Set<String> likedNotes, avoidedNotes, families, moods, occasions;
+        public final Set<String> lovedProductNotes;
         public final int intensity; // 0 unknown, 1 light, 2 balanced, 3 strong
         public final Integer budgetMax;
 
         public Profile(Set<String> likedNotes, Set<String> avoidedNotes, Set<String> families,
                        Set<String> moods, Set<String> occasions, int intensity, Integer budgetMax) {
+            this(likedNotes, avoidedNotes, families, moods, occasions, intensity, budgetMax,
+                Collections.<String>emptySet());
+        }
+
+        public Profile(Set<String> likedNotes, Set<String> avoidedNotes, Set<String> families,
+                       Set<String> moods, Set<String> occasions, int intensity, Integer budgetMax,
+                       Set<String> lovedProductNotes) {
             this.likedNotes = likedNotes;
             this.avoidedNotes = avoidedNotes;
             this.families = families;
@@ -24,6 +32,7 @@ public final class MatchEngine {
             this.occasions = occasions;
             this.intensity = intensity;
             this.budgetMax = budgetMax;
+            this.lovedProductNotes = lovedProductNotes;
         }
     }
 
@@ -87,8 +96,14 @@ public final class MatchEngine {
                 reasons.add("Sevdiğin " + fragrance.family + " aileden");
             } else reasons.add("Koku ailesi tercihin farklı");
         }
-        // Favourite-product accord similarity is reserved for canonical catalogue data.
-        // Stage-one free-text loved products are retained, never guessed into this dimension.
+        if (!profile.lovedProductNotes.isEmpty() && !fragrance.notes.isEmpty()) {
+            dimensions++;
+            available += 15;
+            int hits = overlap(profile.lovedProductNotes, fragrance.notes);
+            earned += 15d * hits / profile.lovedProductNotes.size();
+            reasons.add(hits > 0 ? "Sevdiğin kayıtlı kokularla " + hits + " ortak nota" :
+                "Sevdiğin kayıtlı kokularla ortak nota belirtilmemiş");
+        }
         if ((!profile.moods.isEmpty() && !fragrance.moods.isEmpty()) ||
             (!profile.occasions.isEmpty() && !fragrance.occasions.isEmpty())) {
             dimensions++;
