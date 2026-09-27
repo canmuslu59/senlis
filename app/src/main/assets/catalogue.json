@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-27T21:03:01.102219+00:00",
+  "generated_at": "2026-09-27T21:21:06.339529+00:00",
   "items": [
     {
       "id": "32dfdfd355015cdb894eee0d264f687b",
@@ -95,6 +95,7 @@
         "ejder meyvesi",
         "liçi",
         "yasemin",
+        "okyanus havası",
         "hibiskus",
         "vanilya",
         "misk"
@@ -220,6 +221,14 @@
       ],
       "variants": [
         {
+          "id": "9fc7a39645e05ccb8eb469fe33afc75e",
+          "label": "10 ml EDP",
+          "size_ml": 10,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
           "id": "626ca3dac998576b9c270ebcf665f249",
           "label": "30 ml EDP",
           "size_ml": 30,
@@ -239,6 +248,22 @@
           "id": "8075c8beef1a5de79f05084880cb5037",
           "label": "90 ml EDP",
           "size_ml": 90,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "d906e820b01151cfa6e5062c731d544c",
+          "label": "100 ml Refill EDP",
+          "size_ml": 100,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "86bb3be1ee215d6283882cf17f50997a",
+          "label": "150 ml EDP",
+          "size_ml": 150,
           "concentration": "EDP",
           "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
           "observed_at": "2026-09-27T00:00:00+00:00"
@@ -307,6 +332,14 @@
         }
       ],
       "variants": [
+        {
+          "id": "027cae7f583c5b94965a622f0e95f738",
+          "label": "9 ml Cologne",
+          "size_ml": 9,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
         {
           "id": "8f2f479a4bee55598bb9aa6ee0ba4a81",
           "label": "30 ml Cologne",
