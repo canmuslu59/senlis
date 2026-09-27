@@ -90,7 +90,7 @@ def poll_news(db):
 
 
 def send_fcm(token, title, body, data):
-    """Firebase service account is supplied only as a Render secret."""
+    """Legacy test harness; production news delivery uses firebase_sync on the runner."""
     import firebase_admin
     from firebase_admin import credentials, messaging
     if not firebase_admin._apps:
@@ -140,7 +140,10 @@ if __name__ == '__main__':
     db.migrate()
     command = sys.argv[1] if len(sys.argv) > 1 else ''
     if command == 'sync':
-        print(sync_obf(db, os.getenv('OBF_PAGES', '1')))
+        result = sync_obf(db, os.getenv('OBF_PAGES', '1'))
+        print(result)
+        if result['error']:
+            raise SystemExit('OBF import failed: ' + result['error'])
         poll_news(db)
     elif command == 'deliver':
         print({'sent': deliver(db)})

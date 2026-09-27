@@ -69,7 +69,6 @@ public final class MainActivity extends Activity {
         store = new ProfileStore(this);
         api = new CommunityClient(this);
         catalogueRepository = new CatalogRepository(this);
-        ReminderReceiver.schedule(this, store.reminder());
         loadCatalogue();
         loadProfile();
         if (state != null) {
@@ -570,7 +569,15 @@ public final class MainActivity extends Activity {
             .setTitle("Veriler silinsin mi?")
             .setMessage("Tercihler, favoriler ve özel notlar bu cihazdan silinecek.")
             .setNegativeButton("Vazgeç", null)
-            .setPositiveButton("Sil", (d, w) -> { store.reset(); loadProfile(); showWelcome(); })
+            .setPositiveButton("Sil", (d, w) -> {
+                Runnable clear = () -> { store.reset(); ReminderReceiver.schedule(this, false); loadProfile(); showWelcome(); };
+                if (store.newsPush() && api.signedIn())
+                    api.notification("", false, (result, error) -> {
+                        if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
+                        clear.run();
+                    });
+                else clear.run();
+            })
             .show(), false));
     }
 
@@ -660,8 +667,11 @@ public final class MainActivity extends Activity {
         ReminderReceiver.schedule(this, pendingReminder);
         if (!pendingNews) {
             if (previouslyNews && api.configured() && api.signedIn()) {
-                api.notification("", false, (result, error) -> Toast.makeText(this,
-                    error == null ? "Haber bildirimi kapatıldı." : error, Toast.LENGTH_LONG).show());
+                api.notification("", false, (result, error) -> {
+                    if (error != null) store.notificationChoices(pendingReminder, true);
+                    Toast.makeText(this, error == null ? "Haber bildirimi kapatıldı." : error,
+                        Toast.LENGTH_LONG).show();
+                });
             } else Toast.makeText(this, "Hatırlatma tercihin bu cihazda kaydedildi.", Toast.LENGTH_SHORT).show();
             return;
         }

@@ -23,6 +23,9 @@ service cloud.firestore {
         && request.resource.data.timezone is string
         && request.resource.data.timezone.size() <= 80;
       allow delete: if false;
+      match /deliveries/{day} {
+        allow read, write: if false;
+      }
     }
 
     match /rooms/{room}/messages/{messageId} {

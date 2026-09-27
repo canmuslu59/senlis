@@ -43,6 +43,15 @@ matching JSON files. The exporter keeps the previous timestamp when product
 facts are unchanged. Publishing a new snapshot remains a review action; an
 automated source import alone is never evidence that its facts are correct.
 
+On the runner, inspect candidates with `python -m service.editor --database
+PATH/TO/catalogue.sqlite products` and page with `--offset 100`. After opening
+and checking the named source page, explicitly approve one by ID using
+`approve-product ID --checked-url https://...`. Export with
+`python -m service.export_catalog --database PATH/TO/catalogue.sqlite
+--output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json
+--if-changed`, review the JSON diff, and publish it through a reviewed commit to
+`main`. The APK is still useful offline if this process is delayed.
+
 ## Shared features
 
 Product/general conversation and user ratings cannot synchronize between
@@ -67,6 +76,22 @@ Android client because the rules deny news writes.
 
 Firebase's no-cost quotas are finite; launch traffic and moderation capacity
 must be monitored. The app will never silently switch to a paid hosting plan.
+
+The second self runner workflow `.github/workflows/daily-news.yml` polls official
+news feeds daily, publishes only records already approved in the runner's SQLite,
+and attempts one fresh FCM news item per opted-in user and local day. Review
+candidates with `python -m service.editor --database PATH/TO/catalogue.sqlite
+news`; use `publish-news ID --checked-url https://... --published-at
+2026-09-27T10:00:00+00:00` only after checking the source and its actual date.
+Set the dedicated `SENLIS_FIREBASE_SERVICE_ACCOUNT_JSON` repository secret for
+this workflow. Keep the service account out of the APK and git. Neither the
+scheduled workflows nor live messaging run until the self runner and project
+are configured, the branch is merged into the default branch, and Firestore
+rules/indexes are deployed. Community reports and corrections need an editor
+to inspect them through `python -m service.moderate reports` and
+`python -m service.moderate corrections` on the runner. Hide a reported post
+with `hide-message ROOM MESSAGE_ID`, then mark its report with
+`resolve-report REPORT_ID`; the phone cannot approve or hide content.
 
 ## Development
 

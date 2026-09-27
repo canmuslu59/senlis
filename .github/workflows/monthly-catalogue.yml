@@ -30,6 +30,10 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Official seed failed' }
           python -m service.jobs sync
           if ($LASTEXITCODE -ne 0) { throw 'Source sync failed' }
+          python -m service.editor --database $env:DATABASE_URL products | Out-File -Encoding utf8 products-review.json
+          if ($LASTEXITCODE -ne 0) { throw 'Review queue export failed' }
+          python -m service.editor --database $env:DATABASE_URL news | Out-File -Encoding utf8 news-review.json
+          if ($LASTEXITCODE -ne 0) { throw 'News queue export failed' }
           python -m service.export_catalog --database $env:DATABASE_URL --output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json --if-changed
           if ($LASTEXITCODE -ne 0) { throw 'Reviewed snapshot export failed' }
           git status --short -- docs/catalogue.json app/src/main/assets/catalogue.json
@@ -40,4 +44,6 @@ jobs:
           path: |
             docs/catalogue.json
             app/src/main/assets/catalogue.json
+            products-review.json
+            news-review.json
           retention-days: 14

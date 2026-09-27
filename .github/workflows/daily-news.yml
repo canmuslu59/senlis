@@ -1,0 +1,39 @@
+name: SENLIS reviewed news self runner
+
+on:
+  schedule:
+    - cron: '19 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: senlis-news-delivery
+  cancel-in-progress: false
+
+jobs:
+  news:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r service/requirements-selfrunner.txt
+      - name: Poll official candidates and send reviewed news only
+        shell: powershell
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.SENLIS_FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          $directory = Join-Path $env:USERPROFILE 'senlis-editorial'
+          New-Item -ItemType Directory -Force -Path $directory | Out-Null
+          $env:DATABASE_URL = Join-Path $directory 'catalogue.sqlite'
+          python -m service.firebase_sync poll
+          if ($LASTEXITCODE -ne 0) { throw 'Feed poll failed' }
+          if (-not $env:FIREBASE_SERVICE_ACCOUNT_JSON) { throw 'Dedicated SENLIS Firebase account missing' }
+          python -m service.firebase_sync publish
+          if ($LASTEXITCODE -ne 0) { throw 'Reviewed publication failed' }
+          python -m service.firebase_sync deliver
+          if ($LASTEXITCODE -ne 0) { throw 'News delivery failed' }
