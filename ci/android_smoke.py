@@ -39,8 +39,20 @@ def snapshot(label):
 
 
 def wait_text(text, label):
-    for _ in range(20):
+    for _ in range(30):
         tree = snapshot(label)
+        launcher_stalled = any("Pixel Launcher isn't responding" in node.attrib.get('text', '')
+                               for node in tree.iter('node'))
+        if launcher_stalled:
+            for node in tree.iter('node'):
+                if node.attrib.get('text') == 'Wait':
+                    left, top, right, bottom = map(int, re.findall(r'\d+', node.attrib['bounds']))
+                    command('adb', 'shell', 'input', 'tap', str((left + right)//2), str((top + bottom)//2))
+                    break
+            command('adb', 'shell', 'am', 'start', '-W', '-n',
+                    'com.innative.senlis.preview/com.innative.senlis.MainActivity')
+            time.sleep(2)
+            continue
         for node in tree.iter('node'):
             if text in node.attrib.get('text', ''):
                 return node
