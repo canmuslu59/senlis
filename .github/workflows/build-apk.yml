@@ -1,8 +1,6 @@
-name: SENLIS preview APK
+name: SENLIS Windows manual crosscheck
 
 on:
-  push:
-    branches: [feature/senlis-premium-foundation]
   workflow_dispatch:
 
 jobs:
@@ -42,17 +40,17 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Model compilation failed' }
           java -cp model-test com.innative.senlis.MatchEngineTest
           if ($LASTEXITCODE -ne 0) { throw 'Model tests failed' }
-      - name: Build preview
+      - name: Build development APK
         shell: powershell
         run: |
           gradle :app:assembleDebug --stacktrace
           if ($LASTEXITCODE -ne 0) { throw 'Android build failed' }
-          Copy-Item app/build/outputs/apk/debug/app-debug.apk SENLIS-v0.5.0-preview.apk
-          (Get-FileHash SENLIS-v0.5.0-preview.apk -Algorithm SHA256).Hash | Out-File SENLIS-v0.5.0-preview.sha256
+          Copy-Item app/build/outputs/apk/debug/app-debug.apk SENLIS-v0.6.0-dev-windows.apk
+          (Get-FileHash SENLIS-v0.6.0-dev-windows.apk -Algorithm SHA256).Hash | Out-File SENLIS-v0.6.0-dev-windows.sha256
       - uses: actions/upload-artifact@v4
         with:
-          name: SENLIS-v0.5.0-preview
+          name: SENLIS-v0.6.0-dev-windows
           path: |
-            SENLIS-v0.5.0-preview.apk
-            SENLIS-v0.5.0-preview.sha256
+            SENLIS-v0.6.0-dev-windows.apk
+            SENLIS-v0.6.0-dev-windows.sha256
           retention-days: 7

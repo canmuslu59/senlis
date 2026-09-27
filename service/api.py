@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import re
+import secrets
 import sqlite3
 from urllib.parse import parse_qs
 
@@ -30,7 +31,7 @@ def handle(method, path, query, data, headers):
 
     def require_editor():
         secret = os.getenv('EDITOR_TOKEN', '')
-        if not secret or headers.get('HTTP_X_EDITOR_TOKEN', '') != secret:
+        if not secret or not secrets.compare_digest(headers.get('HTTP_X_EDITOR_TOKEN', ''), secret):
             raise ApiError(403, 'Editör yetkisi gerekiyor')
 
     if method == 'GET' and path == '/v1/health':
@@ -44,7 +45,7 @@ def handle(method, path, query, data, headers):
             raise ApiError(404, 'Koku bulunamadı')
         return product
     if method == 'POST' and path == '/v1/accounts':
-        user_id, token = db.register(data.get('email', ''), data.get('password', ''))
+        user_id, token = db.register(data.get('email', ''), data.get('password', ''), data.get('display_name'))
         return {'user_id': user_id, 'token': token}
     if method == 'POST' and path == '/v1/sessions':
         session = db.login(data.get('email', ''), data.get('password', ''))

@@ -58,6 +58,12 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(self.db.rating_summary(product)['count'], 0)
         self.assertIsNone(self.db.authenticate(token))
 
+    def test_login_throttles_bad_passwords(self):
+        self.db.register('a@example.test', 'long password 123')
+        for _ in range(5):
+            self.assertIsNone(self.db.login('a@example.test', 'wrong password'))
+        self.assertIsNone(self.db.login('a@example.test', 'long password 123'))
+
     def test_news_requires_source_and_deduplicates_delivery(self):
         user, _ = self.db.register('a@example.test', 'long password 123')
         self.db.preferences(user, 'Europe/Istanbul', True, True)

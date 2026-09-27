@@ -6,6 +6,7 @@ Native Turkish Android fragrance discovery app and source-attributed community s
 
 - Five-step local taste profile, transparent score, favourites and private notes.
 - Real perfume/body mist catalogue from four manually reviewed official brand pages, plus a conservative Open Beauty Facts import. Every displayed fact has a source link and timestamp. Unknown scent notes, price, family and intensity remain unknown. The app bundles **no fictional products**.
+- Open Beauty Facts candidates remain in a review queue until an editor approves them. A changed identity returns to review. Official brand entries include source-linked size variants; the initial set is small by design and is not a comprehensive world catalogue.
 - PostgreSQL schema for products, field provenance, source runs, corrections, accounts, sessions, per-product ratings, product/general discussion, reports and moderation, editorial news and deduplicated deliveries.
 - Daily catalogue/feed-candidate sync and hourly FCM delivery jobs. Official news headlines enter a review queue; only editor-approved, source-linked articles can be published. A day without a verified story produces no invented news push.
 - Android account, real discussion, ratings, news and notification opt-in UI. API and Firebase project configuration are injected at build time; server-side FCM service-account credentials stay off the APK.
@@ -36,3 +37,5 @@ The Firebase values above are Android client configuration, while the service ac
 The reviewed starting product source links are in `service/curated.py`. The app uses original, unbranded editorial imagery in place of brand photos. Open Beauty Facts data must retain its ODbL attribution and terms; no third-party fragrance-site scraping, speculative price, copied brand image, invented user rating or fabricated news is allowed. The news queue can be inspected with `GET /v1/editor/candidates` using `X-Editor-Token`; a verified item can be published with `POST /v1/editor/news`. Corrections and reports enter database queues, and moderation needs an editor token. A daily news notification depends on a reviewed source item being available.
 
 The server does not yet have a public production URL or a configured Firebase project. Local tests are not evidence of live push delivery. The implementation and deployment gates are tracked in `docs/superpowers/plans/2026-09-27-senlis-live-service.md`.
+
+Actual Android 35 emulator captures are in `docs/visual-preview/` (welcome, discover, community and profile). The debug build in those captures has no live API URL, so its catalogue and chat show the honest connection state.

@@ -57,12 +57,15 @@ def local_day_due(zone, utc_iso, hour):
 SCHEMA = '''
 CREATE TABLE IF NOT EXISTS users (
  id TEXT PRIMARY KEY, email TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL,
+ display_name TEXT NOT NULL,
  created_at TEXT NOT NULL, timezone TEXT NOT NULL DEFAULT 'Europe/Istanbul',
  reminder INTEGER NOT NULL DEFAULT 0, news_push INTEGER NOT NULL DEFAULT 0,
  fcm_token TEXT, last_post_at TEXT);
 CREATE TABLE IF NOT EXISTS sessions (
  token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
  expires_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS login_attempts (
+ email TEXT PRIMARY KEY, attempts INTEGER NOT NULL, updated_at TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS products (
  id TEXT PRIMARY KEY, code TEXT UNIQUE, name TEXT NOT NULL, brand TEXT NOT NULL,
  kind TEXT NOT NULL, reviewed INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL);
@@ -286,27 +289,43 @@ class Store:
                 (product_id, field, json.dumps(value, ensure_ascii=False), source_url,
                  source_name.strip(), verified_at or now()))
 
-    def register(self, email, password):
+    def register(self, email, password, display_name=None):
         email = email.strip().lower()
         if not re.fullmatch(r'[^@\s]{1,80}@[^@\s]{2,150}', email) or len(password) < 12:
             raise ValueError('invalid account details')
         salt = secrets.token_bytes(16)
         digest = hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1)
         user_id = uuid.uuid4().hex
+        display_name = (display_name or ('Üye ' + user_id[:6])).strip()
+        if not 2 <= len(display_name) <= 40:
+            raise ValueError('display name length 2–40')
         with self.connect() as conn:
-            self.query(conn, 'INSERT INTO users(id,email,password_hash,created_at) VALUES(?,?,?,?)',
-                       (user_id, email, salt.hex() + ':' + digest.hex(), now()))
+            self.query(conn, 'INSERT INTO users(id,email,password_hash,display_name,created_at) VALUES(?,?,?,?,?)',
+                       (user_id, email, salt.hex() + ':' + digest.hex(), display_name, now()))
         return user_id, self.session(user_id)
 
     def login(self, email, password):
+        email = email.strip().lower()
         with self.connect() as conn:
+            attempts = self.one(self.query(conn, 'SELECT attempts,updated_at FROM login_attempts WHERE email=?', (email,)))
+            if attempts and attempts['attempts'] >= 5 and datetime.fromisoformat(attempts['updated_at']) > datetime.now(timezone.utc) - timedelta(minutes=15):
+                return None
             user = self.one(self.query(conn, 'SELECT id,password_hash FROM users WHERE email=?',
-                                       (email.strip().lower(),)))
-        if not user:
-            return None
-        salt, expected = user['password_hash'].split(':')
-        calculated = hashlib.scrypt(password.encode(), salt=bytes.fromhex(salt), n=2**14, r=8, p=1)
-        if not secrets.compare_digest(calculated, bytes.fromhex(expected)):
+                                       (email,)))
+        valid = False
+        if user:
+            salt, expected = user['password_hash'].split(':')
+            calculated = hashlib.scrypt(password.encode(), salt=bytes.fromhex(salt), n=2**14, r=8, p=1)
+            valid = secrets.compare_digest(calculated, bytes.fromhex(expected))
+        with self.connect() as conn:
+            if valid:
+                self.query(conn, 'DELETE FROM login_attempts WHERE email=?', (email,))
+            else:
+                reset = not attempts or datetime.fromisoformat(attempts['updated_at']) < datetime.now(timezone.utc) - timedelta(minutes=15)
+                self.query(conn, '''INSERT INTO login_attempts(email,attempts,updated_at) VALUES(?,?,?)
+                    ON CONFLICT(email) DO UPDATE SET attempts=excluded.attempts,updated_at=excluded.updated_at''',
+                    (email, 1 if reset else attempts['attempts'] + 1, now()))
+        if not valid:
             return None
         return user['id'], self.session(user['id'])
 
@@ -371,7 +390,7 @@ class Store:
         args = () if product_id is None else (product_id,)
         with self.connect() as conn:
             return self.many(self.query(conn, '''SELECT m.id,m.parent_id,m.body,m.created_at,
-                CASE WHEN m.user_id IS NULL THEN 'Silinmiş kullanıcı' ELSE substr(u.email,1,2)||'***' END AS author
+                CASE WHEN m.user_id IS NULL THEN 'Silinmiş kullanıcı' ELSE u.display_name END AS author
                 FROM messages m LEFT JOIN users u ON u.id=m.user_id
                 WHERE ''' + where + ''' AND m.status='visible' ORDER BY m.created_at DESC,m.id DESC
                 LIMIT ? OFFSET ?''', args + (min(50, max(1, int(limit))), max(0, int(offset)))))

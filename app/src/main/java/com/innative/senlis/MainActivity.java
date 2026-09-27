@@ -403,7 +403,10 @@ public final class MainActivity extends Activity {
         addSpace(body, 12);
         if (!catalogueError.isEmpty()) notice(body, "CANLI KATALOG", catalogueError);
         addSpace(body, 14);
-        addProducts(body, sorted(), false);
+        List<MatchEngine.Fragrance> suggestions = sorted();
+        if (!suggestions.isEmpty()) addProducts(body, suggestions, false);
+        else if (catalogueError.isEmpty())
+            notice(body, "ÖNERİ BULUNAMADI", "Tercihlerini veya kaçındığın notaları gözden geçirebilirsin.");
         addSpace(body, 16);
         news(body);
     }
@@ -572,6 +575,8 @@ public final class MainActivity extends Activity {
         email.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         EditText password = input("Şifre · en az 12 karakter", "");
         password.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        EditText displayName = input("Toplulukta görünen adın", "");
+        if (!login) { fields.addView(displayName); addSpace(fields, 10); }
         fields.addView(email);
         addSpace(fields, 10);
         fields.addView(password);
@@ -579,7 +584,8 @@ public final class MainActivity extends Activity {
             .setView(fields).setNegativeButton("Vazgeç", null)
             .setPositiveButton("Devam Et", (dialog, which) -> {
                 JSONObject data = new JSONObject();
-                try { data.put("email", email.getText().toString()); data.put("password", password.getText().toString()); }
+                try { data.put("email", email.getText().toString()); data.put("password", password.getText().toString());
+                    if (!login) data.put("display_name", displayName.getText().toString()); }
                 catch (Exception ignored) {}
                 api.post(login ? "/v1/sessions" : "/v1/accounts", data, (result, error) -> {
                     if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
@@ -628,7 +634,7 @@ public final class MainActivity extends Activity {
         news.setChecked(store.newsPush());
         choices.addView(reminder);
         choices.addView(news);
-        choices.addView(label("Haber bildirimi editör onaylı bir haber varsa gönderilir. Yerel saatle 09.00 ve 13.00 sonrası; sessiz saatler 21.00–09.00.", 13, MUTED, false));
+        choices.addView(label("Haber bildirimi editör onaylı yeni haber varsa gönderilir. Yerel saatle 09.00 ve 13.00 sonrası; sessiz saatler 21.00–09.00.", 13, INK, false));
         new AlertDialog.Builder(this).setTitle("Bildirim Tercihleri").setView(choices)
             .setNegativeButton("Vazgeç", null).setPositiveButton("Kaydet", (dialog, which) -> {
                 pendingReminder = reminder.isChecked(); pendingNews = news.isChecked();
@@ -810,7 +816,8 @@ public final class MainActivity extends Activity {
         if (source != null) {
             String url = source.optString("url");
             TextView link = label(source.optString("source_name") + " · " +
-                source.optString("observed_at"), 13, 0xFF835018, false);
+                shortDate(source.optString("observed_at")) + " · " + source.optString("license"),
+                13, 0xFF835018, false);
             link.setOnClickListener(v -> openUrl(url));
             sheet.addView(link);
         }
@@ -834,7 +841,7 @@ public final class MainActivity extends Activity {
             if (fact != null && ("notes".equals(fact.optString("field")) || "family".equals(fact.optString("field")))) {
                 String url = fact.optString("source_url");
                 TextView link = label(fact.optString("field") + " · " + fact.optString("source_name") +
-                    " · " + fact.optString("observed_at"), 12, 0xFF835018, false);
+                    " · " + shortDate(fact.optString("observed_at")), 12, 0xFF835018, false);
                 link.setOnClickListener(v -> openUrl(url));
                 sheet.addView(link);
             }
@@ -885,6 +892,8 @@ public final class MainActivity extends Activity {
         if (url != null && url.startsWith("https://"))
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
+
+    private String shortDate(String value) { return value.length() >= 10 ? value.substring(0, 10) : value; }
 
     private LinearLayout bottomNav() {
         LinearLayout nav = row();
