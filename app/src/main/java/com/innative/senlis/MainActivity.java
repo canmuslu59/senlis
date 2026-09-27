@@ -2,6 +2,10 @@ package com.innative.senlis;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -21,12 +25,19 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Switch;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.net.URLEncoder;
 
 public final class MainActivity extends Activity {
     private static final int INK = Color.rgb(18, 12, 9);
@@ -40,6 +51,8 @@ public final class MainActivity extends Activity {
     private static final String[] OCCASIONS = {"Günlük", "Akşam", "Yaz"};
 
     private ProfileStore store;
+    private ApiClient api;
+    private String catalogueError = "Katalog yükleniyor…";
     private final Set<String> moods = new HashSet<>(), notes = new HashSet<>(), avoided = new HashSet<>(),
         families = new HashSet<>(), occasions = new HashSet<>();
     private String lovedProducts = "";
@@ -48,16 +61,20 @@ public final class MainActivity extends Activity {
     private boolean inOnboarding = false, inDetail = false;
     private boolean editing = false;
     private String detailDraft = "", detailDraftId = "";
+    private boolean pendingReminder, pendingNews;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().setStatusBarColor(INK);
         getWindow().setNavigationBarColor(INK);
         store = new ProfileStore(this);
+        api = new ApiClient(this);
+        api.token(store.sessionToken());
         loadProfile();
         if (state != null) {
             restoreJourney(state);
         } else if (store.complete()) showTab(0); else showWelcome();
+        loadCatalogue("", false);
     }
 
     private void restoreJourney(Bundle state) {
@@ -75,7 +92,7 @@ public final class MainActivity extends Activity {
         detailDraft = state.getString("detailDraft", "");
         detailDraftId = state.getString("detailDraftId", "");
         String id = state.getString("selectedId", "");
-        for (MatchEngine.Fragrance f : Catalogue.EXAMPLES) if (f.id.equals(id)) selected = f;
+        for (MatchEngine.Fragrance f : Catalogue.ITEMS) if (f.id.equals(id)) selected = f;
         String screen = state.getString("screen", "tab");
         if ("welcome".equals(screen)) showWelcome();
         else if ("step".equals(screen)) showStep();
@@ -123,6 +140,30 @@ public final class MainActivity extends Activity {
         return new MatchEngine.Profile(new HashSet<>(notes), new HashSet<>(avoided),
             new HashSet<>(families), new HashSet<>(moods), new HashSet<>(occasions),
             intensity, budget == 0 ? null : budget);
+    }
+
+    private void loadCatalogue(String query, boolean searchResults) {
+        try {
+            String path = "/v1/products?limit=50&q=" + URLEncoder.encode(query, "UTF-8");
+            api.get(path, (body, error) -> {
+                if (error != null) {
+                    catalogueError = error;
+                    if (store.complete() && tab == 0 && !inOnboarding && !inDetail) showTab(0);
+                    return;
+                }
+                JSONArray items = body.optJSONArray("items");
+                List<MatchEngine.Fragrance> parsed = new ArrayList<>();
+                if (items != null) for (int i = 0; i < items.length(); i++) {
+                    JSONObject item = items.optJSONObject(i);
+                    if (item != null) parsed.add(Catalogue.parse(item));
+                }
+                if (!searchResults) {
+                    Catalogue.ITEMS.clear(); Catalogue.ITEMS.addAll(parsed);
+                    catalogueError = parsed.isEmpty() ? "Kaynaklı ürün kaydı henüz bulunamadı." : "";
+                    if (store.complete() && tab == 0 && !inOnboarding && !inDetail) showTab(0);
+                }
+            });
+        } catch (Exception ignored) { catalogueError = "Katalog araması yapılamadı."; }
     }
 
     private void showWelcome() {
@@ -211,7 +252,7 @@ public final class MainActivity extends Activity {
             addSpace(body, 12);
             options(body, FAMILIES, families, 2);
             addSpace(body, 18);
-            body.addView(label("Yazdığın parfüm adları bu önizlemede otomatik eşleştirilmez. Doğrulanmış katalog geldiğinde kullanılacak.", 13, MUTED, false));
+            body.addView(label("Yazdığın adlar otomatik ürün kimliğine bağlanmaz; yanlış eşleşme puanını etkilemez.", 13, MUTED, false));
         } else if (step == 3) {
             heading(body, "Nelerden uzak duralım?", "Seçtiğin notaları içeren örnekleri önermeyiz.");
             addSpace(body, 18);
@@ -246,7 +287,7 @@ public final class MainActivity extends Activity {
                 body.addView(c, lp);
             }
             addSpace(body, 12);
-            body.addView(label("Örnek katalogda doğrulanmış fiyat yoktur; bütçe eşleşme puanına katılmaz.", 13, MUTED, false));
+            body.addView(label("Kaynağı doğrulanmış fiyat yoksa bütçe eşleşme puanına katılmaz.", 13, MUTED, false));
         }
 
         root.addView(button(step == 4 ? "Kokularımı Keşfet  →" : "Devam Et  →", () -> {
@@ -336,17 +377,19 @@ public final class MainActivity extends Activity {
         body.addView(feature, new LinearLayout.LayoutParams(-1, dp(210)));
         addSpace(body, 24);
         body.addView(title("Sana Özel Öneriler", 27, CREAM));
-        body.addView(label("Tercihlerine göre sıralanan editoryal örnekler", 13, MUTED, false));
+        body.addView(label("Kaynağı doğrulanmış gerçek ürünler · Bilinen tercihlere göre", 13, MUTED, false));
         addSpace(body, 12);
-        notice(body, "ÖNİZLEME KATALOĞU", "Bu isimler örnektir. Gerçek markalar ve güncel ürün verileri doğrulanmış katalogla eklenecek.");
+        if (!catalogueError.isEmpty()) notice(body, "CANLI KATALOG", catalogueError);
         addSpace(body, 14);
         addProducts(body, sorted(), false);
+        addSpace(body, 16);
+        news(body);
     }
 
     private void search(LinearLayout body) {
         body.addView(title("Bir koku keşfet.", 29, CREAM));
         addSpace(body, 8);
-        body.addView(label("Örnek parfüm ve body mist kayıtlarında ara.", 14, MUTED, false));
+        body.addView(label("Kaynaklı parfüm ve body mist kayıtlarında ara.", 14, MUTED, false));
         addSpace(body, 18);
         EditText field = input("İsim, aile veya nota", "");
         field.setSingleLine(true);
@@ -354,16 +397,21 @@ public final class MainActivity extends Activity {
         addSpace(body, 15);
         LinearLayout results = column();
         body.addView(results);
-        addProducts(results, Catalogue.EXAMPLES, false);
+        addProducts(results, Catalogue.ITEMS, false);
         field.addTextChangedListener(watch(value -> {
-            results.removeAllViews();
-            String query = value.trim().toLowerCase(java.util.Locale.forLanguageTag("tr"));
-            List<MatchEngine.Fragrance> found = new ArrayList<>();
-            for (MatchEngine.Fragrance f : Catalogue.EXAMPLES) {
-                if (f.name.toLowerCase(java.util.Locale.forLanguageTag("tr")).contains(query)
-                    || f.family.contains(query) || TextUtils.join(" ", f.notes).contains(query)) found.add(f);
-            }
-            addProducts(results, found, false);
+            try {
+                String request = value.trim();
+                api.get("/v1/products?limit=50&q=" + URLEncoder.encode(request, "UTF-8"), (body, error) -> {
+                    if (!field.getText().toString().trim().equals(request)) return;
+                    results.removeAllViews();
+                    if (error != null) { notice(results, "BAĞLANTI SORUNU", error); return; }
+                    List<MatchEngine.Fragrance> found = new ArrayList<>();
+                    JSONArray array = body.optJSONArray("items");
+                    if (array != null) for (int i = 0; i < array.length(); i++)
+                        if (array.optJSONObject(i) != null) found.add(Catalogue.parse(array.optJSONObject(i)));
+                    addProducts(results, found, false);
+                });
+            } catch (Exception ignored) { notice(results, "HATA", "Arama yapılamadı."); }
         }));
     }
 
@@ -371,7 +419,7 @@ public final class MainActivity extends Activity {
         body.addView(title("Favori kokuların", 29, CREAM));
         addSpace(body, 15);
         List<MatchEngine.Fragrance> saved = new ArrayList<>();
-        for (MatchEngine.Fragrance f : Catalogue.EXAMPLES) if (store.favourite(f.id)) saved.add(f);
+        for (MatchEngine.Fragrance f : Catalogue.ITEMS) if (store.favourite(f.id)) saved.add(f);
         if (saved.isEmpty()) notice(body, "HENÜZ FAVORİN YOK", "Bir kokunun detayındaki kalbe dokunarak burada saklayabilirsin.");
         else addProducts(body, saved, false);
     }
@@ -379,23 +427,101 @@ public final class MainActivity extends Activity {
     private void community(LinearLayout body) {
         body.addView(title("Kokular insanları\nbuluşturur.", 31, CREAM));
         addSpace(body, 14);
-        body.addView(label("Genel sohbet, her kokunun kendi sayfasındaki tartışma ve topluluk puanları SENLIS'in önemli parçalarıdır.", 16, CREAM, false));
-        addSpace(body, 22);
-        notice(body, "TOPLULUK HAZIRLIKTA", "Hesaplar, yorumlar, puanlar ve moderasyon sunucu aşamasında açılacak. Bu önizlemede gerçek kullanıcı mesajı bulunmuyor.");
-        addSpace(body, 20);
-        body.addView(label("Yakında", 18, GOLD, true));
-        addSpace(body, 8);
-        for (String item : new String[]{"Genel koku sohbeti", "Parfüm ve body mist sayfalarında yorumlar", "Kullanıcı puanları ve deneyim notları", "Kaynaklı koku haberleri"}) {
-            TextView row = label("✦  " + item, 15, CREAM, false);
-            row.setPadding(dp(12), dp(12), dp(12), dp(12));
-            body.addView(row);
-        }
+        body.addView(label("Koku deneyimlerini paylaş, sor ve konuş.", 16, CREAM, false));
+        addSpace(body, 18);
+        messageComposer(body, null);
+        addSpace(body, 12);
+        LinearLayout discussion = column();
+        body.addView(discussion);
+        fetchMessages(discussion, null);
+    }
+
+    private void messageComposer(LinearLayout body, String productId) {
+        EditText message = input("Yorumunu yaz...", "");
+        message.setMinLines(2);
+        body.addView(message);
+        addSpace(body, 7);
+        body.addView(button("Sohbete Gönder", () -> requireAccount(() -> {
+            JSONObject payload = new JSONObject();
+            try { payload.put("body", message.getText().toString()); } catch (Exception ignored) {}
+            String path = productId == null ? "/v1/community" : "/v1/products/" + productId + "/messages";
+            api.post(path, payload, (result, error) -> {
+                Toast.makeText(this, error == null ? "Yorumun paylaşıldı" : error, Toast.LENGTH_LONG).show();
+                if (error == null) {
+                    message.setText("");
+                    if (productId == null) showTab(3); else openDetail(selected);
+                }
+            });
+        }), false));
+    }
+
+    private void fetchMessages(LinearLayout holder, String productId) {
+        String path = productId == null ? "/v1/community" : "/v1/products/" + productId + "/messages";
+        api.get(path, (body, error) -> {
+            holder.removeAllViews();
+            if (error != null) { notice(holder, "SOHBET YÜKLENEMEDİ", error); return; }
+            JSONArray items = body.optJSONArray("items");
+            if (items == null || items.length() == 0) {
+                notice(holder, "SOHBET HENÜZ BOŞ", "İlk gerçek deneyimi sen paylaşabilirsin.");
+                return;
+            }
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.optJSONObject(i);
+                if (item == null) continue;
+                LinearLayout card = column();
+                card.setBackground(round(CARD, 13, 0xFF695039));
+                card.setPadding(dp(12), dp(12), dp(12), dp(12));
+                card.addView(label(item.optString("author") + " · " + item.optString("created_at"), 12, GOLD, false));
+                card.addView(label(item.optString("body"), 15, CREAM, false));
+                TextView report = label("Bildir", 12, MUTED, false);
+                report.setOnClickListener(v -> requireAccount(() -> {
+                    EditText reason = input("Bildirim nedeni", "");
+                    new AlertDialog.Builder(this).setTitle("Yorumu bildir").setView(reason)
+                        .setNegativeButton("Vazgeç", null).setPositiveButton("Gönder", (d, which) -> {
+                            JSONObject request = new JSONObject();
+                            try { request.put("reason", reason.getText().toString()); } catch (Exception ignored) {}
+                            api.post("/v1/messages/" + item.optString("id") + "/reports", request,
+                                (response, failure) -> Toast.makeText(this,
+                                    failure == null ? "İnceleme kuyruğuna alındı" : failure, Toast.LENGTH_SHORT).show());
+                        }).show();
+                }));
+                card.addView(report);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+                lp.bottomMargin = dp(8);
+                holder.addView(card, lp);
+            }
+        });
+    }
+
+    private void requireAccount(Runnable action) {
+        if (!store.sessionToken().isEmpty()) { action.run(); return; }
+        Toast.makeText(this, "Önce Profil bölümünden hesap aç veya giriş yap.", Toast.LENGTH_LONG).show();
+        showTab(4);
     }
 
     private void profile(LinearLayout body) {
         body.addView(title("Senin koku dünyan", 29, CREAM));
         addSpace(body, 16);
-        notice(body, "TERCİHLERİN BU CİHAZDA", "Bu önizlemede seçimlerin ve özel notların yalnızca cihazında saklanır.");
+        notice(body, "TERCİHLERİN BU CİHAZDA", "Tercihlerin ve özel notların bu cihazda saklanır. Topluluk hesabın yalnızca paylaştığın puan ve sohbet içeriğine bağlanır.");
+        addSpace(body, 16);
+        if (store.sessionToken().isEmpty()) {
+            body.addView(button("Hesap Aç", () -> accountDialog(false), true));
+            addSpace(body, 8);
+            body.addView(button("Giriş Yap", () -> accountDialog(true), false));
+        } else {
+            body.addView(label("Topluluk hesabın açık", 15, GOLD, true));
+            addSpace(body, 8);
+            body.addView(button("Bildirim Tercihleri", this::notificationSettings, false));
+            addSpace(body, 8);
+            body.addView(button("Hesabımı Sil", () -> new AlertDialog.Builder(this)
+                .setTitle("Hesabın silinsin mi?")
+                .setMessage("Paylaştığın puanlar ve oturumun silinir; sohbet içeriğin anonimleştirilir.")
+                .setNegativeButton("Vazgeç", null).setPositiveButton("Sil", (d, which) ->
+                    api.delete("/v1/me", (response, error) -> {
+                        if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
+                        store.sessionToken(""); api.token(""); showTab(4);
+                    })).show(), false));
+        }
         addSpace(body, 20);
         summary(body, "Sevdiğin hisler", moods);
         summary(body, "Sevdiğin notalar", notes);
@@ -415,6 +541,127 @@ public final class MainActivity extends Activity {
             .show(), false));
     }
 
+    private void accountDialog(boolean login) {
+        LinearLayout fields = column();
+        fields.setPadding(dp(20), dp(8), dp(20), 0);
+        EditText email = input("E-posta", "");
+        email.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        EditText password = input("Şifre · en az 12 karakter", "");
+        password.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        fields.addView(email);
+        addSpace(fields, 10);
+        fields.addView(password);
+        new AlertDialog.Builder(this).setTitle(login ? "Giriş Yap" : "Hesap Aç")
+            .setView(fields).setNegativeButton("Vazgeç", null)
+            .setPositiveButton("Devam Et", (dialog, which) -> {
+                JSONObject data = new JSONObject();
+                try { data.put("email", email.getText().toString()); data.put("password", password.getText().toString()); }
+                catch (Exception ignored) {}
+                api.post(login ? "/v1/sessions" : "/v1/accounts", data, (result, error) -> {
+                    if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
+                    String token = result.optString("token");
+                    store.sessionToken(token); api.token(token);
+                    showTab(4);
+                });
+            }).show();
+    }
+
+    private void news(LinearLayout body) {
+        body.addView(title("Koku Dünyası", 26, CREAM));
+        addSpace(body, 8);
+        LinearLayout list = column();
+        body.addView(list);
+        api.get("/v1/news", (response, error) -> {
+            list.removeAllViews();
+            if (error != null) { notice(list, "HABERLER YÜKLENEMEDİ", error); return; }
+            JSONArray items = response.optJSONArray("items");
+            if (items == null || items.length() == 0) {
+                notice(list, "DOĞRULANMIŞ HABER YOK", "Editör tarafından kaynak kontrolü tamamlanan duyurular burada görünecek.");
+                return;
+            }
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject item = items.optJSONObject(i);
+                if (item == null) continue;
+                TextView story = label(item.optString("title") + "\n" + item.optString("source_name") +
+                    " · " + item.optString("published_at"), 15, CREAM, false);
+                story.setPadding(dp(12), dp(14), dp(12), dp(14));
+                story.setBackground(round(CARD, 12, 0xFF695039));
+                story.setOnClickListener(v -> openUrl(item.optString("url")));
+                list.addView(story);
+                addSpace(list, 7);
+            }
+        });
+    }
+
+    private void notificationSettings() {
+        LinearLayout choices = column();
+        choices.setPadding(dp(20), 0, dp(20), 0);
+        Switch reminder = new Switch(this);
+        reminder.setText("Her gün koku hatırlatması");
+        reminder.setChecked(store.reminder());
+        Switch news = new Switch(this);
+        news.setText("Her gün kaynaklı koku haberi");
+        news.setChecked(store.newsPush());
+        choices.addView(reminder);
+        choices.addView(news);
+        choices.addView(label("Haber bildirimi editör onaylı bir haber varsa gönderilir. Yerel saatle 09.00 ve 13.00 sonrası; sessiz saatler 21.00–09.00.", 13, MUTED, false));
+        new AlertDialog.Builder(this).setTitle("Bildirim Tercihleri").setView(choices)
+            .setNegativeButton("Vazgeç", null).setPositiveButton("Kaydet", (dialog, which) -> {
+                pendingReminder = reminder.isChecked(); pendingNews = news.isChecked();
+                if ((pendingReminder || pendingNews) && Build.VERSION.SDK_INT >= 33 &&
+                    checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 2026);
+                } else saveNotificationChoices();
+            }).show();
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+        super.onRequestPermissionsResult(requestCode, permissions, results);
+        if (requestCode == 2026) {
+            if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) saveNotificationChoices();
+            else Toast.makeText(this, "Bildirim izni verilmedi; tercih açılmadı.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void saveNotificationChoices() {
+        if (!pendingReminder && !pendingNews) { updateNotificationSubscription(""); return; }
+        if (BuildConfig.FIREBASE_APP_ID.isEmpty() || BuildConfig.FIREBASE_API_KEY.isEmpty() ||
+            BuildConfig.FIREBASE_PROJECT_ID.isEmpty() || BuildConfig.FIREBASE_SENDER_ID.isEmpty()) {
+            Toast.makeText(this, "Bildirim altyapısı henüz yapılandırılmadı.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                .setApplicationId(BuildConfig.FIREBASE_APP_ID)
+                .setApiKey(BuildConfig.FIREBASE_API_KEY)
+                .setProjectId(BuildConfig.FIREBASE_PROJECT_ID)
+                .setGcmSenderId(BuildConfig.FIREBASE_SENDER_ID).build();
+            FirebaseApp.initializeApp(this, options);
+        }
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) updateNotificationSubscription(task.getResult());
+            else Toast.makeText(this, "Cihaz bildirim anahtarı alınamadı.", Toast.LENGTH_LONG).show();
+        });
+    }
+
+    private void updateNotificationSubscription(String token) {
+        JSONObject request = new JSONObject();
+        try {
+            String zone = java.util.TimeZone.getDefault().getID();
+            if (!zone.contains("/") && !"UTC".equals(zone)) zone = "Europe/Istanbul";
+            request.put("timezone", zone);
+            request.put("reminder", pendingReminder);
+            request.put("news", pendingNews);
+            request.put("fcm_token", token.isEmpty() ? JSONObject.NULL : token);
+        } catch (Exception ignored) {}
+        api.put("/v1/me/notifications", request, (result, error) -> {
+            if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
+            store.notificationChoices(pendingReminder, pendingNews);
+            store.fcmToken(token);
+            Toast.makeText(this, "Bildirim tercihlerin kaydedildi.", Toast.LENGTH_SHORT).show();
+        });
+    }
+
     private void summary(LinearLayout body, String name, Set<String> values) {
         body.addView(label(name, 15, GOLD, true));
         body.addView(label(values.isEmpty() ? "Henüz seçilmedi" : TextUtils.join(" · ", values), 15, CREAM, false));
@@ -423,7 +670,7 @@ public final class MainActivity extends Activity {
 
     private List<MatchEngine.Fragrance> sorted() {
         List<MatchEngine.Fragrance> items = new ArrayList<>();
-        for (MatchEngine.Fragrance f : Catalogue.EXAMPLES) {
+        for (MatchEngine.Fragrance f : Catalogue.ITEMS) {
             if (!MatchEngine.score(currentProfile(), f).excluded) items.add(f);
         }
         Collections.sort(items, new Comparator<MatchEngine.Fragrance>() {
@@ -453,20 +700,31 @@ public final class MainActivity extends Activity {
             ImageView thumb = image(R.drawable.fragrance_editorial);
             thumb.setBackground(round(INK, 10, 0));
             thumb.setClipToOutline(true);
-            thumb.setContentDescription("Editoryal örnek koku görseli");
+            thumb.setContentDescription("Gerçek ürün fotoğrafı yerine editoryal görsel");
             card.addView(thumb, new LinearLayout.LayoutParams(dp(79), dp(96)));
             LinearLayout words = column();
             words.setPadding(dp(13), 0, 0, 0);
             words.addView(label(f.name, 19, CREAM, true));
-            words.addView(label(f.type + "  ·  " + f.family, 12, MUTED, false));
-            words.addView(label(TextUtils.join(" · ", f.notes), 11, MUTED, false));
+            JSONObject metadata = Catalogue.DETAILS.get(f.id);
+            words.addView(label(f.type + (f.family == null ? "" : "  ·  " + f.family), 12, MUTED, false));
+            if (metadata != null) words.addView(label(metadata.optString("brand"), 11, MUTED, false));
             addSpace(words, 5);
             words.addView(label(result.excluded ? "Kaçındığın nota içeriyor" :
                 result.percent == null ? "Yeterli veri yok" : "%" + result.percent + " tahmini uyum", 12, GOLD, true));
             card.addView(words, new LinearLayout.LayoutParams(0, -2, 1));
-            card.setOnClickListener(v -> { selected = f; showDetail(); });
+            card.setOnClickListener(v -> openDetail(f));
             body.addView(card, clp);
         }
+    }
+
+    private void openDetail(MatchEngine.Fragrance fragrance) {
+        selected = fragrance;
+        api.get("/v1/products/" + fragrance.id, (body, error) -> {
+            if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
+            Catalogue.DETAILS.put(fragrance.id, body);
+            selected = Catalogue.parse(body);
+            showDetail();
+        });
     }
 
     private void showDetail() {
@@ -474,6 +732,7 @@ public final class MainActivity extends Activity {
         inDetail = true;
         inOnboarding = false;
         final MatchEngine.Fragrance f = selected;
+        final JSONObject product = Catalogue.DETAILS.get(f.id);
         MatchEngine.Result match = MatchEngine.score(currentProfile(), f);
         LinearLayout root = column();
         root.setBackgroundColor(INK);
@@ -491,25 +750,48 @@ public final class MainActivity extends Activity {
         scroll.addView(content);
         root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
         ImageView hero = image(R.drawable.fragrance_editorial);
-        hero.setContentDescription("Gerçek ürün fotoğrafı olmayan editoryal parfüm görseli");
+        hero.setContentDescription("Gerçek ürün fotoğrafı yerine SENLIS editoryal görseli");
         content.addView(hero, new LinearLayout.LayoutParams(-1, dp(300)));
 
         LinearLayout sheet = column();
         sheet.setPadding(dp(22), dp(25), dp(22), dp(36));
         sheet.setBackground(round(CREAM, 23, 0));
-        sheet.addView(label("EDİTORYAL ÖRNEK · GERÇEK ÜRÜN DEĞİL", 10, 0xFF795534, true));
+        sheet.addView(label("KAYNAKLI ÜRÜN · FOTOĞRAF TEMSİLİ", 10, 0xFF795534, true));
         addSpace(sheet, 7);
         sheet.addView(title(f.name, 31, INK));
-        sheet.addView(label(f.type + "  ·  " + f.family, 15, 0xFF715849, false));
+        sheet.addView(label((product == null ? "" : product.optString("brand") + " · ") + f.type +
+            (f.family == null ? "" : " · " + f.family), 15, 0xFF715849, false));
         addSpace(sheet, 14);
         sheet.addView(label(match.excluded ? "Tercihlerinle uyumsuz" : match.percent == null ? "Yeterli eşleşme verisi yok" :
             "%" + match.percent + " tahmini eşleşme", 20, 0xFF835018, true));
         sheet.addView(label("Bu oran tercihlerinden hesaplanır; koku deneyiminin garantisi değildir.", 12, 0xFF715849, false));
-        sheet.addView(label("Model v" + MatchEngine.MODEL_VERSION + " · Notlar, aile, his, kullanım anı ve yoğunluk; doğrulanmış fiyat varsa bütçe de hesaba katılır.", 11, 0xFF715849, false));
+        sheet.addView(label("Model v" + MatchEngine.MODEL_VERSION + " · Yalnızca kaynağı belirtilen koku alanları hesaplanır. Eksik bilgiye puan verilmez.", 11, 0xFF715849, false));
         addSpace(sheet, 24);
         sheet.addView(label("KOKU NOTALARI", 12, 0xFF835018, true));
         addSpace(sheet, 8);
-        sheet.addView(label(TextUtils.join("   ✦   ", f.notes), 15, INK, false));
+        sheet.addView(label(f.notes.isEmpty() ? "Marka tarafından doğrulanmış nota bilgisi henüz yok." :
+            TextUtils.join("   ✦   ", f.notes), 15, INK, false));
+        addSpace(sheet, 18);
+        sheet.addView(label("KAYNAK VE GÜNCELLİK", 12, 0xFF835018, true));
+        JSONObject source = product == null ? null : product.optJSONObject("source");
+        if (source != null) {
+            String url = source.optString("url");
+            TextView link = label(source.optString("source_name") + " · " +
+                source.optString("observed_at"), 13, 0xFF835018, false);
+            link.setOnClickListener(v -> openUrl(url));
+            sheet.addView(link);
+        }
+        JSONArray provenance = product == null ? null : product.optJSONArray("provenance");
+        if (provenance != null) for (int i = 0; i < provenance.length(); i++) {
+            JSONObject fact = provenance.optJSONObject(i);
+            if (fact != null && ("notes".equals(fact.optString("field")) || "family".equals(fact.optString("field")))) {
+                String url = fact.optString("source_url");
+                TextView link = label(fact.optString("field") + " · " + fact.optString("source_name") +
+                    " · " + fact.optString("observed_at"), 12, 0xFF835018, false);
+                link.setOnClickListener(v -> openUrl(url));
+                sheet.addView(link);
+            }
+        }
         addSpace(sheet, 22);
         sheet.addView(label(match.excluded ? "NEDEN ÖNERİLMİYOR?" : "EŞLEŞME GEREKÇESİ", 12, 0xFF835018, true));
         addSpace(sheet, 8);
@@ -529,9 +811,32 @@ public final class MainActivity extends Activity {
         }, true));
         addSpace(sheet, 25);
         sheet.addView(label("KOKU SOHBETİ VE PUANLAMA", 12, 0xFF835018, true));
-        sheet.addView(label("Topluluk açıldığında bu kokunun yorumları ve kullanıcı puanları burada yer alacak.", 14, INK, false));
+        JSONObject rating = product == null ? null : product.optJSONObject("rating");
+        sheet.addView(label(rating == null || rating.optInt("count") == 0 ? "Henüz kullanıcı puanı yok." :
+            "Topluluk: " + rating.optDouble("average") + "/5 · " + rating.optInt("count") + " puan", 14, INK, false));
+        addSpace(sheet, 10);
+        sheet.addView(button("Puan Ver", () -> requireAccount(() -> new AlertDialog.Builder(this)
+            .setTitle("Bu kokuyu puanla")
+            .setItems(new String[]{"1 yıldız", "2 yıldız", "3 yıldız", "4 yıldız", "5 yıldız"}, (dialog, which) -> {
+                JSONObject request = new JSONObject();
+                try { request.put("stars", which + 1); } catch (Exception ignored) {}
+                api.put("/v1/products/" + f.id + "/rating", request, (result, error) -> {
+                    Toast.makeText(this, error == null ? "Puanın kaydedildi" : error, Toast.LENGTH_SHORT).show();
+                    if (error == null) openDetail(f);
+                });
+            }).show()), false));
+        addSpace(sheet, 12);
+        messageComposer(sheet, f.id);
+        LinearLayout discussion = column();
+        sheet.addView(discussion);
+        fetchMessages(discussion, f.id);
         content.addView(sheet);
         present(root);
+    }
+
+    private void openUrl(String url) {
+        if (url != null && url.startsWith("https://"))
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
     private LinearLayout bottomNav() {

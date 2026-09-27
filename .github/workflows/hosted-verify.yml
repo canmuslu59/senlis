@@ -27,15 +27,49 @@ jobs:
           mkdir -p model-test
           javac -d model-test app/src/main/java/com/innative/senlis/MatchEngine.java app/src/test/java/com/innative/senlis/MatchEngineTest.java
           java -cp model-test com.innative.senlis.MatchEngineTest
+      - name: Test service and database rules
+        run: python3 -m unittest discover -s service/tests -v
       - name: Build APK
         run: |
           gradle :app:assembleDebug --stacktrace
-          cp app/build/outputs/apk/debug/app-debug.apk SENLIS-v0.5.0-preview.apk
-          sha256sum SENLIS-v0.5.0-preview.apk > SENLIS-v0.5.0-preview.sha256
+          cp app/build/outputs/apk/debug/app-debug.apk SENLIS-v0.6.0-dev.apk
+          sha256sum SENLIS-v0.6.0-dev.apk > SENLIS-v0.6.0-dev.sha256
       - uses: actions/upload-artifact@v4
         with:
-          name: SENLIS-v0.5.0-preview-hosted
+          name: SENLIS-v0.6.0-dev-hosted
           path: |
-            SENLIS-v0.5.0-preview.apk
-            SENLIS-v0.5.0-preview.sha256
+            SENLIS-v0.6.0-dev.apk
+            SENLIS-v0.6.0-dev.sha256
+          retention-days: 7
+
+  emulator-smoke:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [23, 35]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: SENLIS-v0.6.0-dev-hosted
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          script: python3 ci/android_smoke.py SENLIS-v0.6.0-dev.apk screenshots/api-${{ matrix.api-level }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: senlis-screenshots-api-${{ matrix.api-level }}
+          path: screenshots/api-${{ matrix.api-level }}/
           retention-days: 7

@@ -1,29 +1,35 @@
 package com.innative.senlis;
 
-import java.util.Arrays;
-import java.util.Collections;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
-/** Clearly fictional examples for the offline design preview. */
+/** Source-backed records fetched from SENLIS; the APK bundles no invented products. */
 public final class Catalogue {
     private Catalogue() {}
+    public static final List<MatchEngine.Fragrance> ITEMS = new ArrayList<>();
+    public static final Map<String, JSONObject> DETAILS = new HashMap<>();
 
-    public static final List<MatchEngine.Fragrance> EXAMPLES = Collections.unmodifiableList(Arrays.asList(
-        new MatchEngine.Fragrance("jasmin-amber", "Jasmin Amber", "Parfüm · EDP", "çiçeksi",
-            tags("yasemin", "vanilya", "amber"), tags("romantik", "zarif"), tags("akşam"), 2, null),
-        new MatchEngine.Fragrance("citrus-dawn", "Citrus Dawn", "Body mist", "ferah",
-            tags("bergamot", "portakal çiçeği", "misk"), tags("enerjik", "özgür"), tags("günlük", "yaz"), 1, null),
-        new MatchEngine.Fragrance("velvet-rose", "Velvet Rose", "Parfüm · EDP", "çiçeksi",
-            tags("gül", "amber", "sandal ağacı"), tags("romantik", "güçlü"), tags("akşam"), 3, null),
-        new MatchEngine.Fragrance("vanilla-veil", "Vanilla Veil", "Body mist", "gurme",
-            tags("vanilya", "misk", "sandal ağacı"), tags("rahatlatıcı", "zarif"), tags("günlük"), 1, null),
-        new MatchEngine.Fragrance("sandal-nocturne", "Sandal Nocturne", "Parfüm · EDP", "odunsu",
-            tags("sandal ağacı", "amber", "bergamot"), tags("güçlü", "zarif"), tags("akşam"), 3, null),
-        new MatchEngine.Fragrance("sea-breeze", "Sea Breeze", "Body mist", "ferah",
-            tags("bergamot", "misk", "yasemin"), tags("özgür", "rahatlatıcı"), tags("günlük", "yaz"), 1, null)
-    ));
+    public static MatchEngine.Fragrance parse(JSONObject item) {
+        DETAILS.put(item.optString("id"), item);
+        String kind = item.optString("kind");
+        String type = "body_mist".equals(kind) ? "Body mist" : "Parfüm";
+        String family = item.isNull("family") ? null : item.optString("family", null);
+        return new MatchEngine.Fragrance(item.optString("id"), item.optString("name"), type,
+            family, strings(item.optJSONArray("notes")), new HashSet<String>(),
+            new HashSet<String>(), item.optInt("intensity", 0), null);
+    }
 
-    private static Set<String> tags(String... values) { return new HashSet<>(Arrays.asList(values)); }
+    private static Set<String> strings(JSONArray array) {
+        Set<String> values = new HashSet<>();
+        if (array != null) for (int i = 0; i < array.length(); i++)
+            values.add(array.optString(i).toLowerCase(Locale.forLanguageTag("tr")));
+        return values;
+    }
 }

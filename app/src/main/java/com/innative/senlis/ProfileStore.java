@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Local preview persistence. Server-backed accounts are a later stage. */
+/** Private local preferences, notes, favourites and an account session token. */
 public final class ProfileStore {
     private final SharedPreferences prefs;
 
@@ -15,6 +15,15 @@ public final class ProfileStore {
     }
 
     public boolean complete() { return prefs.getBoolean("complete", false); }
+    public String sessionToken() { return prefs.getString("sessionToken", ""); }
+    public void sessionToken(String token) { prefs.edit().putString("sessionToken", token).apply(); }
+    public boolean reminder() { return prefs.getBoolean("reminder", false); }
+    public boolean newsPush() { return prefs.getBoolean("newsPush", false); }
+    public String fcmToken() { return prefs.getString("fcmToken", ""); }
+    public void fcmToken(String token) { prefs.edit().putString("fcmToken", token).apply(); }
+    public void notificationChoices(boolean reminder, boolean news) {
+        prefs.edit().putBoolean("reminder", reminder).putBoolean("newsPush", news).apply();
+    }
     public String lovedProducts() { return prefs.getString("lovedProducts", ""); }
     public boolean favourite(String id) { return prefs.getBoolean("favourite_" + id, false); }
     public String privateNote(String id) { return prefs.getString("note_" + id, ""); }

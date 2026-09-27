@@ -1,7 +1,9 @@
+*.sqlite
+*.sqlite3
+__pycache__/
+*.pyc
 .gradle/
 build/
 app/build/
-local.properties
 model-test/
-*.iml
-.idea/
+screenshots/

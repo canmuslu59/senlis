@@ -8,8 +8,14 @@ android {
         applicationId 'com.innative.senlis.preview'
         minSdk 23
         targetSdk 35
-        versionCode 5
-        versionName '0.5.0-preview'
+        versionCode 6
+        versionName '0.6.0-dev'
+        def apiUrl = project.findProperty('senlisApiUrl') ?: ''
+        buildConfigField 'String', 'SENLIS_API_URL', '"' + apiUrl + '"'
+        buildConfigField 'String', 'FIREBASE_APP_ID', '"' + (project.findProperty('firebaseAppId') ?: '') + '"'
+        buildConfigField 'String', 'FIREBASE_API_KEY', '"' + (project.findProperty('firebaseApiKey') ?: '') + '"'
+        buildConfigField 'String', 'FIREBASE_PROJECT_ID', '"' + (project.findProperty('firebaseProjectId') ?: '') + '"'
+        buildConfigField 'String', 'FIREBASE_SENDER_ID', '"' + (project.findProperty('firebaseSenderId') ?: '') + '"'
     }
 
     buildTypes {
@@ -20,4 +26,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    buildFeatures { buildConfig true }
+}
+
+dependencies {
+    implementation 'com.google.firebase:firebase-messaging:25.1.3'
 }
