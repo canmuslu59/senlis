@@ -5,11 +5,14 @@ databases:
     user: senlis_app
     region: frankfurt
     plan: 0.5c-1g
+    diskSizeGB: 1
     ipAllowList: []
 services:
   - type: web
     name: senlis-api
     runtime: python
+    repo: https://github.com/canmuslu59/senlis
+    branch: feature/senlis-premium-foundation
     region: frankfurt
     plan: 0.5c-512mb
     buildCommand: pip install -r service/requirements.txt
@@ -25,6 +28,8 @@ services:
   - type: cron
     name: senlis-source-sync
     runtime: python
+    repo: https://github.com/canmuslu59/senlis
+    branch: feature/senlis-premium-foundation
     region: frankfurt
     plan: 0.5c-512mb
     schedule: '20 2 * * *'
@@ -42,6 +47,8 @@ services:
   - type: cron
     name: senlis-daily-push
     runtime: python
+    repo: https://github.com/canmuslu59/senlis
+    branch: feature/senlis-premium-foundation
     region: frankfurt
     plan: 0.5c-512mb
     schedule: '0 * * * *'
