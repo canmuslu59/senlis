@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Private local preferences, notes, favourites and an account session token. */
+/** Private local preferences, notes and favourites. */
 public final class ProfileStore {
     private final SharedPreferences prefs;
 
@@ -15,8 +15,6 @@ public final class ProfileStore {
     }
 
     public boolean complete() { return prefs.getBoolean("complete", false); }
-    public String sessionToken() { return prefs.getString("sessionToken", ""); }
-    public void sessionToken(String token) { prefs.edit().putString("sessionToken", token).apply(); }
     public boolean reminder() { return prefs.getBoolean("reminder", false); }
     public boolean newsPush() { return prefs.getBoolean("newsPush", false); }
     public String fcmToken() { return prefs.getString("fcmToken", ""); }

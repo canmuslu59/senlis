@@ -26,8 +26,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Switch;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -51,7 +49,7 @@ public final class MainActivity extends Activity {
     private static final String[] OCCASIONS = {"Günlük", "Akşam", "Yaz"};
 
     private ProfileStore store;
-    private ApiClient api;
+    private CommunityClient api;
     private CatalogRepository catalogueRepository;
     private String catalogueError = "";
     private final Set<String> moods = new HashSet<>(), notes = new HashSet<>(), avoided = new HashSet<>(),
@@ -69,9 +67,9 @@ public final class MainActivity extends Activity {
         getWindow().setStatusBarColor(INK);
         getWindow().setNavigationBarColor(INK);
         store = new ProfileStore(this);
-        api = new ApiClient(this);
+        api = new CommunityClient(this);
         catalogueRepository = new CatalogRepository(this);
-        api.token(store.sessionToken());
+        ReminderReceiver.schedule(this, store.reminder());
         loadCatalogue();
         loadProfile();
         if (state != null) {
@@ -481,10 +479,7 @@ public final class MainActivity extends Activity {
         body.addView(message);
         addSpace(body, 7);
         body.addView(button("Sohbete Gönder", () -> requireAccount(() -> {
-            JSONObject payload = new JSONObject();
-            try { payload.put("body", message.getText().toString()); } catch (Exception ignored) {}
-            String path = productId == null ? "/v1/community" : "/v1/products/" + productId + "/messages";
-            api.post(path, payload, (result, error) -> {
+            api.sendMessage(productId, message.getText().toString(), (result, error) -> {
                 Toast.makeText(this, error == null ? "Yorumun paylaşıldı" : error, Toast.LENGTH_LONG).show();
                 if (error == null) {
                     message.setText("");
@@ -495,8 +490,7 @@ public final class MainActivity extends Activity {
     }
 
     private void fetchMessages(LinearLayout holder, String productId) {
-        String path = productId == null ? "/v1/community" : "/v1/products/" + productId + "/messages";
-        api.get(path, (body, error) -> {
+        api.messages(productId, (body, error) -> {
             holder.removeAllViews();
             if (error != null) { notice(holder, "SOHBET YÜKLENEMEDİ", error); return; }
             JSONArray items = body.optJSONArray("items");
@@ -517,9 +511,7 @@ public final class MainActivity extends Activity {
                     EditText reason = input("Bildirim nedeni", "");
                     new AlertDialog.Builder(this).setTitle("Yorumu bildir").setView(reason)
                         .setNegativeButton("Vazgeç", null).setPositiveButton("Gönder", (d, which) -> {
-                            JSONObject request = new JSONObject();
-                            try { request.put("reason", reason.getText().toString()); } catch (Exception ignored) {}
-                            api.post("/v1/messages/" + item.optString("id") + "/reports", request,
+                            api.report(productId, item.optString("id"), reason.getText().toString(),
                                 (response, failure) -> Toast.makeText(this,
                                     failure == null ? "İnceleme kuyruğuna alındı" : failure, Toast.LENGTH_SHORT).show());
                         }).show();
@@ -533,7 +525,7 @@ public final class MainActivity extends Activity {
     }
 
     private void requireAccount(Runnable action) {
-        if (!store.sessionToken().isEmpty()) { action.run(); return; }
+        if (api.signedIn()) { action.run(); return; }
         Toast.makeText(this, "Önce Profil bölümünden hesap aç veya giriş yap.", Toast.LENGTH_LONG).show();
         showTab(4);
     }
@@ -543,23 +535,23 @@ public final class MainActivity extends Activity {
         addSpace(body, 16);
         notice(body, "TERCİHLERİN BU CİHAZDA", "Tercihlerin ve özel notların bu cihazda saklanır. Topluluk hesabın yalnızca paylaştığın puan ve sohbet içeriğine bağlanır.");
         addSpace(body, 16);
-        if (store.sessionToken().isEmpty()) {
+        body.addView(button("Bildirim Tercihleri", this::notificationSettings, false));
+        addSpace(body, 8);
+        if (!api.signedIn()) {
             body.addView(button("Hesap Aç", () -> accountDialog(false), true));
             addSpace(body, 8);
             body.addView(button("Giriş Yap", () -> accountDialog(true), false));
         } else {
             body.addView(label("Topluluk hesabın açık", 15, GOLD, true));
             addSpace(body, 8);
-            body.addView(button("Bildirim Tercihleri", this::notificationSettings, false));
-            addSpace(body, 8);
-            body.addView(button("Hesabımı Sil", () -> new AlertDialog.Builder(this)
-                .setTitle("Hesabın silinsin mi?")
-                .setMessage("Paylaştığın puanlar ve oturumun silinir; sohbet içeriğin anonimleştirilir.")
-                .setNegativeButton("Vazgeç", null).setPositiveButton("Sil", (d, which) ->
-                    api.delete("/v1/me", (response, error) -> {
-                        if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
-                        store.sessionToken(""); api.token(""); showTab(4);
-                    })).show(), false));
+            body.addView(button("Çıkış Yap", () -> {
+                if (store.newsPush()) api.notification("", false, (response, error) -> {
+                    if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
+                    store.notificationChoices(store.reminder(), false);
+                    api.signOut(); showTab(4);
+                });
+                else { api.signOut(); showTab(4); }
+            }, false));
         }
         addSpace(body, 20);
         summary(body, "Sevdiğin hisler", moods);
@@ -597,14 +589,9 @@ public final class MainActivity extends Activity {
         new AlertDialog.Builder(this).setTitle(login ? "Giriş Yap" : "Hesap Aç")
             .setView(fields).setNegativeButton("Vazgeç", null)
             .setPositiveButton("Devam Et", (dialog, which) -> {
-                JSONObject data = new JSONObject();
-                try { data.put("email", email.getText().toString()); data.put("password", password.getText().toString());
-                    if (!login) data.put("display_name", displayName.getText().toString()); }
-                catch (Exception ignored) {}
-                api.post(login ? "/v1/sessions" : "/v1/accounts", data, (result, error) -> {
+                api.account(email.getText().toString(), password.getText().toString(),
+                    displayName.getText().toString(), login, (result, error) -> {
                     if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
-                    String token = result.optString("token");
-                    store.sessionToken(token); api.token(token);
                     showTab(4);
                 });
             }).show();
@@ -615,7 +602,7 @@ public final class MainActivity extends Activity {
         addSpace(body, 8);
         LinearLayout list = column();
         body.addView(list);
-        api.get("/v1/news", (response, error) -> {
+        api.news((response, error) -> {
             list.removeAllViews();
             if (error != null) { notice(list, "HABERLER YÜKLENEMEDİ", error); return; }
             JSONArray items = response.optJSONArray("items");
@@ -648,7 +635,7 @@ public final class MainActivity extends Activity {
         news.setChecked(store.newsPush());
         choices.addView(reminder);
         choices.addView(news);
-        choices.addView(label("Haber bildirimi editör onaylı yeni haber varsa gönderilir. Yerel saatle 09.00 ve 13.00 sonrası; sessiz saatler 21.00–09.00.", 13, INK, false));
+        choices.addView(label("Kişisel hatırlatma cihazda her gün 09.00 civarı planlanır. Kaynaklı yeni haber varsa haber bildirimi ayrıca gönderilir.", 13, INK, false));
         new AlertDialog.Builder(this).setTitle("Bildirim Tercihleri").setView(choices)
             .setNegativeButton("Vazgeç", null).setPositiveButton("Kaydet", (dialog, which) -> {
                 pendingReminder = reminder.isChecked(); pendingNews = news.isChecked();
@@ -668,19 +655,19 @@ public final class MainActivity extends Activity {
     }
 
     private void saveNotificationChoices() {
-        if (!pendingReminder && !pendingNews) { updateNotificationSubscription(""); return; }
-        if (BuildConfig.FIREBASE_APP_ID.isEmpty() || BuildConfig.FIREBASE_API_KEY.isEmpty() ||
-            BuildConfig.FIREBASE_PROJECT_ID.isEmpty() || BuildConfig.FIREBASE_SENDER_ID.isEmpty()) {
-            Toast.makeText(this, "Bildirim altyapısı henüz yapılandırılmadı.", Toast.LENGTH_LONG).show();
+        boolean previouslyNews = store.newsPush();
+        store.notificationChoices(pendingReminder, false);
+        ReminderReceiver.schedule(this, pendingReminder);
+        if (!pendingNews) {
+            if (previouslyNews && api.configured() && api.signedIn()) {
+                api.notification("", false, (result, error) -> Toast.makeText(this,
+                    error == null ? "Haber bildirimi kapatıldı." : error, Toast.LENGTH_LONG).show());
+            } else Toast.makeText(this, "Hatırlatma tercihin bu cihazda kaydedildi.", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (FirebaseApp.getApps(this).isEmpty()) {
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                .setApplicationId(BuildConfig.FIREBASE_APP_ID)
-                .setApiKey(BuildConfig.FIREBASE_API_KEY)
-                .setProjectId(BuildConfig.FIREBASE_PROJECT_ID)
-                .setGcmSenderId(BuildConfig.FIREBASE_SENDER_ID).build();
-            FirebaseApp.initializeApp(this, options);
+        if (!api.configured() || !api.signedIn()) {
+            Toast.makeText(this, "Haber bildirimi için topluluk hesabı ve Firebase ayarı gerekiyor. Hatırlatma kaydedildi.", Toast.LENGTH_LONG).show();
+            return;
         }
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (task.isSuccessful()) updateNotificationSubscription(task.getResult());
@@ -689,16 +676,7 @@ public final class MainActivity extends Activity {
     }
 
     private void updateNotificationSubscription(String token) {
-        JSONObject request = new JSONObject();
-        try {
-            String zone = java.util.TimeZone.getDefault().getID();
-            if (!zone.contains("/") && !"UTC".equals(zone)) zone = "Europe/Istanbul";
-            request.put("timezone", zone);
-            request.put("reminder", pendingReminder);
-            request.put("news", pendingNews);
-            request.put("fcm_token", token.isEmpty() ? JSONObject.NULL : token);
-        } catch (Exception ignored) {}
-        api.put("/v1/me/notifications", request, (result, error) -> {
+        api.notification(token, pendingNews, (result, error) -> {
             if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
             store.notificationChoices(pendingReminder, pendingNews);
             store.fcmToken(token);
@@ -836,9 +814,7 @@ public final class MainActivity extends Activity {
             EditText description = input("Hatalı bilgi ve doğru kaynağı yaz", "");
             new AlertDialog.Builder(this).setTitle("Kayıt düzeltmesi").setView(description)
                 .setNegativeButton("Vazgeç", null).setPositiveButton("Gönder", (dialog, which) -> {
-                    JSONObject request = new JSONObject();
-                    try { request.put("description", description.getText().toString()); } catch (Exception ignored) {}
-                    api.post("/v1/products/" + f.id + "/corrections", request,
+                    api.correction(f.id, description.getText().toString(),
                         (response, error) -> Toast.makeText(this,
                             error == null ? "İnceleme kuyruğuna alındı" : error, Toast.LENGTH_SHORT).show());
                 }).show();
@@ -874,16 +850,20 @@ public final class MainActivity extends Activity {
         }, true));
         addSpace(sheet, 25);
         sheet.addView(label("KOKU SOHBETİ VE PUANLAMA", 12, 0xFF835018, true));
-        JSONObject rating = product == null ? null : product.optJSONObject("rating");
-        sheet.addView(label(rating == null || rating.optInt("count") == 0 ? "Henüz kullanıcı puanı yok." :
-            "Topluluk: " + rating.optDouble("average") + "/5 · " + rating.optInt("count") + " puan", 14, INK, false));
+        TextView ratingLabel = label("Topluluk puanı yükleniyor…", 14, INK, false);
+        sheet.addView(ratingLabel);
+        api.rating(f.id, (summary, error) -> {
+            if (error != null) { ratingLabel.setText(error); return; }
+            int count = summary.optInt("count");
+            ratingLabel.setText(count == 0 ? "Henüz kullanıcı puanı yok." :
+                "Topluluk: " + String.format(Locale.forLanguageTag("tr"), "%.1f", summary.optDouble("average")) +
+                "/5 · " + count + " puan");
+        });
         addSpace(sheet, 10);
         sheet.addView(button("Puan Ver", () -> requireAccount(() -> new AlertDialog.Builder(this)
             .setTitle("Bu kokuyu puanla")
             .setItems(new String[]{"1 yıldız", "2 yıldız", "3 yıldız", "4 yıldız", "5 yıldız"}, (dialog, which) -> {
-                JSONObject request = new JSONObject();
-                try { request.put("stars", which + 1); } catch (Exception ignored) {}
-                api.put("/v1/products/" + f.id + "/rating", request, (result, error) -> {
+                api.rate(f.id, which + 1, (result, error) -> {
                     Toast.makeText(this, error == null ? "Puanın kaydedildi" : error, Toast.LENGTH_SHORT).show();
                     if (error == null) openDetail(f);
                 });

@@ -10,8 +10,6 @@ android {
         targetSdk 35
         versionCode 6
         versionName '0.6.0-dev'
-        def apiUrl = project.findProperty('senlisApiUrl') ?: ''
-        buildConfigField 'String', 'SENLIS_API_URL', '"' + apiUrl + '"'
         buildConfigField 'String', 'SENLIS_CATALOG_URL', '"' + (project.findProperty('senlisCatalogUrl') ?: 'https://raw.githubusercontent.com/canmuslu59/senlis/main/docs/catalogue.json') + '"'
         buildConfigField 'String', 'FIREBASE_APP_ID', '"' + (project.findProperty('firebaseAppId') ?: '') + '"'
         buildConfigField 'String', 'FIREBASE_API_KEY', '"' + (project.findProperty('firebaseApiKey') ?: '') + '"'
@@ -31,5 +29,8 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-messaging:25.1.3'
+    implementation platform('com.google.firebase:firebase-bom:34.19.0')
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
 }
