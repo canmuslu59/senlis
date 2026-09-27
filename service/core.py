@@ -207,12 +207,13 @@ class Store:
             if cursor.rowcount != 1:
                 raise ValueError('product missing')
 
-    def product_queue(self):
+    def product_queue(self, limit=100, offset=0):
         with self.connect() as conn:
             return self.many(self.query(conn, '''SELECT p.id,p.code,p.name,p.brand,p.kind,p.updated_at,
                 s.source_url FROM products p JOIN product_sources s
                 ON s.product_id=p.id AND s.field='name' WHERE p.reviewed=0
-                ORDER BY p.updated_at DESC LIMIT 100'''))
+                ORDER BY p.updated_at DESC,p.id DESC LIMIT ? OFFSET ?''',
+                (max(1, min(100, int(limit))), max(0, int(offset)))))
 
     def import_brand_verified(self, name, brand, kind, source_url, notes, family=None,
                               verified_at=None, variants=None):
@@ -474,10 +475,13 @@ class Store:
                 VALUES(?,?,?,?,?) ON CONFLICT(url) DO NOTHING''',
                 (uuid.uuid4().hex, title.strip()[:300], url, source_name, now()))
 
-    def candidate_queue(self):
+    def candidate_queue(self, limit=100, offset=0):
         with self.connect() as conn:
             return self.many(self.query(conn, '''SELECT id,title,url,source_name,discovered_at
-                FROM news_candidates WHERE status='pending' ORDER BY discovered_at DESC LIMIT 100'''))
+                FROM news_candidates n WHERE status='pending'
+                AND NOT EXISTS (SELECT 1 FROM articles a WHERE a.url=n.url AND a.reviewed=1)
+                ORDER BY discovered_at DESC,id DESC LIMIT ? OFFSET ?''',
+                (max(1, min(100, int(limit))), max(0, int(offset)))))
 
     def news(self, limit=20):
         with self.connect() as conn:

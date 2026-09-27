@@ -1,9 +1,13 @@
 import os
+import json
 import tempfile
 import unittest
 import sqlite3
+from unittest import mock
+from urllib.parse import parse_qs, urlparse
 
 from service.core import SCHEMA, Store, normalize_obf, local_day_due
+from service import jobs
 from service.jobs import deliver
 from service.curated import seed
 
@@ -55,6 +59,37 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(verified['notes'], ['rose'])
         self.assertTrue(any(p['field'] == 'notes' and p['source_name'] == 'Official brand'
                             for p in verified['provenance']))
+
+    def test_sync_refreshes_first_page_and_rotates_later_pages(self):
+        requested = []
+        def response(url):
+            query = parse_qs(urlparse(url).query)
+            requested.append(int(query['page'][0]))
+            category = query['categories_tags'][0]
+            barcode = str(10000000 + len(requested))
+            return json.dumps({'products': [{'code': barcode,
+                'product_name': 'Source item', 'brands': 'Source brand',
+                'categories_tags': [category]}]}).encode()
+        with mock.patch.dict(os.environ, {'SOURCE_CONTACT': 'editor@example.test'}), \
+                mock.patch.object(jobs, 'fetch', side_effect=response), \
+                mock.patch.object(jobs.time, 'sleep'):
+            self.assertIsNone(jobs.sync_obf(self.db, pages=1)['error'])
+            self.assertIsNone(jobs.sync_obf(self.db, pages=1)['error'])
+        self.assertEqual(requested, [1, 2, 1, 2, 1, 3, 1, 3])
+        self.assertEqual(len(self.db.product_queue()), 8)
+        self.assertEqual(self.db.catalogue(), [])
+
+    def test_editor_backlog_can_page_and_published_news_leaves_queue(self):
+        for number in range(101):
+            self.db.import_obf(normalize_obf({'code': str(10000000 + number),
+                'product_name': 'Listed product', 'brands': 'Source brand',
+                'categories_tags': ['en:perfumes']}))
+        self.assertEqual(len(self.db.product_queue()), 100)
+        self.assertEqual(len(self.db.product_queue(offset=100)), 1)
+        self.db.news_candidate('Official release', 'https://example.com/release', 'Source')
+        self.assertEqual(len(self.db.candidate_queue()), 1)
+        self.db.publish_news('Official release', 'https://example.com/release', 'Source', True)
+        self.assertEqual(self.db.candidate_queue(), [])
 
     def test_account_rating_and_report_moderation(self):
         self.db.import_obf(normalize_obf({'code': '12345678', 'product_name': 'Rose Mist',

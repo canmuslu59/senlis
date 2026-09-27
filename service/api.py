@@ -92,10 +92,10 @@ def handle(method, path, query, data, headers):
                                       data.get('published_at'))}
     if method == 'GET' and path == '/v1/editor/candidates':
         require_editor()
-        return {'items': db.candidate_queue()}
+        return {'items': db.candidate_queue(param('limit', '100'), param('offset', '0'))}
     if method == 'GET' and path == '/v1/editor/products':
         require_editor()
-        return {'items': db.product_queue()}
+        return {'items': db.product_queue(param('limit', '100'), param('offset', '0'))}
     if method == 'POST' and path == '/v1/editor/products':
         require_editor()
         return {'id': db.import_brand_verified(data.get('name'), data.get('brand'),

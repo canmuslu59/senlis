@@ -33,24 +33,33 @@ def fetch(url):
 
 
 def sync_obf(db, pages=1):
-    """Search two relevant category tags; never infer notes, images or prices."""
+    """Refresh page one and rotate a bounded source review window daily."""
     if not os.getenv('SOURCE_CONTACT'):
         raise RuntimeError('SOURCE_CONTACT must be a monitored address for OBF API access')
+    pages = max(1, min(int(pages), 5))
     run_id = uuid.uuid4().hex
     with db.connect() as conn:
+        completed = db.one(db.query(conn, '''SELECT COUNT(*) AS count FROM import_runs
+            WHERE source='OBF' AND finished_at IS NOT NULL AND error IS NULL'''))['count']
         db.query(conn, 'INSERT INTO import_runs(id,source,started_at) VALUES(?,?,?)', (run_id, 'OBF', now()))
+    batch = completed % max(1, 30 // pages)
+    source_pages = [1] + list(range(2 + batch * pages, 2 + (batch + 1) * pages))
     accepted = rejected = 0
     error = None
+    request_count = 0
     try:
         for category in ('perfumes', 'body-mists'):
-            for page in range(1, max(1, min(int(pages), 5)) + 1):
+            for page in source_pages:
                 params = urllib.parse.urlencode({
                     'categories_tags': 'en:' + category, 'page': page, 'page_size': 100,
                     'fields': 'code,product_name,brands,categories_tags,last_modified_t',
                     'json': 1,
                 })
                 url = 'https://world.openbeautyfacts.org/api/v2/search?' + params
+                if request_count:
+                    time.sleep(7)  # <=10 search requests/minute/IP, including category changes
                 records = json.loads(fetch(url)).get('products', [])
+                request_count += 1
                 for record in records:
                     normalized = normalize_obf(record)
                     if normalized:
@@ -60,7 +69,6 @@ def sync_obf(db, pages=1):
                         rejected += 1
                 if not records:
                     break
-                time.sleep(7)  # <=10 search requests/minute/IP
     except Exception as exc:
         error = str(exc)[:500]
         LOG.exception('OBF sync failed')
