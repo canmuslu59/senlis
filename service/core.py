@@ -162,9 +162,24 @@ class Store:
 
     def migrate(self):
         with self.connect() as conn:
+            if self.pg:
+                # Web workers and scheduled jobs can start at the same time.
+                conn.execute("SELECT pg_advisory_xact_lock(hashtext('senlis_schema'))")
             for statement in SCHEMA.split(';'):
                 if statement.strip():
                     conn.execute(statement)
+            # Existing installations predate public display names. Preserve users and
+            # their discussion history when upgrading the persistent database.
+            if self.pg:
+                missing = not self.one(conn.execute('''SELECT column_name FROM information_schema.columns
+                    WHERE table_schema=current_schema() AND table_name='users'
+                    AND column_name='display_name' '''))
+            else:
+                missing = 'display_name' not in {row['name'] for row in
+                    self.many(conn.execute('PRAGMA table_info(users)'))}
+            if missing:
+                conn.execute('ALTER TABLE users ADD COLUMN display_name TEXT NOT NULL DEFAULT \'Üye\'')
+                conn.execute("UPDATE users SET display_name='Üye ' || substr(id,1,6)")
 
     def import_obf(self, row):
         if row is None:

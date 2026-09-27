@@ -23,6 +23,8 @@ python -m service.api
 
 `GET http://localhost:8000/v1/health` shows catalogue count and the latest Open Beauty Facts import. Local SQLite is for development only. For PostgreSQL deployment, set `DATABASE_URL` and install `service/requirements.txt`. `render.yaml` defines a web service, a persistent paid PostgreSQL database and two scheduled jobs; review and authorize its costs, choose a Render workspace, then supply `EDITOR_TOKEN`, `SOURCE_CONTACT` (a monitored contact address) and `FIREBASE_SERVICE_ACCOUNT_JSON` as secrets. The first web start runs the idempotent official-source seed. The daily sync is rate-limited and caps initial Open Beauty Facts search pages; increasing coverage needs a permitted bulk export and reconciliation review.
 
+After deployment, run `SENLIS_BASE_URL=https://YOUR-DEPLOYED-SERVICE.onrender.com python -m ci.live_smoke`. This read-only check verifies live database-backed catalogue, source attribution, community and news endpoints. An existing SQLite database is upgraded in place to add public display names; its messages remain intact.
+
 Build the Android app with Gradle 8.11.1, Java 17 and Android SDK 35:
 
 ```sh

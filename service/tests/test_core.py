@@ -1,8 +1,9 @@
 import os
 import tempfile
 import unittest
+import sqlite3
 
-from service.core import Store, normalize_obf, local_day_due
+from service.core import SCHEMA, Store, normalize_obf, local_day_due
 from service.jobs import deliver
 from service.curated import seed
 
@@ -15,6 +16,21 @@ class StoreTests(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
+
+    def test_existing_database_adds_display_name_without_losing_messages(self):
+        path = self.tmp.name + '/legacy.sqlite'
+        legacy = SCHEMA.replace(' display_name TEXT NOT NULL,\n', '')
+        with sqlite3.connect(path) as conn:
+            conn.executescript(legacy)
+            conn.execute('INSERT INTO users(id,email,password_hash,created_at) VALUES(?,?,?,?)',
+                         ('abcdef123456', 'legacy@example.test', 'old', '2026-01-01'))
+            conn.execute('INSERT INTO messages(id,user_id,body,created_at) VALUES(?,?,?,?)',
+                         ('message1', 'abcdef123456', 'Gerçek eski yorum', '2026-01-01'))
+        upgraded = Store(path)
+        upgraded.migrate()
+        upgraded.migrate()
+        self.assertEqual(upgraded.messages(None)[0]['body'], 'Gerçek eski yorum')
+        self.assertEqual(upgraded.messages(None)[0]['author'], 'Üye abcdef')
 
     def test_catalogue_requires_real_identity_and_keeps_provenance(self):
         self.assertIsNone(normalize_obf({'code': '123', 'product_name': 'Test', 'brands': 'Acme'}))
