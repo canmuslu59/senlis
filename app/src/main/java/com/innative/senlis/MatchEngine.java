@@ -7,6 +7,7 @@ import java.util.Set;
 
 /** Transparent, local preview scorer; percentages are estimates, never measured enjoyment. */
 public final class MatchEngine {
+    public static final String MODEL_VERSION = "1";
     private MatchEngine() {}
 
     public static final class Profile {
@@ -75,7 +76,8 @@ public final class MatchEngine {
             available += 35;
             int hits = overlap(profile.likedNotes, fragrance.notes);
             earned += 35d * hits / profile.likedNotes.size();
-            if (hits > 0) reasons.add("Sevdiğin notalardan " + hits + " tanesi var");
+            reasons.add(hits > 0 ? "Sevdiğin notalardan " + hits + " tanesi var" :
+                "Sevdiğin notalar bu kokuda belirtilmemiş");
         }
         if (!profile.families.isEmpty() && fragrance.family != null) {
             dimensions++;
@@ -83,7 +85,7 @@ public final class MatchEngine {
             if (profile.families.contains(fragrance.family)) {
                 earned += 20;
                 reasons.add("Sevdiğin " + fragrance.family + " aileden");
-            }
+            } else reasons.add("Koku ailesi tercihin farklı");
         }
         // Favourite-product accord similarity is reserved for canonical catalogue data.
         // Stage-one free-text loved products are retained, never guessed into this dimension.
@@ -96,14 +98,15 @@ public final class MatchEngine {
             if (moodHit || occasionHit) {
                 earned += 15;
                 reasons.add(moodHit ? "Aradığın hisle uyumlu" : "Seçtiğin kullanım anına uyumlu");
-            }
+            } else reasons.add("Seçtiğin his veya kullanım anı ile örtüşmüyor");
         }
         if (profile.intensity > 0 && fragrance.intensity > 0) {
             dimensions++;
             available += 10;
             int delta = Math.abs(profile.intensity - fragrance.intensity);
             earned += delta == 0 ? 10 : delta == 1 ? 5 : 0;
-            if (delta == 0) reasons.add("Yoğunluk tercihinle örtüşüyor");
+            reasons.add(delta == 0 ? "Yoğunluk tercihinle örtüşüyor" :
+                delta == 1 ? "Yoğunluğu tercihine yakın" : "Yoğunluğu tercihinden farklı");
         }
         if (profile.budgetMax != null && fragrance.price != null) {
             dimensions++;
@@ -111,7 +114,7 @@ public final class MatchEngine {
             if (fragrance.price <= profile.budgetMax) {
                 earned += 5;
                 reasons.add("Bütçe aralığında");
-            }
+            } else reasons.add("Belirttiğin bütçenin üzerinde");
         }
         if (dimensions < 2 || available <= 0) return new Result(null, false, reasons);
         return new Result((int) Math.round(100 * earned / available), false, reasons);

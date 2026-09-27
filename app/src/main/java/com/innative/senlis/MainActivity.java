@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Build;
 import android.text.TextUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +46,8 @@ public final class MainActivity extends Activity {
     private int intensity = 0, budget = 0, step = 0, tab = 0;
     private MatchEngine.Fragrance selected;
     private boolean inOnboarding = false, inDetail = false;
+    private boolean editing = false;
+    private String detailDraft = "", detailDraftId = "";
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -50,7 +55,56 @@ public final class MainActivity extends Activity {
         getWindow().setNavigationBarColor(INK);
         store = new ProfileStore(this);
         loadProfile();
-        if (store.complete()) showTab(0); else showWelcome();
+        if (state != null) {
+            restoreJourney(state);
+        } else if (store.complete()) showTab(0); else showWelcome();
+    }
+
+    private void restoreJourney(Bundle state) {
+        restoreSet(state, "moods", moods);
+        restoreSet(state, "notes", notes);
+        restoreSet(state, "avoided", avoided);
+        restoreSet(state, "families", families);
+        restoreSet(state, "occasions", occasions);
+        lovedProducts = state.getString("lovedProducts", lovedProducts);
+        intensity = state.getInt("intensity", intensity);
+        budget = state.getInt("budget", budget);
+        step = state.getInt("step", 0);
+        tab = state.getInt("tab", 0);
+        editing = state.getBoolean("editing", false);
+        detailDraft = state.getString("detailDraft", "");
+        detailDraftId = state.getString("detailDraftId", "");
+        String id = state.getString("selectedId", "");
+        for (MatchEngine.Fragrance f : Catalogue.EXAMPLES) if (f.id.equals(id)) selected = f;
+        String screen = state.getString("screen", "tab");
+        if ("welcome".equals(screen)) showWelcome();
+        else if ("step".equals(screen)) showStep();
+        else if ("detail".equals(screen) && selected != null) showDetail();
+        else showTab(tab);
+    }
+
+    private void restoreSet(Bundle state, String key, Set<String> destination) {
+        ArrayList<String> saved = state.getStringArrayList(key);
+        if (saved != null) { destination.clear(); destination.addAll(saved); }
+    }
+
+    @Override protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        state.putStringArrayList("moods", new ArrayList<>(moods));
+        state.putStringArrayList("notes", new ArrayList<>(notes));
+        state.putStringArrayList("avoided", new ArrayList<>(avoided));
+        state.putStringArrayList("families", new ArrayList<>(families));
+        state.putStringArrayList("occasions", new ArrayList<>(occasions));
+        state.putString("lovedProducts", lovedProducts);
+        state.putInt("intensity", intensity);
+        state.putInt("budget", budget);
+        state.putInt("step", step);
+        state.putInt("tab", tab);
+        state.putBoolean("editing", editing);
+        state.putString("screen", inDetail ? "detail" : inOnboarding ? "step" : store.complete() ? "tab" : "welcome");
+        state.putString("selectedId", selected == null ? "" : selected.id);
+        state.putString("detailDraft", detailDraft);
+        state.putString("detailDraftId", detailDraftId);
     }
 
     private void loadProfile() {
@@ -93,14 +147,14 @@ public final class MainActivity extends Activity {
         addSpace(overlay, 12);
         overlay.addView(label("Kendini yansıtan kokuyu keşfet.\nHer koku, hayatının farklı bir anını anlatır.", 15, CREAM, false));
         addSpace(overlay, 28);
-        overlay.addView(button("Hemen Başla  →", () -> { step = 0; showStep(); }, true));
+        overlay.addView(button("Hemen Başla  →", () -> { editing = false; step = 0; showStep(); }, true));
         addSpace(overlay, 13);
         TextView skip = label("Şimdilik keşfet", 14, MUTED, false);
         skip.setGravity(Gravity.CENTER);
         skip.setPadding(0, dp(10), 0, dp(10));
-        skip.setOnClickListener(v -> { store.skip(); showTab(0); });
+        skip.setOnClickListener(v -> { loadProfile(); editing = false; store.skip(); showTab(0); });
         overlay.addView(skip);
-        setContentView(frame);
+        present(frame);
     }
 
     private void showStep() {
@@ -112,7 +166,7 @@ public final class MainActivity extends Activity {
         LinearLayout top = row();
         TextView back = label("‹", 34, CREAM, false);
         back.setGravity(Gravity.CENTER_VERTICAL);
-        back.setOnClickListener(v -> { if (step == 0) showWelcome(); else { step--; showStep(); } });
+        back.setOnClickListener(v -> backFromStep());
         top.addView(back, new LinearLayout.LayoutParams(dp(44), dp(45)));
         top.addView(label("S E N L I S", 16, GOLD, true), new LinearLayout.LayoutParams(0, -2, 1));
         TextView counter = label((step + 1) + "/5", 14, CREAM, false);
@@ -165,10 +219,10 @@ public final class MainActivity extends Activity {
             addSpace(body, 28);
             body.addView(label("TERCİH ETTİĞİN YOĞUNLUK", 12, GOLD, true));
             addSpace(body, 12);
-            String[] choices = {"Hafif", "Dengeli", "Güçlü"};
+            String[] choices = {"Farketmez", "Hafif", "Dengeli", "Güçlü"};
             LinearLayout line = row();
             for (int i = 0; i < choices.length; i++) {
-                final int value = i + 1;
+                final int value = i;
                 TextView c = chip(choices[i], intensity == value);
                 c.setOnClickListener(v -> { intensity = value; showStep(); });
                 addWeighted(line, c);
@@ -181,7 +235,7 @@ public final class MainActivity extends Activity {
             addSpace(body, 28);
             body.addView(label("BÜTÇE ÜST SINIRI · İSTEĞE BAĞLI", 12, GOLD, true));
             addSpace(body, 12);
-            String[] labels = {"Belirtmem", "1.000 TL", "3.000 TL", "5.000 TL+"};
+            String[] labels = {"Belirtmem", "1.000 TL", "3.000 TL", "5.000 TL"};
             int[] values = {0, 1000, 3000, 5000};
             for (int i = 0; i < labels.length; i++) {
                 final int value = values[i];
@@ -197,9 +251,16 @@ public final class MainActivity extends Activity {
 
         root.addView(button(step == 4 ? "Kokularımı Keşfet  →" : "Devam Et  →", () -> {
             if (step < 4) { step++; showStep(); }
-            else { store.save(currentProfile(), lovedProducts); showTab(0); }
+            else { store.save(currentProfile(), lovedProducts); editing = false; showTab(0); }
         }, true));
-        setContentView(root);
+        present(root);
+    }
+
+    private void backFromStep() {
+        if (step > 0) { step--; showStep(); return; }
+        loadProfile();
+        if (editing) { editing = false; showTab(4); }
+        else showWelcome();
     }
 
     private void heading(LinearLayout body, String head, String sub) {
@@ -253,7 +314,7 @@ public final class MainActivity extends Activity {
         if (index == 3) community(content);
         if (index == 4) profile(content);
         root.addView(bottomNav());
-        setContentView(root);
+        present(root);
     }
 
     private void discover(LinearLayout body) {
@@ -344,7 +405,7 @@ public final class MainActivity extends Activity {
         body.addView(label("Sevdiğin parfümler", 15, GOLD, true));
         body.addView(label(lovedProducts.isEmpty() ? "Henüz eklenmedi" : lovedProducts, 15, CREAM, false));
         addSpace(body, 22);
-        body.addView(button("Tercihlerimi Düzenle  →", () -> { step = 0; showStep(); }, true));
+        body.addView(button("Tercihlerimi Düzenle  →", () -> { editing = true; step = 0; showStep(); }, true));
         addSpace(body, 12);
         body.addView(button("Bu Cihazdaki Verileri Sıfırla", () -> new AlertDialog.Builder(this)
             .setTitle("Veriler silinsin mi?")
@@ -365,10 +426,13 @@ public final class MainActivity extends Activity {
         for (MatchEngine.Fragrance f : Catalogue.EXAMPLES) {
             if (!MatchEngine.score(currentProfile(), f).excluded) items.add(f);
         }
-        items.sort(Comparator.comparingInt((MatchEngine.Fragrance f) -> {
-            Integer score = MatchEngine.score(currentProfile(), f).percent;
-            return score == null ? -1 : score;
-        }).reversed());
+        Collections.sort(items, new Comparator<MatchEngine.Fragrance>() {
+            @Override public int compare(MatchEngine.Fragrance a, MatchEngine.Fragrance b) {
+                Integer first = MatchEngine.score(currentProfile(), a).percent;
+                Integer second = MatchEngine.score(currentProfile(), b).percent;
+                return Integer.compare(second == null ? -1 : second, first == null ? -1 : first);
+            }
+        });
         return items;
     }
 
@@ -383,7 +447,8 @@ public final class MainActivity extends Activity {
             card.setGravity(Gravity.CENTER_VERTICAL);
             card.setBackground(round(CARD, 15, 0xFF56402F));
             card.setPadding(dp(7), dp(7), dp(11), dp(7));
-            LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(-1, dp(112));
+            card.setMinimumHeight(dp(112));
+            LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(-1, -2);
             clp.bottomMargin = dp(9);
             ImageView thumb = image(R.drawable.fragrance_editorial);
             thumb.setBackground(round(INK, 10, 0));
@@ -396,7 +461,8 @@ public final class MainActivity extends Activity {
             words.addView(label(f.type + "  ·  " + f.family, 12, MUTED, false));
             words.addView(label(TextUtils.join(" · ", f.notes), 11, MUTED, false));
             addSpace(words, 5);
-            words.addView(label(result.percent == null ? "Yeterli veri yok" : "%" + result.percent + " tahmini uyum", 12, GOLD, true));
+            words.addView(label(result.excluded ? "Kaçındığın nota içeriyor" :
+                result.percent == null ? "Yeterli veri yok" : "%" + result.percent + " tahmini uyum", 12, GOLD, true));
             card.addView(words, new LinearLayout.LayoutParams(0, -2, 1));
             card.setOnClickListener(v -> { selected = f; showDetail(); });
             body.addView(card, clp);
@@ -436,23 +502,25 @@ public final class MainActivity extends Activity {
         sheet.addView(title(f.name, 31, INK));
         sheet.addView(label(f.type + "  ·  " + f.family, 15, 0xFF715849, false));
         addSpace(sheet, 14);
-        sheet.addView(label(match.percent == null ? "Yeterli eşleşme verisi yok" :
+        sheet.addView(label(match.excluded ? "Tercihlerinle uyumsuz" : match.percent == null ? "Yeterli eşleşme verisi yok" :
             "%" + match.percent + " tahmini eşleşme", 20, 0xFF835018, true));
         sheet.addView(label("Bu oran tercihlerinden hesaplanır; koku deneyiminin garantisi değildir.", 12, 0xFF715849, false));
+        sheet.addView(label("Model v" + MatchEngine.MODEL_VERSION + " · Notlar, aile, his, kullanım anı ve yoğunluk; doğrulanmış fiyat varsa bütçe de hesaba katılır.", 11, 0xFF715849, false));
         addSpace(sheet, 24);
         sheet.addView(label("KOKU NOTALARI", 12, 0xFF835018, true));
         addSpace(sheet, 8);
         sheet.addView(label(TextUtils.join("   ✦   ", f.notes), 15, INK, false));
         addSpace(sheet, 22);
-        sheet.addView(label("NEDEN ÖNERİLDİ?", 12, 0xFF835018, true));
+        sheet.addView(label(match.excluded ? "NEDEN ÖNERİLMİYOR?" : "EŞLEŞME GEREKÇESİ", 12, 0xFF835018, true));
         addSpace(sheet, 8);
         sheet.addView(label(match.reasons.isEmpty() ? "Daha fazla tercih seçtiğinde nedenlerini burada göreceksin." :
             "• " + TextUtils.join("\n• ", match.reasons), 15, INK, false));
         addSpace(sheet, 22);
         sheet.addView(label("BU KOKU HAKKINDA ÖZEL NOTUN", 12, 0xFF835018, true));
         addSpace(sheet, 9);
-        EditText note = input("Sende uyandırdığı hissi yaz...", store.privateNote(f.id));
+        EditText note = input("Sende uyandırdığı hissi yaz...", f.id.equals(detailDraftId) ? detailDraft : store.privateNote(f.id));
         note.setMinLines(2);
+        note.addTextChangedListener(watch(value -> { detailDraftId = f.id; detailDraft = value; }));
         sheet.addView(note);
         addSpace(sheet, 9);
         sheet.addView(button("Notumu Kaydet", () -> {
@@ -463,7 +531,7 @@ public final class MainActivity extends Activity {
         sheet.addView(label("KOKU SOHBETİ VE PUANLAMA", 12, 0xFF835018, true));
         sheet.addView(label("Topluluk açıldığında bu kokunun yorumları ve kullanıcı puanları burada yer alacak.", 14, INK, false));
         content.addView(sheet);
-        setContentView(root);
+        present(root);
     }
 
     private LinearLayout bottomNav() {
@@ -475,7 +543,8 @@ public final class MainActivity extends Activity {
             TextView link = label(names[i], 11, tab == i ? GOLD : CREAM, tab == i);
             link.setGravity(Gravity.CENTER);
             link.setOnClickListener(v -> showTab(item));
-            nav.addView(link, new LinearLayout.LayoutParams(0, dp(62), 1));
+            link.setMinHeight(dp(62));
+            nav.addView(link, new LinearLayout.LayoutParams(0, -2, 1));
         }
         return nav;
     }
@@ -516,7 +585,9 @@ public final class MainActivity extends Activity {
         view.setGravity(Gravity.CENTER);
         view.setBackground(round(primary ? GOLD : CARD, 16, primary ? 0 : 0xFF9D7950));
         view.setOnClickListener(v -> action.run());
-        view.setLayoutParams(new LinearLayout.LayoutParams(-1, dp(54)));
+        view.setMinHeight(dp(54));
+        view.setPadding(dp(8), dp(12), dp(8), dp(12));
+        view.setLayoutParams(new LinearLayout.LayoutParams(-1, -2));
         return view;
     }
 
@@ -529,7 +600,8 @@ public final class MainActivity extends Activity {
     }
 
     private void addWeighted(LinearLayout row, View child) {
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(56), 1);
+        child.setMinimumHeight(dp(56));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -2, 1);
         lp.setMargins(dp(3), 0, dp(3), 0);
         row.addView(child, lp);
     }
@@ -581,9 +653,25 @@ public final class MainActivity extends Activity {
     private void addSpace(LinearLayout l, int dp) { l.addView(new View(this), new LinearLayout.LayoutParams(1, dp(dp))); }
     private int dp(int value) { return Math.round(value * getResources().getDisplayMetrics().density); }
 
+    private void present(View root) {
+        if (Build.VERSION.SDK_INT >= 35) {
+            final int left = root.getPaddingLeft(), top = root.getPaddingTop();
+            final int right = root.getPaddingRight(), bottom = root.getPaddingBottom();
+            root.setOnApplyWindowInsetsListener((view, insets) -> {
+                int bars = WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars() |
+                    WindowInsets.Type.displayCutout();
+                android.graphics.Insets safe = insets.getInsets(bars);
+                view.setPadding(left + safe.left, top + safe.top, right + safe.right, bottom + safe.bottom);
+                return insets;
+            });
+        }
+        setContentView(root);
+        if (Build.VERSION.SDK_INT >= 35) root.requestApplyInsets();
+    }
+
     @Override public void onBackPressed() {
         if (inDetail) showTab(tab);
-        else if (inOnboarding) { if (step == 0) showWelcome(); else { step--; showStep(); } }
+        else if (inOnboarding) backFromStep();
         else if (tab != 0) showTab(0);
         else super.onBackPressed();
     }

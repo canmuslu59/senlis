@@ -8,7 +8,8 @@ public final class MatchEngineTest {
         matchingPreferencesProduceExplainedScore();
         dislikedNoteExcludesProduct();
         unknownPriceDoesNotCountAsBudgetMatch();
-        System.out.println("MatchEngineTest: 4 passed");
+        nonmatchingKnownDimensionsAreExplained();
+        System.out.println("MatchEngineTest: 5 passed");
     }
 
     private static void emptyProfileHasNoScore() {
@@ -40,6 +41,14 @@ public final class MatchEngineTest {
             Set.of("yasemin"), Set.of(), Set.of(), Set.of(), Set.of(), 0, 1000);
         MatchEngine.Result result = MatchEngine.score(profile, product(null));
         check(result.percent == null, "Unknown price cannot create a second known dimension");
+    }
+
+    private static void nonmatchingKnownDimensionsAreExplained() {
+        MatchEngine.Profile profile = new MatchEngine.Profile(
+            Set.of("gül"), Set.of(), Set.of("odunsu"), Set.of(), Set.of(), 1, null);
+        MatchEngine.Result result = MatchEngine.score(profile, product(null));
+        check(result.percent != null, "Three known dimensions permit a score");
+        check(result.reasons.size() >= 3, "Negative and partial contributions need explanations");
     }
 
     private static MatchEngine.Fragrance product(Integer price) {
