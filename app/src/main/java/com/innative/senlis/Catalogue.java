@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-/** Source-backed records fetched from SENLIS; the APK bundles no invented products. */
+/** Source-backed records from the bundled and monthly-updated local catalogue. */
 public final class Catalogue {
     private Catalogue() {}
     public static final List<MatchEngine.Fragrance> ITEMS = new ArrayList<>();

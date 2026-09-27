@@ -12,6 +12,7 @@ android {
         versionName '0.6.0-dev'
         def apiUrl = project.findProperty('senlisApiUrl') ?: ''
         buildConfigField 'String', 'SENLIS_API_URL', '"' + apiUrl + '"'
+        buildConfigField 'String', 'SENLIS_CATALOG_URL', '"' + (project.findProperty('senlisCatalogUrl') ?: 'https://raw.githubusercontent.com/canmuslu59/senlis/main/docs/catalogue.json') + '"'
         buildConfigField 'String', 'FIREBASE_APP_ID', '"' + (project.findProperty('firebaseAppId') ?: '') + '"'
         buildConfigField 'String', 'FIREBASE_API_KEY', '"' + (project.findProperty('firebaseApiKey') ?: '') + '"'
         buildConfigField 'String', 'FIREBASE_PROJECT_ID', '"' + (project.findProperty('firebaseProjectId') ?: '') + '"'

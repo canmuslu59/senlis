@@ -1,43 +1,77 @@
 # SENLIS
 
-Native Turkish Android fragrance discovery app and source-attributed community service. The live implementation is under development on `feature/senlis-premium-foundation`; no APK from this branch is a complete delivery until database, Firebase and emulator checks are exercised together.
+Native Turkish Android fragrance discovery app. The fragrance catalogue lives on
+the device. The first APK contains four real products reviewed against official
+brand pages, with source links and dates. Taste choices, favourites and private
+notes stay on the phone. This branch remains a development preview; community
+and notifications need a shared Firebase project before the final APK can be
+verified end to end.
 
-## Current implementation
+## Catalogue without a product server
 
-- Five-step local taste profile, transparent score, favourites and private notes.
-- Real perfume/body mist catalogue from four manually reviewed official brand pages, plus a conservative Open Beauty Facts import. Every displayed fact has a source link and timestamp. Unknown scent notes, price, family and intensity remain unknown. The app bundles **no fictional products**.
-- Open Beauty Facts candidates remain in a review queue until an editor approves them. A changed identity returns to review. Official brand entries include source-linked size variants; the initial set is small by design and is not a comprehensive world catalogue.
-- PostgreSQL schema for products, field provenance, source runs, corrections, accounts, sessions, per-product ratings, product/general discussion, reports and moderation, editorial news and deduplicated deliveries.
-- Daily catalogue/feed-candidate sync and hourly FCM delivery jobs. Official news headlines enter a review queue; only editor-approved, source-linked articles can be published. A day without a verified story produces no invented news push.
-- Android account, real discussion, ratings, news and notification opt-in UI. API and Firebase project configuration are injected at build time; server-side FCM service-account credentials stay off the APK.
+`app/src/main/assets/catalogue.json` is the initial source-attributed snapshot.
+The same JSON is published as `docs/catalogue.json` in the repository. The app
+loads the bundled or newer validated local file, searches and scores offline,
+and checks the published HTTPS file when opened after 30 days. An unavailable
+network or invalid update leaves the last good catalogue usable. No taste
+profile or personal note is sent in this request. The static update URL defaults
+to the repository's `main` branch; a different HTTPS location can be set with
+`-PsenlisCatalogUrl=...` at build time.
 
-## Run locally
+The editorial SQLite database is a **single curator workspace**, not a database
+for each user. It stores candidate product records, source attribution and
+review decisions. The exporter includes reviewed products only; unknown notes,
+prices and ratings are left unknown. Open Beauty Facts candidates need a human
+source check before approval. A changed source identity returns to the queue.
+No fictional products, speculative prices or copied brand imagery are bundled.
 
-Python 3.11+ is required (standard library for the SQLite test path):
+To bootstrap and verify the snapshot locally:
 
 ```sh
-python -m unittest discover -s service/tests -v
-python -m service.curated
-python -m service.api
+python3 -m service.export_catalog --database senlis-editorial.sqlite \
+  --output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json --seed
+python3 -m unittest discover -s service/tests -v
 ```
 
-`GET http://localhost:8000/v1/health` shows catalogue count and the latest Open Beauty Facts import. Local SQLite is for development only. For PostgreSQL deployment, set `DATABASE_URL` and install `service/requirements.txt`. `render.yaml` defines a web service, a persistent paid PostgreSQL database and two scheduled jobs; review and authorize its costs, choose a Render workspace, then supply `EDITOR_TOKEN`, `SOURCE_CONTACT` (a monitored contact address) and `FIREBASE_SERVICE_ACCOUNT_JSON` as secrets. The first web start runs the idempotent official-source seed. The daily sync is rate-limited: it refreshes the first page and rotates three additional pages through a 30-page window for each category. Those records remain in editorial review. Wider coverage needs a permitted bulk export and reconciliation review.
+The free Windows self runner workflow `.github/workflows/monthly-catalogue.yml`
+collects Open Beauty Facts candidates on the second day of each month into its
+own persistent SQLite file. Set a monitored `SOURCE_CONTACT` repository secret
+and install/register the runner. The workflow runs on the default branch after
+merge; a manual dispatch is also available. An editor checks candidates and
+their source links, approves those that are correct, and republishes the two
+matching JSON files. The exporter keeps the previous timestamp when product
+facts are unchanged. Publishing a new snapshot remains a review action; an
+automated source import alone is never evidence that its facts are correct.
 
-After deployment, run `SENLIS_BASE_URL=https://YOUR-DEPLOYED-SERVICE.onrender.com python -m ci.live_smoke`. This read-only check verifies live database-backed catalogue, source attribution, community and news endpoints. An existing SQLite database is upgraded in place to add public display names; its messages remain intact.
+## Shared features
 
-Build the Android app with Gradle 8.11.1, Java 17 and Android SDK 35:
+Product/general conversation and user ratings cannot synchronize between
+phones through a local JSON file. They need one shared store with authentication
+and moderation. The previous custom HTTP service in `service/api.py` is a local
+development harness, **not** a required catalogue server. Its old Android
+integration is being replaced with the no-cost Firebase Spark path; a SENLIS
+Firebase project and Android configuration must be supplied and checked before
+calling those features live. Source-backed news may use the same static snapshot
+approach. A daily reminder can be scheduled on the device; a genuine news
+notification requires a reviewed item and user permission. We do not invent
+daily news on quiet days.
+
+Firebase's no-cost quotas are finite; launch traffic and moderation capacity
+must be monitored. The app will never silently switch to a paid hosting plan.
+
+## Development
+
+Android: Java 17, Gradle 8.11.1, SDK 35. The hosted verification workflow builds
+an APK and exercises API 23/35 emulators. Build parameters for the existing
+preview notification code are `firebaseAppId`, `firebaseApiKey`,
+`firebaseProjectId` and `firebaseSenderId`.
 
 ```sh
-gradle :app:assembleDebug -PsenlisApiUrl=https://YOUR-DEPLOYED-SERVICE.onrender.com \
-  -PfirebaseAppId=... -PfirebaseApiKey=... -PfirebaseProjectId=... -PfirebaseSenderId=...
+gradle :app:assembleDebug
 ```
 
-The Firebase values above are Android client configuration, while the service account JSON belongs only on the server. Notification permission is requested on opt-in. A build without a live HTTPS API URL explicitly shows a connection status and cannot serve real community data.
-
-## Editorial and source policy
-
-The reviewed starting product source links are in `service/curated.py`. The app uses original, unbranded editorial imagery in place of brand photos. Open Beauty Facts data must retain its ODbL attribution and terms; no third-party fragrance-site scraping, speculative price, copied brand image, invented user rating or fabricated news is allowed. The news queue can be inspected with `GET /v1/editor/candidates` using `X-Editor-Token`; a verified item can be published with `POST /v1/editor/news`. Corrections and reports enter database queues, and moderation needs an editor token. A daily news notification depends on a reviewed source item being available.
-
-The server does not yet have a public production URL or a configured Firebase project. Local tests are not evidence of live push delivery. The implementation and deployment gates are tracked in `docs/superpowers/plans/2026-09-27-senlis-live-service.md`.
-
-Actual Android 35 emulator captures are in `docs/visual-preview/` (welcome, discover, community and profile). The debug build in those captures has no live API URL, so its catalogue and chat show the honest connection state.
+The source code for the previous experimental WSGI/PostgreSQL service remains
+only for test and migration work. There is no Render deployment configuration.
+The `docs/visual-preview/` images are emulator captures, not branded product
+photography. An installable final APK is pending the free shared community
+integration and live verification.

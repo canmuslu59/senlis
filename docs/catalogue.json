@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-27T21:03:01.102219+00:00",
+  "items": [
+    {
+      "id": "32dfdfd355015cdb894eee0d264f687b",
+      "code": null,
+      "name": "Cheirosa 62 Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "antep fıstığı",
+        "badem",
+        "heliotrop",
+        "yasemin",
+        "vanilya",
+        "tuzlu karamel",
+        "sandal ağacı"
+      ],
+      "family": null,
+      "intensity": null,
+      "price": null,
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "31ad2d6b22d95fbb8647d574279febb6",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "66a06f4efe51599f99a63f25c651cfc8",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "49c66ac78b6a56f2b77e9be9978004a5",
+      "code": null,
+      "name": "Cheirosa 68 Beija Flor Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "ejder meyvesi",
+        "liçi",
+        "yasemin",
+        "hibiskus",
+        "vanilya",
+        "misk"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "e1b868c1543e5ec988951b3dce5a849c",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "99ddc461ef3c5e73a92fb24d02ca4902",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "08bb3ea2bbfe5bb1885e369b19625792",
+      "code": null,
+      "name": "Libre Eau de Parfum",
+      "brand": "Yves Saint Laurent Beauty",
+      "kind": "perfume",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Yves Saint Laurent Beauty",
+        "url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "lavanta",
+        "portakal çiçeği",
+        "misk",
+        "vanilya"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "626ca3dac998576b9c270ebcf665f249",
+          "label": "30 ml EDP",
+          "size_ml": 30,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "97dfde9a863c5d10a1e62c1296e6d7ad",
+          "label": "50 ml EDP",
+          "size_ml": 50,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "8075c8beef1a5de79f05084880cb5037",
+          "label": "90 ml EDP",
+          "size_ml": 90,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "7d22389f87a65cc5890d75ba49a58cad",
+      "code": null,
+      "name": "Peony & Blush Suede Cologne",
+      "brand": "Jo Malone London",
+      "kind": "perfume",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Jo Malone London",
+        "url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "şakayık",
+        "kırmızı elma",
+        "yasemin",
+        "gül",
+        "süet"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "8f2f479a4bee55598bb9aa6ee0ba4a81",
+          "label": "30 ml Cologne",
+          "size_ml": 30,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "fdc2380d5a9d55ea8b2c1cfeac499405",
+          "label": "50 ml Cologne",
+          "size_ml": 50,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "1413539b344854fd9f5e4869d1628aa4",
+          "label": "100 ml Cologne",
+          "size_ml": 100,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    }
+  ]
+}

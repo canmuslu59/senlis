@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.net.URLEncoder;
+import java.util.Locale;
 
 public final class MainActivity extends Activity {
     private static final int INK = Color.rgb(18, 12, 9);
@@ -52,7 +52,8 @@ public final class MainActivity extends Activity {
 
     private ProfileStore store;
     private ApiClient api;
-    private String catalogueError = "Katalog yükleniyor…";
+    private CatalogRepository catalogueRepository;
+    private String catalogueError = "";
     private final Set<String> moods = new HashSet<>(), notes = new HashSet<>(), avoided = new HashSet<>(),
         families = new HashSet<>(), occasions = new HashSet<>(), lovedIds = new HashSet<>();
     private String lovedProducts = "";
@@ -69,12 +70,13 @@ public final class MainActivity extends Activity {
         getWindow().setNavigationBarColor(INK);
         store = new ProfileStore(this);
         api = new ApiClient(this);
+        catalogueRepository = new CatalogRepository(this);
         api.token(store.sessionToken());
+        loadCatalogue();
         loadProfile();
         if (state != null) {
             restoreJourney(state);
         } else if (store.complete()) showTab(0); else showWelcome();
-        loadCatalogue("", false);
     }
 
     private void restoreJourney(Bundle state) {
@@ -148,28 +150,51 @@ public final class MainActivity extends Activity {
             intensity, budget == 0 ? null : budget, lovedNotes);
     }
 
-    private void loadCatalogue(String query, boolean searchResults) {
+    private void loadCatalogue() {
         try {
-            String path = "/v1/products?limit=50&q=" + URLEncoder.encode(query, "UTF-8");
-            api.get(path, (body, error) -> {
-                if (error != null) {
-                    catalogueError = error;
-                    if (store.complete() && tab == 0 && !inOnboarding && !inDetail) showTab(0);
-                    return;
+            JSONObject current = catalogueRepository.load();
+            applyCatalogue(current);
+            catalogueRepository.checkMonthly(current, update -> runOnUiThread(() -> {
+                if (isFinishing() || isDestroyed()) return;
+                applyCatalogue(update);
+                if (inDetail && selected != null) {
+                    for (MatchEngine.Fragrance item : Catalogue.ITEMS)
+                        if (item.id.equals(selected.id)) { selected = item; showDetail(); return; }
                 }
-                JSONArray items = body.optJSONArray("items");
-                List<MatchEngine.Fragrance> parsed = new ArrayList<>();
-                if (items != null) for (int i = 0; i < items.length(); i++) {
-                    JSONObject item = items.optJSONObject(i);
-                    if (item != null) parsed.add(Catalogue.parse(item));
-                }
-                if (!searchResults) {
-                    Catalogue.ITEMS.clear(); Catalogue.ITEMS.addAll(parsed);
-                    catalogueError = parsed.isEmpty() ? "Kaynaklı ürün kaydı henüz bulunamadı." : "";
-                    if (store.complete() && tab == 0 && !inOnboarding && !inDetail) showTab(0);
-                }
-            });
-        } catch (Exception ignored) { catalogueError = "Katalog araması yapılamadı."; }
+                if (!inOnboarding && store.complete()) showTab(tab);
+                else if (inOnboarding) showStep();
+            }));
+        } catch (Exception error) {
+            catalogueError = "Yerel katalog açılamadı.";
+        }
+    }
+
+    private void applyCatalogue(JSONObject snapshot) {
+        JSONArray items = snapshot.optJSONArray("items");
+        List<MatchEngine.Fragrance> parsed = new ArrayList<>();
+        Catalogue.DETAILS.clear();
+        if (items != null) for (int i = 0; i < items.length(); i++) {
+            JSONObject item = items.optJSONObject(i);
+            if (item != null) parsed.add(Catalogue.parse(item));
+        }
+        Catalogue.ITEMS.clear();
+        Catalogue.ITEMS.addAll(parsed);
+        catalogueError = parsed.isEmpty() ? "Doğrulanmış ürün kaydı henüz bulunamadı." : "";
+    }
+
+    private List<MatchEngine.Fragrance> localSearch(String query) {
+        String needle = query.trim().toLowerCase(Locale.forLanguageTag("tr"));
+        List<MatchEngine.Fragrance> found = new ArrayList<>();
+        for (MatchEngine.Fragrance item : Catalogue.ITEMS) {
+            JSONObject detail = Catalogue.DETAILS.get(item.id);
+            String brand = detail == null ? "" : detail.optString("brand");
+            if (needle.isEmpty() || (item.name + " " + brand + " " +
+                (item.family == null ? "" : item.family) + " " + TextUtils.join(" ", item.notes))
+                .toLowerCase(Locale.forLanguageTag("tr")).contains(needle)) {
+                found.add(item);
+            }
+        }
+        return found;
     }
 
     private void showWelcome() {
@@ -401,7 +426,7 @@ public final class MainActivity extends Activity {
         body.addView(title("Sana Özel Öneriler", 27, CREAM));
         body.addView(label("Kaynağı doğrulanmış gerçek ürünler · Bilinen tercihlere göre", 13, MUTED, false));
         addSpace(body, 12);
-        if (!catalogueError.isEmpty()) notice(body, "CANLI KATALOG", catalogueError);
+        if (!catalogueError.isEmpty()) notice(body, "YEREL KATALOG", catalogueError);
         addSpace(body, 14);
         List<MatchEngine.Fragrance> suggestions = sorted();
         if (!suggestions.isEmpty()) addProducts(body, suggestions, false);
@@ -422,21 +447,10 @@ public final class MainActivity extends Activity {
         addSpace(body, 15);
         LinearLayout results = column();
         body.addView(results);
-        addProducts(results, Catalogue.ITEMS, false);
+        addProducts(results, localSearch(""), false);
         field.addTextChangedListener(watch(value -> {
-            try {
-                String request = value.trim();
-                api.get("/v1/products?limit=50&q=" + URLEncoder.encode(request, "UTF-8"), (response, error) -> {
-                    if (!field.getText().toString().trim().equals(request)) return;
-                    results.removeAllViews();
-                    if (error != null) { notice(results, "BAĞLANTI SORUNU", error); return; }
-                    List<MatchEngine.Fragrance> found = new ArrayList<>();
-                    JSONArray array = response.optJSONArray("items");
-                    if (array != null) for (int i = 0; i < array.length(); i++)
-                        if (array.optJSONObject(i) != null) found.add(Catalogue.parse(array.optJSONObject(i)));
-                    addProducts(results, found, false);
-                });
-            } catch (Exception ignored) { notice(results, "HATA", "Arama yapılamadı."); }
+            results.removeAllViews();
+            addProducts(results, localSearch(value), false);
         }));
     }
 
@@ -749,12 +763,7 @@ public final class MainActivity extends Activity {
 
     private void openDetail(MatchEngine.Fragrance fragrance) {
         selected = fragrance;
-        api.get("/v1/products/" + fragrance.id, (body, error) -> {
-            if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
-            Catalogue.DETAILS.put(fragrance.id, body);
-            selected = Catalogue.parse(body);
-            showDetail();
-        });
+        showDetail();
     }
 
     private void showDetail() {
