@@ -1,0 +1,83 @@
+name: Build SENLIS APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Prepare Android SDK
+        shell: powershell
+        run: |
+          $candidates = @(@(
+            $env:ANDROID_HOME,
+            $env:ANDROID_SDK_ROOT,
+            "C:\actions-runner\android-sdk",
+            "$env:LOCALAPPDATA\Android\Sdk",
+            "C:\Android\Sdk"
+          ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -Unique)
+
+          if ($candidates.Count -eq 0) {
+            throw "No Android SDK installation could be found."
+          }
+
+          $sdk = [string]$candidates[0]
+          "ANDROID_HOME=$sdk" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "ANDROID_SDK_ROOT=$sdk" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "Using Android SDK: $sdk"
+
+          if (-not (Test-Path "$sdk\platforms\android-35")) {
+            $sdkmanager = @(
+              "$sdk\cmdline-tools\latest\bin\sdkmanager.bat",
+              "$sdk\cmdline-tools\16.0\bin\sdkmanager.bat",
+              "$sdk\tools\bin\sdkmanager.bat"
+            ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+
+            if (-not $sdkmanager) {
+              throw "android-35 is missing and sdkmanager could not be found."
+            }
+
+            & $sdkmanager "platforms;android-35" "build-tools;35.0.0"
+            if ($LASTEXITCODE -ne 0) {
+              throw "sdkmanager failed with exit code $LASTEXITCODE"
+            }
+          }
+
+      - name: Build debug APK
+        shell: powershell
+        run: |
+          gradle :app:assembleDebug --stacktrace
+
+      - name: Prepare APK
+        shell: powershell
+        run: |
+          Copy-Item "app\build\outputs\apk\debug\app-debug.apk" "SENLIS-v0.3.0.apk" -Force
+          (Get-FileHash "SENLIS-v0.3.0.apk" -Algorithm SHA256).Hash | Out-File "SENLIS-v0.3.0.sha256"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-v0.3.0
+          path: |
+            SENLIS-v0.3.0.apk
+            SENLIS-v0.3.0.sha256
+          retention-days: 7
