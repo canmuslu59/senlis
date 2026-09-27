@@ -1,4 +1,9 @@
-# SENLIS live service implementation plan
+# SENLIS live service implementation plan (superseded)
+
+> The user replaced the paid live-service architecture with a free device
+> catalogue, static monthly snapshots, Firebase Spark shared community and a
+> scheduled self runner. This plan is historical context; `README.md` describes
+> the active architecture.
 
 ## Scope
 

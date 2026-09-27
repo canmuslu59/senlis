@@ -1,5 +1,12 @@
 # SENLIS product design
 
+> Architecture update, 27 September 2026: The user chose a fully free, local
+> product catalogue. The four original stages below describe the earlier
+> service concept. The current implementation bundles reviewed products in
+> Android, publishes one static snapshot after editorial approval, uses local
+> profile storage, Firebase Spark for shared community only, and a scheduled
+> self runner for source candidates and verified news push. See `README.md`.
+
 ## Intent and success
 
 SENLIS is an Android fragrance discovery community for Turkey. A person describes scents they enjoy, scents they avoid, perfumes they own or love, mood, occasion, intensity and budget, then sees relevant perfume and body mist suggestions with a transparent match percentage. Every fragrance has a useful detail page and, once the shared service is live, its own ratings and discussion. A general community space, editorial fragrance news and a daily scent reminder bring people back. The visual reference is a dark, photographic, warm gold editorial experience with elegant serif headings and clear Turkish copy. A usable product must have working navigation and honest data, not a sequence of photographs presented as screens.
