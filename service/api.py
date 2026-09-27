@@ -1,5 +1,6 @@
 """Small WSGI JSON API. No secrets or upstream calls are made from read requests."""
 import json
+import logging
 import os
 import re
 import sqlite3
@@ -94,6 +95,12 @@ def handle(method, path, query, data, headers):
     if method == 'GET' and path == '/v1/editor/products':
         require_editor()
         return {'items': db.product_queue()}
+    if method == 'GET' and path == '/v1/editor/reports':
+        require_editor()
+        return {'items': db.report_queue()}
+    if method == 'GET' and path == '/v1/editor/corrections':
+        require_editor()
+        return {'items': db.correction_queue()}
     review = re.fullmatch(r'/v1/editor/products/([a-f0-9]{32})/review', path)
     if method == 'PUT' and review:
         require_editor()
@@ -131,9 +138,12 @@ def application(environ, start_response):
         status, result = 400, {'error': 'Geçersiz JSON'}
     except (ValueError, KeyError, TypeError, sqlite3.IntegrityError) as exc:
         status, result = 400, {'error': str(exc)[:200]}
+    except Exception:
+        logging.exception('Unhandled SENLIS API error')
+        status, result = 500, {'error': 'Sunucu hatası'}
     body = json.dumps(result, ensure_ascii=False).encode('utf-8')
     status_name = {200: 'OK', 400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden',
-                   404: 'Not Found', 413: 'Content Too Large'}[status]
+                   404: 'Not Found', 413: 'Content Too Large', 500: 'Internal Server Error'}[status]
     start_response(f'{status} {status_name}', [('Content-Type', 'application/json; charset=utf-8'),
                     ('Content-Length', str(len(body))), ('Cache-Control', 'no-store')])
     return [body]

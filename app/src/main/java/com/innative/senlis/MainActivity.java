@@ -781,6 +781,20 @@ public final class MainActivity extends Activity {
             link.setOnClickListener(v -> openUrl(url));
             sheet.addView(link);
         }
+        addSpace(sheet, 7);
+        TextView correction = label("Bu kayıtta hata mı var? Düzeltme bildir", 13, 0xFF835018, true);
+        correction.setOnClickListener(v -> requireAccount(() -> {
+            EditText description = input("Hatalı bilgi ve doğru kaynağı yaz", "");
+            new AlertDialog.Builder(this).setTitle("Kayıt düzeltmesi").setView(description)
+                .setNegativeButton("Vazgeç", null).setPositiveButton("Gönder", (dialog, which) -> {
+                    JSONObject request = new JSONObject();
+                    try { request.put("description", description.getText().toString()); } catch (Exception ignored) {}
+                    api.post("/v1/products/" + f.id + "/corrections", request,
+                        (response, error) -> Toast.makeText(this,
+                            error == null ? "İnceleme kuyruğuna alındı" : error, Toast.LENGTH_SHORT).show());
+                }).show();
+        }));
+        sheet.addView(correction);
         JSONArray provenance = product == null ? null : product.optJSONArray("provenance");
         if (provenance != null) for (int i = 0; i < provenance.length(); i++) {
             JSONObject fact = provenance.optJSONObject(i);

@@ -3,6 +3,8 @@ name: SENLIS hosted verification
 on:
   push:
     branches: [feature/senlis-premium-foundation]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -73,3 +75,28 @@ jobs:
           name: senlis-screenshots-api-${{ matrix.api-level }}
           path: screenshots/api-${{ matrix.api-level }}/
           retention-days: 7
+
+  postgres-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: senlis
+          POSTGRES_PASSWORD: senlis-ci-only
+          POSTGRES_DB: senlis
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U senlis" --health-interval 10s
+          --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql://senlis:senlis-ci-only@localhost:5432/senlis
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install 'psycopg[binary]==3.2.12'
+      - run: python -m ci.postgres_smoke

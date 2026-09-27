@@ -368,6 +368,7 @@ class Store:
             raise ValueError('invalid status')
         with self.connect() as conn:
             self.query(conn, 'UPDATE messages SET status=? WHERE id=?', (status, message_id))
+            self.query(conn, "UPDATE reports SET status='resolved' WHERE message_id=?", (message_id,))
 
     def correction(self, user_id, product_id, description):
         if not 10 <= len(description.strip()) <= 1000:
@@ -375,6 +376,18 @@ class Store:
         with self.connect() as conn:
             self.query(conn, 'INSERT INTO corrections(id,product_id,user_id,description,created_at) VALUES(?,?,?,?,?)',
                        (uuid.uuid4().hex, product_id, user_id, description.strip(), now()))
+
+    def correction_queue(self):
+        with self.connect() as conn:
+            return self.many(self.query(conn, '''SELECT c.id,c.product_id,p.name,c.description,c.created_at
+                FROM corrections c JOIN products p ON p.id=c.product_id
+                WHERE c.status='pending' ORDER BY c.created_at LIMIT 100'''))
+
+    def report_queue(self):
+        with self.connect() as conn:
+            return self.many(self.query(conn, '''SELECT r.id,r.message_id,r.reason,r.created_at,m.body
+                FROM reports r JOIN messages m ON m.id=r.message_id
+                WHERE r.status='pending' ORDER BY r.created_at LIMIT 100'''))
 
     def preferences(self, user_id, zone, reminder, news_push, fcm_token=None):
         ZoneInfo(zone)  # reject invalid IANA zones
