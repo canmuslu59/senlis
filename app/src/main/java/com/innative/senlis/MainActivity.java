@@ -447,7 +447,7 @@ public final class MainActivity extends Activity {
         body.addView(feature, new LinearLayout.LayoutParams(-1, dp(210)));
         addSpace(body, 24);
         body.addView(title("Sana Özel Öneriler", 27, CREAM));
-        body.addView(label("Kaynağı doğrulanmış gerçek ürünler · Bilinen tercihlere göre", 13, MUTED, false));
+        body.addView(label("Kaynağı belirtilen kokular · Bilinen tercihlere göre", 13, MUTED, false));
         addSpace(body, 12);
         if (!catalogueError.isEmpty()) notice(body, "YEREL KATALOG", catalogueError);
         addSpace(body, 14);
@@ -799,7 +799,8 @@ public final class MainActivity extends Activity {
             if (metadata != null) words.addView(label(metadata.optString("brand"), 11, MUTED, false));
             addSpace(words, 5);
             words.addView(label(result.excluded ? "Kaçındığın nota içeriyor" :
-                result.percent == null ? "Yeterli veri yok" : "%" + result.percent + " tahmini uyum", 12, GOLD, true));
+                result.percent == null ? "Yeterli veri yok" : "%" + result.percent +
+                (result.noteOnly ? " nota benzerliği" : " tahmini uyum"), 12, GOLD, true));
             card.addView(words, new LinearLayout.LayoutParams(0, -2, 1));
             card.setOnClickListener(v -> openDetail(f));
             body.addView(card, clp);
@@ -842,7 +843,10 @@ public final class MainActivity extends Activity {
         LinearLayout sheet = column();
         sheet.setPadding(dp(22), dp(25), dp(22), dp(36));
         sheet.setBackground(round(CREAM, 23, 0));
-        sheet.addView(label(licensedPhoto == null ? "KAYNAKLI ÜRÜN · FOTOĞRAF TEMSİLİ" :
+        JSONObject source = product == null ? null : product.optJSONObject("source");
+        boolean datasetRecord = source != null && source.optString("license").contains("veri seti");
+        sheet.addView(label(datasetRecord ? "VERİ SETİ KAYDI · FOTOĞRAF TEMSİLİ" :
+            licensedPhoto == null ? "KAYNAKLI ÜRÜN · FOTOĞRAF TEMSİLİ" :
             "KAYNAKLI ÜRÜN · LİSANSLI FOTOĞRAF", 10, 0xFF795534, true));
         addSpace(sheet, 7);
         sheet.addView(title(f.name, 31, INK));
@@ -882,17 +886,18 @@ public final class MainActivity extends Activity {
         }
         addSpace(sheet, 14);
         sheet.addView(label(match.excluded ? "Tercihlerinle uyumsuz" : match.percent == null ? "Yeterli eşleşme verisi yok" :
-            "%" + match.percent + " tahmini eşleşme", 20, 0xFF835018, true));
+            "%" + match.percent + (match.noteOnly ? " nota benzerliği" : " tahmini eşleşme"), 20, 0xFF835018, true));
         sheet.addView(label("Bu oran tercihlerinden hesaplanır; koku deneyiminin garantisi değildir.", 12, 0xFF715849, false));
         sheet.addView(label("Model v" + MatchEngine.MODEL_VERSION + " · Yalnızca kaynağı belirtilen koku alanları hesaplanır. Eksik bilgiye puan verilmez.", 11, 0xFF715849, false));
         addSpace(sheet, 24);
         sheet.addView(label("KOKU NOTALARI", 12, 0xFF835018, true));
         addSpace(sheet, 8);
-        sheet.addView(label(f.notes.isEmpty() ? "Marka tarafından doğrulanmış nota bilgisi henüz yok." :
+        sheet.addView(label(f.notes.isEmpty() ? "Kaynakta nota bilgisi yok." :
             TextUtils.join("   ✦   ", f.notes), 15, INK, false));
+        if (datasetRecord) sheet.addView(label("Bu notalar veri setinde listelenmiştir; üretici tarafından ayrıca kontrol edilmemiştir.",
+            12, 0xFF715849, false));
         addSpace(sheet, 18);
         sheet.addView(label("KAYNAK VE GÜNCELLİK", 12, 0xFF835018, true));
-        JSONObject source = product == null ? null : product.optJSONObject("source");
         if (source != null) {
             String url = source.optString("url");
             TextView link = label(source.optString("source_name") + " · " +

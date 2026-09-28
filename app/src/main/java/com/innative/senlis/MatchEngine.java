@@ -60,11 +60,13 @@ public final class MatchEngine {
     public static final class Result {
         public final Integer percent;
         public final boolean excluded;
+        public final boolean noteOnly;
         public final List<String> reasons;
 
-        private Result(Integer percent, boolean excluded, List<String> reasons) {
+        private Result(Integer percent, boolean excluded, boolean noteOnly, List<String> reasons) {
             this.percent = percent;
             this.excluded = excluded;
+            this.noteOnly = noteOnly;
             this.reasons = Collections.unmodifiableList(reasons);
         }
     }
@@ -72,16 +74,18 @@ public final class MatchEngine {
     public static Result score(Profile profile, Fragrance fragrance) {
         for (String note : profile.avoidedNotes) {
             if (fragrance.notes.contains(note)) {
-                return new Result(null, true, Collections.singletonList("Kaçındığın nota: " + note));
+                return new Result(null, true, false, Collections.singletonList("Kaçındığın nota: " + note));
             }
         }
         double earned = 0;
         double available = 0;
         int dimensions = 0;
+        boolean noteEvidence = false;
         List<String> reasons = new ArrayList<>();
 
         if (!profile.likedNotes.isEmpty() && !fragrance.notes.isEmpty()) {
             dimensions++;
+            noteEvidence = true;
             available += 35;
             int hits = overlap(profile.likedNotes, fragrance.notes);
             earned += 35d * hits / profile.likedNotes.size();
@@ -98,6 +102,7 @@ public final class MatchEngine {
         }
         if (!profile.lovedProductNotes.isEmpty() && !fragrance.notes.isEmpty()) {
             dimensions++;
+            noteEvidence = true;
             available += 15;
             int hits = overlap(profile.lovedProductNotes, fragrance.notes);
             earned += 15d * hits / profile.lovedProductNotes.size();
@@ -131,8 +136,10 @@ public final class MatchEngine {
                 reasons.add("Bütçe aralığında");
             } else reasons.add("Belirttiğin bütçenin üzerinde");
         }
-        if (dimensions < 2 || available <= 0) return new Result(null, false, reasons);
-        return new Result((int) Math.round(100 * earned / available), false, reasons);
+        if (available <= 0 || (dimensions < 2 && !noteEvidence))
+            return new Result(null, false, false, reasons);
+        return new Result((int) Math.round(100 * earned / available), false,
+            dimensions == 1, reasons);
     }
 
     private static int overlap(Set<String> a, Set<String> b) {

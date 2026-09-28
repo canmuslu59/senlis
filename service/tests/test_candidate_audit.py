@@ -7,6 +7,22 @@ from service.core import Store
 
 
 class CandidateAuditTests(unittest.TestCase):
+    def test_note_backed_identity_and_conflicting_duplicate_counts(self):
+        common = {'source': 'doevent-perfume',
+                  'source_url': 'https://huggingface.co/datasets/doevent/perfume',
+                  'top_notes': '', 'middle_notes': '', 'base_notes': ''}
+        rows = [
+            dict(common, brand='Example', name='Rose', all_notes='Rose; Musk', main_accords=''),
+            dict(common, brand='Example', name='Rose', all_notes='Rose; Musk', main_accords=''),
+            dict(common, brand='Example', name='Rose', all_notes='Rose; Amber', main_accords=''),
+            dict(common, brand='Example', name='Iris', all_notes='', main_accords='Floral'),
+            dict(common, brand='Example', name='Vanilla', all_notes='Vanilla', main_accords=''),
+        ]
+        report = audit_rows(rows)
+        self.assertEqual(report['distinct_brand_names'], 3)
+        self.assertEqual(report.get('distinct_note_backed_brand_names'), 2)
+        self.assertEqual(report.get('conflicting_note_identities'), 1)
+
     def test_upstream_rows_are_counted_but_never_promoted_to_verified_products(self):
         rows = [
             {'brand': 'Acme', 'name': 'Rose', 'source': 'TidyTuesday-Parfumo',

@@ -30,6 +30,8 @@ def key(value):
 def audit_rows(rows):
     sources = Counter()
     unique = set()
+    note_sets = {}
+    conflicts = set()
     report = {'rows': 0, 'distinct_brand_names': 0, 'blocked_source_rows': 0,
               'review_only_rows': 0, 'missing_identity_rows': 0,
               'rows_with_upstream_note_text': 0, 'possible_accords_as_notes': 0,
@@ -44,7 +46,8 @@ def audit_rows(rows):
         host = (urlparse(url).hostname or '').lower()
         sources[source or '(unknown)'] += 1
         if brand and name and key(brand) and key(name):
-            unique.add((key(brand), key(name)))
+            identity = (key(brand), key(name))
+            unique.add(identity)
         else:
             report['missing_identity_rows'] += 1
             continue
@@ -60,10 +63,19 @@ def audit_rows(rows):
                           ('top_notes', 'middle_notes', 'base_notes'))
         if has_pyramid or str(row.get('all_notes') or '').strip():
             report['rows_with_upstream_note_text'] += 1
+            text = str(row.get('all_notes') or '').strip() or ';'.join(
+                str(row.get(field) or '') for field in ('top_notes', 'middle_notes', 'base_notes'))
+            notes = frozenset(part.strip().casefold() for part in text.split(';') if part.strip())
+            if notes:
+                if identity in note_sets and notes != note_sets[identity]:
+                    conflicts.add(identity)
+                note_sets.setdefault(identity, notes)
         if source == 'anvo2-perfume-rec-assets' and not has_pyramid and \
                 str(row.get('all_notes') or '').strip():
             report['possible_accords_as_notes'] += 1
     report['distinct_brand_names'] = len(unique)
+    report['distinct_note_backed_brand_names'] = len(note_sets)
+    report['conflicting_note_identities'] = len(conflicts)
     report['by_source'] = dict(sorted(sources.items()))
     return report
 

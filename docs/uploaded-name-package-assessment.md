@@ -10,7 +10,7 @@ in the uploaded file. We did not execute the launcher or download its sources.
 | Script source | Finding | SENLIS decision |
 | --- | --- | --- |
 | [TidyTuesday Parfumo data](https://github.com/rfordatascience/tidytuesday/blob/main/data/2024/2024-12-10/readme.md) | The project's own page says the dataset was scraped from Parfumo and includes its notes and product links. | No bulk app import without verified original reuse rights. |
-| [doevent/perfume](https://huggingface.co/datasets/doevent/perfume/blob/main/README.md) | Its uploader labels the dataset MIT and says it holds 26K+ records, but its card does not identify the original source or grant for each product image/field. | Names can be counted as unverified review leads from a user-provided output; do not publish fields or count them as verified. |
+| [doevent/perfume](https://huggingface.co/datasets/doevent/perfume/blob/main/README.md) | Its uploader labels the dataset MIT and says it holds 26K+ records, but its card does not identify the original source or grant for each product image/field. | Keep the source label on listed name/note claims in an experimental local package; never present them as manufacturer-checked or import images. |
 | [anvo2/perfume-rec-assets](https://huggingface.co/datasets/anvo2/perfume-rec-assets) | Its visible rows include Fragrantica links and descriptions. The supplied script derives names from those URLs and copies the note descriptions. | Excluded from import under Fragrantica's [terms](https://www.fragrantica.com/terms-of-service.phtml). |
 
 The script's fallback copies `Main Accords` into `all_notes` when a note pyramid
@@ -22,9 +22,9 @@ row with more note text regardless of reuse rights. These rules cannot prove
 If the actual CSV/TXT is supplied, run `python -m service.candidate_audit
 path/to/parfum_bodymist_tekil.csv`. This streaming, read-only check reports the
 actual raw and distinct brand/name counts, missing identities and upstream
-source categories. It adds **zero** products to the published catalogue. For
-every selected product an editor must establish an independent manufacturer or
-permitted source for its identity and notes before publishing it. Price offers
+source categories. It adds **zero** products to the published catalogue. The
+curated catalogue requires independently checked product facts; the separate
+dataset-labelled experiment records the uploader's claims as such. Price offers
 need their own dated variant and retailer source; photos need an explicit reuse
 license and attribution.
 
@@ -38,7 +38,7 @@ Its **154,154 rows** break down as follows:
 | --- | ---: | --- |
 | TidyTuesday-Parfumo | 59,324 | Excluded from app import pending original reuse rights |
 | anvo2-perfume-rec-assets | 68,511 | Excluded: Fragrantica-derived URL and descriptions |
-| doevent-perfume | 26,319 | Private name leads only; original product sources unspecified |
+| doevent-perfume | 26,319 | Private name leads and a separate dataset-labelled local experiment; original product sources unspecified |
 
 Normalizing brand and name yields **126,826 distinct keys across all rows**,
 not 154,154 distinct perfumes. Two rows have a name consisting solely of a
@@ -46,6 +46,9 @@ symbol and lack a useful normalized key. **104,362 rows** have upstream text
 in at least one note column; that is not verified note coverage. Unlike the
 earlier ZIP script's fallback, this TXT has a separate `main_accords` column;
 the audit did not detect an anvo2 accord copied into a note-only field.
+The refined audit finds **85,805 distinct brand/name keys with note text** and
+**14,391 keys with conflicting note lists across duplicate rows**. It never
+merges those lists into a fictitious larger pyramid.
 
 The local editorial database now holds **26,229 distinct doevent names in a
 private `external_name_leads` queue**; 90 of its rows were duplicates or failed
@@ -53,5 +56,14 @@ the lead field check. It stores only brand/name and a dataset reference, not
 upstream notes, photos or a guessed body-mist type. These leads are absent from
 the Android package and do not increase the ten verified product count. Inspect
 them using `python -m service.editor --database PATH/TO/editorial.sqlite leads`.
-An editor must verify a separate official product identity and note page using
-`add-brand-product` before any record reaches the note-backed app snapshot.
+An editor can establish a separate official product identity and note page
+using `add-brand-product` to promote a record to the curated app snapshot.
+
+An experimental, separate `service.supplied_catalogue` path now uses the
+doevent dataset's MIT-labelled note lists as *dataset-listed*, without
+calling them manufacturer-verified. From this actual file it created a local
+**26,194-record package with 202,591 note entries**: ten curated records and
+26,184 dataset records. It excludes 45 conflicting doevent identities and
+four names already present in the curated set, and leaves kind unknown. This
+38 MB snapshot is not the bundled or published catalogue; no dataset photos,
+prices or main accords were imported.

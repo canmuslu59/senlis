@@ -10,7 +10,8 @@ public final class MatchEngineTest {
         unknownPriceDoesNotCountAsBudgetMatch();
         nonmatchingKnownDimensionsAreExplained();
         lovedCanonicalProductContributesOnlyKnownNotes();
-        System.out.println("MatchEngineTest: 6 passed");
+        singleKnownNoteDimensionHasLabelledSimilarity();
+        System.out.println("MatchEngineTest: 7 passed");
     }
 
     private static void emptyProfileHasNoScore() {
@@ -41,7 +42,12 @@ public final class MatchEngineTest {
         MatchEngine.Profile profile = new MatchEngine.Profile(
             Set.of("yasemin"), Set.of(), Set.of(), Set.of(), Set.of(), 0, 1000);
         MatchEngine.Result result = MatchEngine.score(profile, product(null));
-        check(result.percent == null, "Unknown price cannot create a second known dimension");
+        MatchEngine.Result noBudget = MatchEngine.score(
+            new MatchEngine.Profile(Set.of("yasemin"), Set.of(), Set.of(), Set.of(), Set.of(), 0, null),
+            product(null));
+        check(result.percent != null && result.percent.equals(noBudget.percent),
+            "Unknown price must not change note similarity");
+        check(result.noteOnly, "Only notes were known");
     }
 
     private static void nonmatchingKnownDimensionsAreExplained() {
@@ -60,6 +66,14 @@ public final class MatchEngineTest {
         check(result.percent != null, "Two explicit signals with source-backed notes permit a score");
         check(result.reasons.stream().anyMatch(x -> x.contains("kayıtlı kokularla")),
             "Loved-product similarity needs an explanation");
+    }
+
+    private static void singleKnownNoteDimensionHasLabelledSimilarity() {
+        MatchEngine.Profile profile = new MatchEngine.Profile(
+            Set.of("vanilya", "gül"), Set.of(), Set.of(), Set.of(), Set.of(), 0, null);
+        MatchEngine.Result result = MatchEngine.score(profile, product(null));
+        check(result.percent != null && result.percent == 50, "One of two chosen notes should give 50% similarity");
+        check(result.noteOnly, "One dimension must be visibly labelled as note similarity");
     }
 
     private static MatchEngine.Fragrance product(Integer price) {

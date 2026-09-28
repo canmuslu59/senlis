@@ -19,7 +19,8 @@ public final class Catalogue {
     public static MatchEngine.Fragrance parse(JSONObject item) {
         DETAILS.put(item.optString("id"), item);
         String kind = item.optString("kind");
-        String type = "body_mist".equals(kind) ? "Body mist" : "Parfüm";
+        String type = "body_mist".equals(kind) ? "Body mist" :
+            "perfume".equals(kind) ? "Parfüm" : "Koku türü belirtilmemiş";
         String family = item.isNull("family") ? null : item.optString("family", null);
         return new MatchEngine.Fragrance(item.optString("id"), item.optString("name"), type,
             family, strings(item.optJSONArray("notes")), new HashSet<String>(),

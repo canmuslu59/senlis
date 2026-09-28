@@ -46,13 +46,33 @@ reported as a large catalogue.
 The uploaded package and subsequent 154,154-row TXT were
 [audited](docs/uploaded-name-package-assessment.md). The original ZIP contains
 only a downloader; the TXT's 154,154 rows normalize to 126,826 brand/name keys.
-Parfumo/Fragrantica-derived rows cannot be treated as licensed app data. The
+The improved audit counts 85,805 distinct names with note text and 14,391
+identities whose duplicate note lists conflict. These are data-set claims, not
+individually manufacturer-confirmed notes. A local experimental exporter now
+builds a 26,194-record, 202,591-note, 38 MB package from the ten checked
+products and the conflict-filtered `doevent/perfume` portion of the user file.
+Its `unknown` type is not guessed from the text, its notes are visibly
+dataset-listed, and neither photos nor prices are copied. The **bundled APK
+still contains ten products**; the larger package awaits Android device checks
+and the source decision before it can replace the published snapshot.
+
+To reproduce the local package from the supplied file:
+
+```sh
+DATABASE_URL=/path/to/editorial.sqlite python3 -m service.curated
+python3 -m service.supplied_catalogue /path/to/parfum_bodymist_154154_hazir.txt \\
+  --database /path/to/editorial.sqlite --output /path/to/senlis-supplied-preview.sqlite
+```
+
+Parfumo/Fragrantica-derived rows are excluded from this import while their
+reuse conditions are unresolved. The
 read-only tool `python -m service.candidate_audit PATH/TO/FILE` measures the
 actual file. With `--stage-doevent --database PATH/TO/editorial.sqlite`, it
 stores only eligible names in a **private review queue**. The actual TXT yielded
-26,229 distinct private leads; none are published or counted as note-backed
-fragrances. Its third source lacks original field-level provenance, so each
-selected lead still requires independent product and note verification.
+26,229 distinct private leads in the earlier editorial queue. Separately, the
+experimental dataset-labelled package uses available note text without
+pretending that every field was independently checked. Its third source lacks
+original field-level provenance, so errors can be reported and corrected.
 
 To bootstrap and verify the snapshot locally:
 
