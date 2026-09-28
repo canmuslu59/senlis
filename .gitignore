@@ -1,0 +1,11 @@
+*.sqlite
+!docs/catalogue.sqlite
+!app/src/main/assets/catalogue.sqlite
+*.sqlite3
+__pycache__/
+*.pyc
+.gradle/
+build/
+app/build/
+model-test/
+screenshots/

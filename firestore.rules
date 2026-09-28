@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function roomId(room) { return room == 'global' || room.matches('^[0-9a-f]{32}$'); }
+
+    match /users/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list: if false;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['display_name', 'created_at'])
+        && request.resource.data.keys().hasAll(['display_name', 'created_at'])
+        && request.resource.data.display_name is string
+        && request.resource.data.display_name.size() >= 2
+        && request.resource.data.display_name.size() <= 40
+        && request.resource.data.created_at == request.time;
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['fcm_token', 'news_push', 'timezone'])
+        && request.resource.data.fcm_token is string
+        && request.resource.data.fcm_token.size() <= 2048
+        && request.resource.data.news_push is bool
+        && request.resource.data.timezone is string
+        && request.resource.data.timezone.size() <= 80;
+      allow delete: if false;
+      match /deliveries/{day} {
+        allow read, write: if false;
+      }
+    }
+
+    match /rooms/{room}/messages/{messageId} {
+      allow get: if roomId(room) && resource.data.status == 'visible';
+      allow list: if roomId(room) && request.query.limit <= 50
+        && resource.data.status == 'visible';
+      allow create: if signedIn() && roomId(room)
+        && request.resource.data.keys().hasOnly(['uid', 'author', 'body', 'status', 'created_at'])
+        && request.resource.data.keys().hasAll(['uid', 'author', 'body', 'status', 'created_at'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.author is string
+        && request.resource.data.author.size() >= 2
+        && request.resource.data.author.size() <= 40
+        && request.resource.data.body is string
+        && request.resource.data.body.size() >= 2
+        && request.resource.data.body.size() <= 1000
+        && request.resource.data.status == 'visible'
+        && request.resource.data.created_at == request.time;
+      allow update, delete: if false;
+    }
+
+    match /ratings/{productId}/users/{uid} {
+      allow read: if productId.matches('^[0-9a-f]{32}$');
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && productId.matches('^[0-9a-f]{32}$')
+        && request.resource.data.keys().hasOnly(['uid', 'stars', 'updated_at'])
+        && request.resource.data.keys().hasAll(['uid', 'stars', 'updated_at'])
+        && request.resource.data.uid == uid
+        && request.resource.data.stars is int
+        && request.resource.data.stars >= 1 && request.resource.data.stars <= 5
+        && request.resource.data.updated_at == request.time;
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+
+    match /reports/{reportId} {
+      allow read, update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'room', 'message_id', 'reason', 'created_at'])
+        && request.resource.data.keys().hasAll(['uid', 'room', 'message_id', 'reason', 'created_at'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.room is string && roomId(request.resource.data.room)
+        && request.resource.data.message_id is string
+        && request.resource.data.message_id.size() <= 128
+        && request.resource.data.reason is string
+        && request.resource.data.reason.size() >= 5
+        && request.resource.data.reason.size() <= 500
+        && request.resource.data.created_at == request.time;
+    }
+
+    match /corrections/{correctionId} {
+      allow read, update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'product_id', 'description', 'created_at'])
+        && request.resource.data.keys().hasAll(['uid', 'product_id', 'description', 'created_at'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.product_id is string
+        && request.resource.data.product_id.matches('^[0-9a-f]{32}$')
+        && request.resource.data.description is string
+        && request.resource.data.description.size() >= 10
+        && request.resource.data.description.size() <= 1000
+        && request.resource.data.created_at == request.time;
+    }
+
+    match /news/{articleId} {
+      allow get: if resource.data.reviewed == true;
+      allow list: if request.query.limit <= 30 && resource.data.reviewed == true;
+      allow write: if false;
+    }
+  }
+}

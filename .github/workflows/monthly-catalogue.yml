@@ -1,0 +1,52 @@
+name: SENLIS monthly editorial candidates
+
+on:
+  schedule:
+    - cron: '23 6 2 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Refresh review queue in runner-owned SQLite
+        shell: powershell
+        env:
+          SOURCE_CONTACT: ${{ secrets.SOURCE_CONTACT }}
+        run: |
+          if (-not $env:SOURCE_CONTACT) { throw 'Set SOURCE_CONTACT to a monitored address' }
+          $directory = Join-Path $env:USERPROFILE 'senlis-editorial'
+          New-Item -ItemType Directory -Force -Path $directory | Out-Null
+          $env:DATABASE_URL = Join-Path $directory 'catalogue.sqlite'
+          python -m service.curated
+          if ($LASTEXITCODE -ne 0) { throw 'Official seed failed' }
+          python -m service.jobs sync
+          if ($LASTEXITCODE -ne 0) { throw 'Source sync failed' }
+          python -m service.editor --database $env:DATABASE_URL products | Out-File -Encoding utf8 products-review.json
+          if ($LASTEXITCODE -ne 0) { throw 'Review queue export failed' }
+          python -m service.editor --database $env:DATABASE_URL news | Out-File -Encoding utf8 news-review.json
+          if ($LASTEXITCODE -ne 0) { throw 'News queue export failed' }
+          python -m service.export_catalog --database $env:DATABASE_URL --output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json --if-changed
+          if ($LASTEXITCODE -ne 0) { throw 'Reviewed snapshot export failed' }
+          python -m service.catalogue_package --database $env:DATABASE_URL --output docs/catalogue.sqlite
+          if ($LASTEXITCODE -ne 0) { throw 'Indexed source-linked catalogue export failed' }
+          git status --short -- docs/catalogue.json docs/catalogue.sqlite app/src/main/assets/catalogue.json
+      - name: Upload editorial queue and reviewed snapshot for manual publication
+        uses: actions/upload-artifact@v4
+        with:
+          name: senlis-reviewed-catalogue
+          path: |
+            docs/catalogue.json
+            docs/catalogue.sqlite
+            app/src/main/assets/catalogue.json
+            products-review.json
+            news-review.json
+          retention-days: 14

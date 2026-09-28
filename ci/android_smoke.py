@@ -1,0 +1,112 @@
+"""Install the actual hosted APK and inspect native screens on an emulator."""
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+
+APK, OUT = sys.argv[1:3]
+os.makedirs(OUT, exist_ok=True)
+
+
+def sdk_tool(name):
+    installed = shutil.which(name)
+    if installed:
+        return installed
+    home = os.environ.get('ANDROID_HOME') or os.environ.get('ANDROID_SDK_ROOT', '')
+    for version in ('35.0.0', '34.0.0'):
+        path = os.path.join(home, 'build-tools', version, name)
+        if os.path.exists(path):
+            return path
+    raise FileNotFoundError(name)
+
+
+def command(*args):
+    return subprocess.run(args, check=True, capture_output=True, text=True).stdout
+
+
+def snapshot(label):
+    command('adb', 'shell', 'uiautomator', 'dump', '/sdcard/window.xml')
+    xml = command('adb', 'shell', 'cat', '/sdcard/window.xml')
+    with open(f'{OUT}/{label}.xml', 'w') as file:
+        file.write(xml)
+    with open(f'{OUT}/{label}.png', 'wb') as file:
+        subprocess.run(['adb', 'exec-out', 'screencap', '-p'], check=True, stdout=file)
+    return ET.fromstring(xml)
+
+
+def wait_text(text, label):
+    for _ in range(30):
+        tree = snapshot(label)
+        launcher_stalled = any("Pixel Launcher isn't responding" in node.attrib.get('text', '')
+                               for node in tree.iter('node'))
+        if launcher_stalled:
+            for node in tree.iter('node'):
+                if node.attrib.get('text') == 'Wait':
+                    left, top, right, bottom = map(int, re.findall(r'\d+', node.attrib['bounds']))
+                    command('adb', 'shell', 'input', 'tap', str((left + right)//2), str((top + bottom)//2))
+                    break
+            command('adb', 'shell', 'am', 'start', '-W', '-n',
+                    'com.innative.senlis.preview/com.innative.senlis.MainActivity')
+            time.sleep(2)
+            continue
+        for node in tree.iter('node'):
+            if text in node.attrib.get('text', ''):
+                return node
+        time.sleep(1)
+    raise AssertionError(f'Missing visible text: {text}; see {OUT}/{label}.xml')
+
+
+def tap(text, label):
+    node = wait_text(text, label)
+    bounds = node.attrib['bounds']
+    left, top, right, bottom = map(int, re.findall(r'\d+', bounds))
+    command('adb', 'shell', 'input', 'tap', str((left + right)//2), str((top + bottom)//2))
+
+
+def type_in_search(text):
+    tree = snapshot('search-ready')
+    fields = [node for node in tree.iter('node')
+              if node.attrib.get('class') == 'android.widget.EditText']
+    assert len(fields) == 1, 'Search must expose one editable field'
+    left, top, right, bottom = map(int, re.findall(r'\d+', fields[0].attrib['bounds']))
+    command('adb', 'shell', 'input', 'tap', str((left + right)//2), str((top + bottom)//2))
+    command('adb', 'shell', 'input', 'text', text)
+
+
+try:
+    manifest = command(sdk_tool('aapt'), 'dump', 'badging', APK)
+    assert "name='com.innative.senlis.preview'" in manifest
+    assert "sdkVersion:'23'" in manifest
+    assert "targetSdkVersion:'35'" in manifest
+    command(sdk_tool('apksigner'), 'verify', '--min-sdk-version', '23', APK)
+    command('adb', 'install', '-r', APK)
+    command('adb', 'shell', 'pm', 'clear', 'com.innative.senlis.preview')
+    command('adb', 'shell', 'am', 'start', '-W', '-n', 'com.innative.senlis.preview/com.innative.senlis.MainActivity')
+    wait_text('Koku, senin', 'welcome')
+    tap('Hemen Başla', 'welcome')
+    for index in range(1, 6):
+        wait_text(f'{index}/5', f'onboarding-{index}')
+        tap('Kokularımı Keşfet' if index == 5 else 'Devam Et', f'onboarding-{index}')
+    wait_text('Sana Özel Öneriler', 'discover')
+    command('adb', 'shell', 'svc', 'wifi', 'disable')
+    command('adb', 'shell', 'svc', 'data', 'disable')
+    tap('Ara', 'discover')
+    type_in_search('vanilya')
+    wait_text('Cheirosa 62', 'offline-note-search')
+    tap('Cheirosa 62', 'offline-search')
+    wait_text('Cheirosa 62 Perfume Mist', 'offline-detail')
+    tap('Geri', 'offline-detail')
+    tap('Sohbet', 'discover')
+    wait_text('Kokular insanları', 'community')
+    tap('Profil', 'community')
+    wait_text('Senin koku dünyan', 'profile')
+finally:
+    with open(f'{OUT}/logcat.txt', 'w') as file:
+        file.write(subprocess.run(['adb', 'logcat', '-d', '-t', '400'], capture_output=True, text=True).stdout)
+    with open(f'{OUT}/catalog-errors.txt', 'w') as file:
+        file.write(subprocess.run(['adb', 'logcat', '-d', '-s', 'SENLIS-Catalog:E', 'SQLiteLog:E',
+                                   'AndroidRuntime:E'], capture_output=True, text=True).stdout)

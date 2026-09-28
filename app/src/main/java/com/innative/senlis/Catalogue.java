@@ -1,0 +1,36 @@
+package com.innative.senlis;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.LinkedHashMap;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+/** Source-backed records from the bundled and monthly-updated local catalogue. */
+public final class Catalogue {
+    private Catalogue() {}
+    public static final Map<String, JSONObject> DETAILS = Collections.synchronizedMap(new LinkedHashMap<String, JSONObject>(256, .75f, true) {
+        @Override protected boolean removeEldestEntry(Map.Entry<String, JSONObject> eldest) { return size() > 256; }
+    });
+
+    public static MatchEngine.Fragrance parse(JSONObject item) {
+        DETAILS.put(item.optString("id"), item);
+        String kind = item.optString("kind");
+        String type = "body_mist".equals(kind) ? "Body mist" :
+            "perfume".equals(kind) ? "Parfüm" : "Koku türü belirtilmemiş";
+        String family = item.isNull("family") ? null : item.optString("family", null);
+        return new MatchEngine.Fragrance(item.optString("id"), item.optString("name"), type,
+            family, strings(item.optJSONArray("notes")), new HashSet<String>(),
+            new HashSet<String>(), item.optInt("intensity", 0), null);
+    }
+
+    private static Set<String> strings(JSONArray array) {
+        Set<String> values = new HashSet<>();
+        if (array != null) for (int i = 0; i < array.length(); i++)
+            values.add(array.optString(i).toLowerCase(Locale.forLanguageTag("tr")));
+        return values;
+    }
+}

@@ -1,0 +1,874 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-28T07:10:19.541876+00:00",
+  "items": [
+    {
+      "id": "dc7afc148ca55485a1bd404cde40a2d7",
+      "code": null,
+      "name": "Cheirosa 40 Bom Dia Bright Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "siyah amber erik",
+        "frenk üzümü likörü",
+        "yasemin çiçekleri",
+        "brezilya orkidesi",
+        "vanilya odunları",
+        "sıcak misk"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "d853523e2dc05befb1e121b7049023ea",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        },
+        {
+          "id": "57a7e874295b54959ee71f9001f2e13d",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "a889878db7ee5ebeb4f022cb427df125",
+      "code": null,
+      "name": "Cheirosa 48 Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "guava nektarı",
+        "hindistan cevizi suyu",
+        "orkide",
+        "limon",
+        "iris",
+        "pembe misk",
+        "vanilya"
+      ],
+      "family": "gurme",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "b5e11f2b74ad5514a77cc050d88358d5",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        },
+        {
+          "id": "94f190cd5a0b58c6a3e094be1cc748a4",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-48-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "30077425750d534b8a5694ebe66000b8",
+      "code": null,
+      "name": "Cheirosa 59 Delícia Drench Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "erik",
+        "şekerli menekşe",
+        "vanilya orkidesi",
+        "amber",
+        "sandal ağacı",
+        "vetiver"
+      ],
+      "family": "gurme",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "270b5dd34c32590cba46fb1234d17138",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        },
+        {
+          "id": "40f6f9128d3056cdbc4ccb05321c8c4c",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "7df34c06571c5383af1865456b0bfeaa",
+      "code": null,
+      "name": "Cheirosa 59 Intense Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "beyaz orkide",
+        "makademya",
+        "menekşe",
+        "sambak yasemini",
+        "sandal ağacı",
+        "toffee",
+        "paçuli",
+        "amber akoru",
+        "vetiver",
+        "misk"
+      ],
+      "family": "gurme",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "0cc37d155fa25e9bba4a5d760c1db292",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "32dfdfd355015cdb894eee0d264f687b",
+      "code": null,
+      "name": "Cheirosa 62 Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "antep fıstığı",
+        "badem",
+        "heliotrop",
+        "yasemin",
+        "vanilya",
+        "tuzlu karamel",
+        "sandal ağacı"
+      ],
+      "family": null,
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "31ad2d6b22d95fbb8647d574279febb6",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "66a06f4efe51599f99a63f25c651cfc8",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "49c66ac78b6a56f2b77e9be9978004a5",
+      "code": null,
+      "name": "Cheirosa 68 Beija Flor Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "ejder meyvesi",
+        "liçi",
+        "yasemin",
+        "okyanus havası",
+        "hibiskus",
+        "vanilya",
+        "misk"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "e1b868c1543e5ec988951b3dce5a849c",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "99ddc461ef3c5e73a92fb24d02ca4902",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-68-perfume-mist",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "fdc2ba70e1a85883b09ba828c87aef55",
+      "code": null,
+      "name": "Cheirosa 71 Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "karamelize vanilya",
+        "deniz tuzu",
+        "kavrulmuş makademya",
+        "beyaz çikolata",
+        "tonka fasulyesi",
+        "hindistan cevizi çiçeği"
+      ],
+      "family": "gurme",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "7d7d7617a7465f50b5c51a1d9ab6e547",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        },
+        {
+          "id": "a1a7a8dc654358dab7350114e769ec8a",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "591bb9d7f3105b6397eb775782980b67",
+      "code": null,
+      "name": "Cheirosa 76 Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "siyah frenk üzümü",
+        "armut nektarı",
+        "yasemin",
+        "vanilya kreması",
+        "frezya",
+        "amber odunları",
+        "karamelize paçuli"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "e91b066893a35d1aac87b2f7a3000279",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        },
+        {
+          "id": "a7ee47a7dce854f2932a90003f545451",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-76-perfume-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "08bb3ea2bbfe5bb1885e369b19625792",
+      "code": null,
+      "name": "Libre Eau de Parfum",
+      "brand": "Yves Saint Laurent Beauty",
+      "kind": "perfume",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Yves Saint Laurent Beauty",
+        "url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "lavanta",
+        "portakal çiçeği",
+        "misk",
+        "vanilya"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Yves Saint Laurent Beauty",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "9fc7a39645e05ccb8eb469fe33afc75e",
+          "label": "10 ml EDP",
+          "size_ml": 10,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "626ca3dac998576b9c270ebcf665f249",
+          "label": "30 ml EDP",
+          "size_ml": 30,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "97dfde9a863c5d10a1e62c1296e6d7ad",
+          "label": "50 ml EDP",
+          "size_ml": 50,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "8075c8beef1a5de79f05084880cb5037",
+          "label": "90 ml EDP",
+          "size_ml": 90,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "d906e820b01151cfa6e5062c731d544c",
+          "label": "100 ml Refill EDP",
+          "size_ml": 100,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "86bb3be1ee215d6283882cf17f50997a",
+          "label": "150 ml EDP",
+          "size_ml": 150,
+          "concentration": "EDP",
+          "source_url": "https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    },
+    {
+      "id": "7d22389f87a65cc5890d75ba49a58cad",
+      "code": null,
+      "name": "Peony & Blush Suede Cologne",
+      "brand": "Jo Malone London",
+      "kind": "perfume",
+      "reviewed": 1,
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "source": {
+        "source_name": "Jo Malone London",
+        "url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+        "observed_at": "2026-09-27T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "şakayık",
+        "kırmızı elma",
+        "yasemin",
+        "gül",
+        "süet"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Jo Malone London",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "027cae7f583c5b94965a622f0e95f738",
+          "label": "9 ml Cologne",
+          "size_ml": 9,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "8f2f479a4bee55598bb9aa6ee0ba4a81",
+          "label": "30 ml Cologne",
+          "size_ml": 30,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "fdc2380d5a9d55ea8b2c1cfeac499405",
+          "label": "50 ml Cologne",
+          "size_ml": 50,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        },
+        {
+          "id": "1413539b344854fd9f5e4869d1628aa4",
+          "label": "100 ml Cologne",
+          "size_ml": 100,
+          "concentration": "Cologne",
+          "source_url": "https://www.jomalone.com/product/25946/27028/colognes/peony-blush-suede-cologne",
+          "observed_at": "2026-09-27T00:00:00+00:00"
+        }
+      ]
+    }
+  ]
+}
