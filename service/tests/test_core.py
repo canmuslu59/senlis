@@ -59,6 +59,8 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(verified['notes'], ['rose'])
         self.assertTrue(any(p['field'] == 'notes' and p['source_name'] == 'Official brand'
                             for p in verified['provenance']))
+        with self.assertRaisesRegex(ValueError, 'nonempty'):
+            self.db.verified_fact(product['id'], 'notes', [], 'https://brand.example/rose', 'Official brand')
 
     def test_sync_refreshes_first_page_and_rotates_later_pages(self):
         requested = []

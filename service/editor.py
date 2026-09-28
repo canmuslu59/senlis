@@ -1,8 +1,26 @@
 """Explicit human review commands for the runner's persistent editorial SQLite."""
 import argparse
 import json
+from urllib.parse import urlparse
 
 from .core import Store
+
+
+def verify_notes(db, product_id, notes, source_url, source_name):
+    """Record notes an editor checked on an independent product source page."""
+    product = db.product(product_id)
+    if product is None:
+        raise ValueError('reviewed product required before adding notes')
+    host = (urlparse(source_url).hostname or '').lower()
+    if not source_url.startswith('https://') or not host or host == 'openbeautyfacts.org' or \
+            host.endswith('.openbeautyfacts.org') or \
+            host.startswith('fragrantica.') or '.fragrantica.' in host:
+        raise ValueError('independent source page required for scent notes')
+    cleaned = [note.strip() for note in notes]
+    if not source_name.strip() or not 1 <= len(cleaned) <= 60 or not all(
+            1 <= len(note) <= 80 for note in cleaned) or len({note.casefold() for note in cleaned}) != len(cleaned):
+        raise ValueError('nonempty, distinct note list and source name required')
+    db.verified_fact(product_id, 'notes', cleaned, source_url, source_name)
 
 
 def main():
@@ -16,6 +34,11 @@ def main():
     approve = sub.add_parser('approve-product')
     approve.add_argument('id')
     approve.add_argument('--checked-url', required=True)
+    notes = sub.add_parser('verify-notes')
+    notes.add_argument('id')
+    notes.add_argument('--checked-url', required=True, help='Independent brand or reusable note source')
+    notes.add_argument('--source-name', required=True)
+    notes.add_argument('--note', action='append', required=True, help='Repeat for every checked scent note')
     story = sub.add_parser('publish-news')
     story.add_argument('id')
     story.add_argument('--checked-url', required=True)
@@ -36,6 +59,9 @@ def main():
             raise SystemExit('Candidate/source URL mismatch; inspect the queue first')
         db.review_product(args.id, True)
         print(f'Approved sourced product: {args.id}')
+    elif args.command == 'verify-notes':
+        verify_notes(db, args.id, args.note, args.checked_url, args.source_name)
+        print(f'Verified {len(args.note)} sourced scent notes for {args.id}')
     elif args.command == 'publish-news':
         with db.connect() as conn:
             candidate = db.one(db.query(conn, '''SELECT id,title,url,source_name FROM news_candidates

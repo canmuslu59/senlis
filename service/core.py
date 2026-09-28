@@ -291,7 +291,8 @@ class Store:
     def verified_fact(self, product_id, field, value, source_url, source_name, verified_at=None):
         if field not in ('notes', 'family', 'intensity') or not source_url.startswith('https://'):
             raise ValueError('unsupported or unlinked product fact')
-        if field == 'notes' and (not isinstance(value, list) or not all(isinstance(x, str) and x.strip() for x in value)):
+        if field == 'notes' and (not isinstance(value, list) or not value or
+                                 not all(isinstance(x, str) and x.strip() for x in value)):
             raise ValueError('notes must be a nonempty string list')
         if field == 'family' and (not isinstance(value, str) or not value.strip()):
             raise ValueError('family required')

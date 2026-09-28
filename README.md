@@ -64,7 +64,12 @@ automated source import alone is never evidence that its facts are correct.
 On the runner, inspect candidates with `python -m service.editor --database
 PATH/TO/catalogue.sqlite products` and page with `--offset 100`. After opening
 and checking the named source page, explicitly approve one by ID using
-`approve-product ID --checked-url https://...`. Export with
+`approve-product ID --checked-url https://...`. After independently checking
+the scent notes on an official brand or reusable source page, add them with
+`verify-notes ID --checked-url https://brand.example/product --source-name Brand
+--note Gül --note Misk`. The command rejects Open Beauty Facts and Fragrantica
+as scent-note sources; an INCI ingredient list or a copied community pyramid
+does not become a checked note claim. Export with
 `python -m service.export_catalog --database PATH/TO/catalogue.sqlite
 --output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json
 --if-changed`, review the JSON diff, and publish it through a reviewed commit to
