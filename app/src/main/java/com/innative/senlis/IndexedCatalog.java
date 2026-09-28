@@ -177,10 +177,15 @@ public final class IndexedCatalog {
             MatchEngine.Fragrance item = get(id);
             if (item != null && !MatchEngine.score(profile, item).excluded) ranked.add(item);
         }
-        ranked.sort(Comparator.comparingInt((MatchEngine.Fragrance item) -> {
-            Integer percent = MatchEngine.score(profile, item).percent;
-            return percent == null ? -1 : percent;
-        }).reversed().thenComparing(item -> item.name));
+        // Collections.sort with an explicit comparator also works on API 23.
+        Collections.sort(ranked, new Comparator<MatchEngine.Fragrance>() {
+            @Override public int compare(MatchEngine.Fragrance a, MatchEngine.Fragrance b) {
+                Integer first = MatchEngine.score(profile, a).percent;
+                Integer second = MatchEngine.score(profile, b).percent;
+                int order = Integer.compare(second == null ? -1 : second, first == null ? -1 : first);
+                return order != 0 ? order : a.name.compareTo(b.name);
+            }
+        });
         return new ArrayList<>(ranked.subList(0, Math.min(Math.max(limit, 0), ranked.size())));
     }
 
@@ -257,7 +262,7 @@ public final class IndexedCatalog {
 
     private static SQLiteDatabase verified(File file) throws Exception {
         SQLiteDatabase candidate = SQLiteDatabase.openDatabase(file.getPath(), null,
-            SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+            SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         try {
             if (candidate.getVersion() != 3 || !"3".equals(meta(candidate, "schema_version")))
                 throw new IllegalArgumentException("unsupported catalogue schema");
@@ -267,8 +272,12 @@ public final class IndexedCatalog {
                 || !"ok".equals(string(candidate, "PRAGMA quick_check")))
                 throw new IllegalArgumentException("invalid catalogue");
             if (meta(candidate, "generated_at").isEmpty()) throw new IllegalArgumentException("missing date");
-            return candidate;
-        } catch (Exception failure) { candidate.close(); throw failure; }
+            // Android's FTS4 integrity check writes to its shadow table. Verify on
+            // the private writable copy, then expose a read-only handle to the UI.
+            candidate.close();
+            return SQLiteDatabase.openDatabase(file.getPath(), null,
+                SQLiteDatabase.OPEN_READONLY | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+        } catch (Exception failure) { if (candidate.isOpen()) candidate.close(); throw failure; }
     }
 
     private static String meta(SQLiteDatabase database, String key) {
