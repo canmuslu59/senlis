@@ -51,7 +51,7 @@ def main():
     parser.add_argument('--database', default='senlis-editorial.sqlite')
     parser.add_argument('--output', default='docs/catalogue.json')
     parser.add_argument('--asset-output', help='copy the same verified snapshot into the APK assets')
-    parser.add_argument('--seed', action='store_true', help='add four manually verified brand entries')
+    parser.add_argument('--seed', action='store_true', help='add manually verified brand entries')
     parser.add_argument('--if-changed', action='store_true', help='keep the previous timestamp if facts are unchanged')
     args = parser.parse_args()
     db = Store(args.database)

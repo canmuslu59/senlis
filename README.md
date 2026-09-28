@@ -1,7 +1,7 @@
 # SENLIS
 
 Native Turkish Android fragrance discovery app. The fragrance catalogue lives on
-the device. The first APK contains four real products reviewed against official
+the device. The development APK contains six real products reviewed against official
 brand pages, with source links and dates. Taste choices, favourites and private
 notes stay on the phone. This branch remains a development preview; live
 community and news push need a SENLIS Firebase project before the final APK
@@ -23,22 +23,36 @@ review and comparison, but Android no longer parses it as its working catalog.
 The editorial SQLite database is a **single curator workspace**, not a database
 for each user. It stores candidate product records, source attribution and
 review decisions. The exporter includes reviewed products only; unknown notes,
-prices and ratings are left unknown. Open Beauty Facts candidates need a human
+prices and ratings are left unknown unless separately verified. Open Beauty Facts candidates need a human
 source check before approval. A changed source identity returns to the queue.
 No fictional products, speculative prices or copied brand imagery are bundled.
+Product names are discovered through Open Beauty Facts and checked official
+brand pages. Systematically collecting names from Fragrantica, even when notes
+and images would come from elsewhere, is outside this pipeline under its terms.
 
 `python -m service.catalogue_package --database PATH/TO/catalogue.sqlite
 --output docs/catalogue.sqlite` exports only reviewed fragrances with
 individually sourced notes. The monthly workflow uploads it for manual review.
 It reports actual counts and refuses to replace a valid package if attribution
 is malformed. After review, publish the same package to `docs/` and the Android
-asset on the default branch. The current package contains **four** products.
+asset on the default branch. The current package contains **six** products.
 
 The revised target of approximately 141,000 distinct fragrances **with sourced scent
 notes** is not yet met. See [the source and scale assessment](docs/catalogue-scale-assessment.md)
-for verified source counts and usage limitations. The present four-record
+for verified source counts and usage limitations. The present six-record
 SQLite package must not be
 reported as a large catalogue.
+
+The uploaded package and subsequent 154,154-row TXT were
+[audited](docs/uploaded-name-package-assessment.md). The original ZIP contains
+only a downloader; the TXT's 154,154 rows normalize to 126,826 brand/name keys.
+Parfumo/Fragrantica-derived rows cannot be treated as licensed app data. The
+read-only tool `python -m service.candidate_audit PATH/TO/FILE` measures the
+actual file. With `--stage-doevent --database PATH/TO/editorial.sqlite`, it
+stores only eligible names in a **private review queue**. The actual TXT yielded
+26,229 distinct private leads; none are published or counted as note-backed
+fragrances. Its third source lacks original field-level provenance, so each
+selected lead still requires independent product and note verification.
 
 To bootstrap and verify the snapshot locally:
 
@@ -75,6 +89,27 @@ does not become a checked note claim. Export with
 --if-changed`, review the JSON diff, and publish it through a reviewed commit to
 `main` together with the reviewed SQLite file copied to the Android asset.
 The APK is still useful offline if this process is delayed.
+
+An editor can add a product found directly on a manufacturer's page with
+`add-brand-product --name '...' --brand '...' --kind perfume
+--checked-url https://brand.example/product --note '...'` (repeat `--note`).
+The human-checked URL and each note remain in the database. Verified prices
+can be recorded with `record-offer ID --retailer '...' --checked-url
+https://shop.example/product --amount-minor 129900 --currency TRY --country TR
+--variant '90 ml' --observed-at 2026-09-28T10:00:00+00:00`. This represents a
+dated offer for one variant, not a timeless product price. Offers older than
+30 days are excluded from the next SQLite export and hidden on the device when
+they expire; recheck them before each publication. The example numbers and
+domains in this command are documentation placeholders, not catalogue records.
+
+`record-photo ID --image-url https://images.example/asset.jpg --checked-url
+https://images.example/asset --license-name '...' --license-url
+https://images.example/license --attribution '...'` records an image only when
+the editor has checked explicit app reuse rights for that asset. Search engine
+thumbnails and Fragrantica images are not accepted as rights evidence. The app
+loads licensed HTTPS images with an editorial illustration as a fallback and
+links the credit and license. The current package has **zero** licensed product
+photos and **zero** current price observations; we do not invent either.
 
 ## Shared features
 

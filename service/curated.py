@@ -23,6 +23,22 @@ OFFICIAL_PRODUCTS = [
         'variants': [{'label': '90 ml', 'size_ml': 90}, {'label': '240 ml', 'size_ml': 240}],
     },
     {
+        'name': 'Cheirosa 71 Perfume Mist', 'brand': 'Sol de Janeiro', 'kind': 'body_mist',
+        'source_url': 'https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist',
+        'notes': ['karamelize vanilya', 'deniz tuzu', 'kavrulmuş makademya', 'beyaz çikolata',
+                  'tonka fasulyesi', 'hindistan cevizi çiçeği'],
+        'family': 'gurme', 'verified_at': '2026-09-28T00:00:00+00:00',
+        'variants': [{'label': '90 ml', 'size_ml': 90}, {'label': '240 ml', 'size_ml': 240}],
+    },
+    {
+        'name': 'Cheirosa 40 Bom Dia Bright Perfume Mist', 'brand': 'Sol de Janeiro', 'kind': 'body_mist',
+        'source_url': 'https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist',
+        'notes': ['siyah amber erik', 'frenk üzümü likörü', 'yasemin çiçekleri',
+                  'brezilya orkidesi', 'vanilya odunları', 'sıcak misk'],
+        'family': 'çiçeksi', 'verified_at': '2026-09-28T00:00:00+00:00',
+        'variants': [{'label': '90 ml', 'size_ml': 90}, {'label': '240 ml', 'size_ml': 240}],
+    },
+    {
         'name': 'Libre Eau de Parfum', 'brand': 'Yves Saint Laurent Beauty', 'kind': 'perfume',
         'source_url': 'https://www.yslbeautyus.com/fragrance/womens-fragrances/libre/libre-eau-de-parfum/109YSL.html',
         'notes': ['lavanta', 'portakal çiçeği', 'misk', 'vanilya'],

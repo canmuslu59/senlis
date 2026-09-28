@@ -222,6 +222,22 @@ public final class IndexedCatalog {
                 .put("source_url", c.getString(3)).put("observed_at", c.getString(4)));
         }
         item.put("variants", variants);
+        try (Cursor c = db.rawQuery("SELECT image_url,source_url,license_name,license_url,attribution,verified_at "
+            + "FROM fragrance_photos WHERE fragrance_id=?", new String[]{id})) {
+            if (c.moveToFirst()) item.put("photo", new JSONObject().put("image_url", c.getString(0))
+                .put("source_url", c.getString(1)).put("license_name", c.getString(2))
+                .put("license_url", c.getString(3)).put("attribution", c.getString(4))
+                .put("verified_at", c.getString(5)));
+        }
+        JSONArray offers = new JSONArray();
+        try (Cursor c = db.rawQuery("SELECT retailer,offer_url,amount_minor,currency,country,variant_label,observed_at "
+            + "FROM fragrance_offers WHERE fragrance_id=? ORDER BY observed_at DESC LIMIT 12", new String[]{id})) {
+            while (c.moveToNext()) offers.put(new JSONObject().put("retailer", c.getString(0))
+                .put("offer_url", c.getString(1)).put("amount_minor", c.getInt(2))
+                .put("currency", c.getString(3)).put("country", c.getString(4))
+                .put("variant_label", c.getString(5)).put("observed_at", c.getString(6)));
+        }
+        item.put("offers", offers);
         return Catalogue.parse(item);
     }
 
@@ -265,7 +281,7 @@ public final class IndexedCatalog {
         SQLiteDatabase candidate = SQLiteDatabase.openDatabase(file.getPath(), null,
             SQLiteDatabase.OPEN_READWRITE | SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         try {
-            if (candidate.getVersion() != 3 || !"3".equals(meta(candidate, "schema_version")))
+            if (candidate.getVersion() != 4 || !"4".equals(meta(candidate, "schema_version")))
                 throw new IllegalArgumentException("unsupported catalogue schema");
             int count = Integer.parseInt(meta(candidate, "fragrances"));
             if (count <= 0 || count != integer(candidate, "SELECT count(*) FROM fragrances")

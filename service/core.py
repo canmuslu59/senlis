@@ -12,11 +12,31 @@ import sqlite3
 import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
 
 def now():
     return datetime.now(timezone.utc).isoformat()
+
+
+def independent_https(url):
+    """Require a direct source; search results and Fragrantica are not import grants."""
+    parsed = urlparse(url)
+    host = (parsed.hostname or '').lower()
+    return parsed.scheme == 'https' and bool(host) and not (
+        host == 'fragrantica.com' or host.startswith('fragrantica.') or
+        '.fragrantica.' in host or host.startswith('google.') or
+        '.google.' in host or host.endswith('.gstatic.com') or
+        host in ('bing.com', 'www.bing.com'))
+
+
+def recent_observation(value, days=30):
+    try:
+        checked = datetime.fromisoformat(value)
+        return checked.tzinfo is not None and datetime.now(timezone.utc) - timedelta(days=days) <= checked <= datetime.now(timezone.utc) + timedelta(days=1)
+    except (TypeError, ValueError):
+        return False
 
 
 def normalize_obf(raw):
@@ -85,6 +105,20 @@ CREATE TABLE IF NOT EXISTS product_facts (
  field TEXT NOT NULL, value TEXT NOT NULL, source_url TEXT NOT NULL,
  source_name TEXT NOT NULL, verified_at TEXT NOT NULL,
  PRIMARY KEY(product_id,field));
+CREATE TABLE IF NOT EXISTS product_photos (
+ product_id TEXT PRIMARY KEY REFERENCES products(id) ON DELETE CASCADE,
+ image_url TEXT NOT NULL, source_url TEXT NOT NULL, license_name TEXT NOT NULL,
+ license_url TEXT NOT NULL, attribution TEXT NOT NULL, verified_at TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS product_offers (
+ product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+ retailer TEXT NOT NULL, offer_url TEXT NOT NULL, amount_minor INTEGER NOT NULL,
+ currency TEXT NOT NULL, country TEXT NOT NULL, variant_label TEXT NOT NULL,
+ observed_at TEXT NOT NULL, PRIMARY KEY(product_id,offer_url,variant_label));
+CREATE TABLE IF NOT EXISTS external_name_leads (
+ id TEXT PRIMARY KEY, brand TEXT NOT NULL, name TEXT NOT NULL,
+ source_name TEXT NOT NULL, source_url TEXT NOT NULL,
+ status TEXT NOT NULL DEFAULT 'pending', discovered_at TEXT NOT NULL);
+CREATE INDEX IF NOT EXISTS external_name_leads_queue ON external_name_leads(status,brand,name);
 CREATE TABLE IF NOT EXISTS import_runs (
  id TEXT PRIMARY KEY, source TEXT NOT NULL, started_at TEXT NOT NULL,
  finished_at TEXT, accepted INTEGER NOT NULL DEFAULT 0, rejected INTEGER NOT NULL DEFAULT 0,
@@ -215,10 +249,42 @@ class Store:
                 ORDER BY p.updated_at DESC,p.id DESC LIMIT ? OFFSET ?''',
                 (max(1, min(100, int(limit))), max(0, int(offset)))))
 
+    def stage_doevent_names(self, rows):
+        """Private research leads only; no inherited notes, photos or approval."""
+        source_url = 'https://huggingface.co/datasets/doevent/perfume'
+        staged = skipped = 0
+        with self.connect() as conn:
+            for row in rows:
+                brand = str(row.get('brand') or '').strip()
+                name = str(row.get('name') or '').strip()
+                if row.get('source') != 'doevent-perfume' or row.get('source_url') != source_url or \
+                        not 2 <= len(brand) <= 120 or not 2 <= len(name) <= 180:
+                    skipped += 1
+                    continue
+                normalized = re.sub(r'\W+', '', brand.casefold()) + '/' + \
+                    re.sub(r'\W+', '', name.casefold())
+                lead_id = uuid.uuid5(uuid.NAMESPACE_URL, source_url + '#' + normalized).hex
+                cursor = self.query(conn, '''INSERT INTO external_name_leads
+                    (id,brand,name,source_name,source_url,discovered_at) VALUES(?,?,?,?,?,?)
+                    ON CONFLICT(id) DO NOTHING''',
+                    (lead_id, brand, name, 'doevent/perfume', source_url, now()))
+                if cursor.rowcount:
+                    staged += 1
+                else:
+                    skipped += 1
+        return {'staged': staged, 'skipped': skipped}
+
+    def lead_queue(self, limit=100, offset=0):
+        with self.connect() as conn:
+            return self.many(self.query(conn, '''SELECT id,brand,name,source_name,source_url,
+                discovered_at FROM external_name_leads WHERE status='pending'
+                ORDER BY brand,name,id LIMIT ? OFFSET ?''',
+                (max(1, min(100, int(limit))), max(0, int(offset)))))
+
     def import_brand_verified(self, name, brand, kind, source_url, notes, family=None,
                               verified_at=None, variants=None):
         """Human-reviewed official brand facts; no invented barcode, price or imagery."""
-        if kind not in ('perfume', 'body_mist') or not source_url.startswith('https://') or not name or not brand:
+        if kind not in ('perfume', 'body_mist') or not independent_https(source_url) or not name or not brand:
             raise ValueError('official product identity required')
         if not verified_at:
             raise ValueError('human verification timestamp required')
@@ -278,6 +344,12 @@ class Store:
             result.update(source=source, notes=mapped.get('notes'), family=mapped.get('family'),
                           intensity=mapped.get('intensity'), price=None,
                           rating=self.rating_summary(product_id))
+            result['photo'] = self.one(self.query(conn, '''SELECT image_url,source_url,license_name,
+                license_url,attribution,verified_at FROM product_photos WHERE product_id=?''', (product_id,)))
+            result['offers'] = [offer for offer in self.many(self.query(conn, '''SELECT retailer,
+                offer_url,amount_minor,currency,country,variant_label,observed_at
+                FROM product_offers WHERE product_id=? ORDER BY observed_at DESC''', (product_id,)))
+                if recent_observation(offer['observed_at'])]
             result['provenance'] = self.many(self.query(conn, '''SELECT field,source_name,source_url,
                 observed_at,license FROM product_sources WHERE product_id=?''', (product_id,)))
             result['provenance'] += [{'field': f['field'], 'source_name': f['source_name'],
@@ -288,8 +360,43 @@ class Store:
                 (product_id,)))
             return result
 
+    def record_photo(self, product_id, image_url, source_url, license_name,
+                     license_url, attribution, verified_at=None):
+        """An editor asserts and records an explicit reuse grant, never a search thumbnail."""
+        if not independent_https(image_url) or not independent_https(source_url):
+            raise ValueError('independent HTTPS image and source required')
+        if not independent_https(license_url) or not license_name.strip() or not attribution.strip():
+            raise ValueError('photo license URL, name and attribution required')
+        if not self.product(product_id):
+            raise ValueError('reviewed product required')
+        with self.connect() as conn:
+            self.query(conn, '''INSERT INTO product_photos VALUES(?,?,?,?,?,?,?)
+                ON CONFLICT(product_id) DO UPDATE SET image_url=excluded.image_url,
+                source_url=excluded.source_url,license_name=excluded.license_name,
+                license_url=excluded.license_url,attribution=excluded.attribution,
+                verified_at=excluded.verified_at''',
+                (product_id, image_url, source_url, license_name.strip(), license_url,
+                 attribution.strip(), verified_at or now()))
+
+    def record_offer(self, product_id, retailer, offer_url, amount_minor, currency,
+                     country, variant_label, observed_at):
+        """Prices are variant-specific observations; stale rows stay in the audit DB."""
+        if not self.product(product_id) or not independent_https(offer_url) or \
+                not retailer.strip() or not variant_label.strip() or \
+                type(amount_minor) is not int or not 0 < amount_minor < 2**31 or \
+                not re.fullmatch(r'[A-Z]{3}', currency) or not re.fullmatch(r'[A-Z]{2}', country) or \
+                not recent_observation(observed_at, 3650):
+            raise ValueError('offer needs a reviewed product, variant, source, amount and dated currency')
+        with self.connect() as conn:
+            self.query(conn, '''INSERT INTO product_offers VALUES(?,?,?,?,?,?,?,?)
+                ON CONFLICT(product_id,offer_url,variant_label) DO UPDATE SET
+                amount_minor=excluded.amount_minor,currency=excluded.currency,
+                country=excluded.country,retailer=excluded.retailer,observed_at=excluded.observed_at''',
+                (product_id, retailer.strip(), offer_url, amount_minor, currency,
+                 country, variant_label.strip(), observed_at))
+
     def verified_fact(self, product_id, field, value, source_url, source_name, verified_at=None):
-        if field not in ('notes', 'family', 'intensity') or not source_url.startswith('https://'):
+        if field not in ('notes', 'family', 'intensity') or not independent_https(source_url):
             raise ValueError('unsupported or unlinked product fact')
         if field == 'notes' and (not isinstance(value, list) or not value or
                                  not all(isinstance(x, str) and x.strip() for x in value)):

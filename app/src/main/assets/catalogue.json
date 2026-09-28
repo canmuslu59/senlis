@@ -1,7 +1,90 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-27T21:21:06.339529+00:00",
+  "generated_at": "2026-09-28T01:26:50.337495+00:00",
   "items": [
+    {
+      "id": "dc7afc148ca55485a1bd404cde40a2d7",
+      "code": null,
+      "name": "Cheirosa 40 Bom Dia Bright Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "siyah amber erik",
+        "frenk üzümü likörü",
+        "yasemin çiçekleri",
+        "brezilya orkidesi",
+        "vanilya odunları",
+        "sıcak misk"
+      ],
+      "family": "çiçeksi",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "d853523e2dc05befb1e121b7049023ea",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        },
+        {
+          "id": "57a7e874295b54959ee71f9001f2e13d",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/collections/fragrances/products/cheirosa-40-hair-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
     {
       "id": "32dfdfd355015cdb894eee0d264f687b",
       "code": null,
@@ -28,6 +111,8 @@
       "family": null,
       "intensity": null,
       "price": null,
+      "photo": null,
+      "offers": [],
       "provenance": [
         {
           "field": "brand",
@@ -103,6 +188,8 @@
       "family": "çiçeksi",
       "intensity": null,
       "price": null,
+      "photo": null,
+      "offers": [],
       "provenance": [
         {
           "field": "brand",
@@ -160,6 +247,89 @@
       ]
     },
     {
+      "id": "fdc2ba70e1a85883b09ba828c87aef55",
+      "code": null,
+      "name": "Cheirosa 71 Perfume Mist",
+      "brand": "Sol de Janeiro",
+      "kind": "body_mist",
+      "reviewed": 1,
+      "updated_at": "2026-09-28T00:00:00+00:00",
+      "source": {
+        "source_name": "Sol de Janeiro",
+        "url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+        "observed_at": "2026-09-28T00:00:00+00:00",
+        "license": "brand product page"
+      },
+      "notes": [
+        "karamelize vanilya",
+        "deniz tuzu",
+        "kavrulmuş makademya",
+        "beyaz çikolata",
+        "tonka fasulyesi",
+        "hindistan cevizi çiçeği"
+      ],
+      "family": "gurme",
+      "intensity": null,
+      "price": null,
+      "photo": null,
+      "offers": [],
+      "provenance": [
+        {
+          "field": "brand",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "kind",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "name",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "brand product page"
+        },
+        {
+          "field": "family",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        },
+        {
+          "field": "notes",
+          "source_name": "Sol de Janeiro",
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00",
+          "license": "source-linked fact"
+        }
+      ],
+      "variants": [
+        {
+          "id": "7d7d7617a7465f50b5c51a1d9ab6e547",
+          "label": "90 ml",
+          "size_ml": 90,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        },
+        {
+          "id": "a1a7a8dc654358dab7350114e769ec8a",
+          "label": "240 ml",
+          "size_ml": 240,
+          "concentration": null,
+          "source_url": "https://soldejaneiro.com/products/cheirosa-71-body-fragrance-mist",
+          "observed_at": "2026-09-28T00:00:00+00:00"
+        }
+      ]
+    },
+    {
       "id": "08bb3ea2bbfe5bb1885e369b19625792",
       "code": null,
       "name": "Libre Eau de Parfum",
@@ -182,6 +352,8 @@
       "family": "çiçeksi",
       "intensity": null,
       "price": null,
+      "photo": null,
+      "offers": [],
       "provenance": [
         {
           "field": "brand",
@@ -294,6 +466,8 @@
       "family": "çiçeksi",
       "intensity": null,
       "price": null,
+      "photo": null,
+      "offers": [],
       "provenance": [
         {
           "field": "brand",

@@ -39,6 +39,11 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.Locale;
+import java.util.Currency;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public final class MainActivity extends Activity {
     private static final int INK = Color.rgb(18, 12, 9);
@@ -828,13 +833,17 @@ public final class MainActivity extends Activity {
         scroll.addView(content);
         root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
         ImageView hero = image(R.drawable.fragrance_editorial);
-        hero.setContentDescription("Gerçek ürün fotoğrafı yerine SENLIS editoryal görseli");
+        JSONObject licensedPhoto = product == null ? null : product.optJSONObject("photo");
+        hero.setContentDescription(licensedPhoto == null ? "SENLIS editoryal görseli" :
+            "Kaynağı ve kullanım izni belirtilen ürün görseli; yüklenemezse SENLIS editoryal görseli");
         content.addView(hero, new LinearLayout.LayoutParams(-1, dp(300)));
+        if (licensedPhoto != null) LicensedPhotoLoader.show(hero, licensedPhoto.optString("image_url"));
 
         LinearLayout sheet = column();
         sheet.setPadding(dp(22), dp(25), dp(22), dp(36));
         sheet.setBackground(round(CREAM, 23, 0));
-        sheet.addView(label("KAYNAKLI ÜRÜN · FOTOĞRAF TEMSİLİ", 10, 0xFF795534, true));
+        sheet.addView(label(licensedPhoto == null ? "KAYNAKLI ÜRÜN · FOTOĞRAF TEMSİLİ" :
+            "KAYNAKLI ÜRÜN · LİSANSLI FOTOĞRAF", 10, 0xFF795534, true));
         addSpace(sheet, 7);
         sheet.addView(title(f.name, 31, INK));
         sheet.addView(label((product == null ? "" : product.optString("brand") + " · ") + f.type +
@@ -847,6 +856,29 @@ public final class MainActivity extends Activity {
                 if (variant != null) labels.add(variant.optString("label"));
             }
             sheet.addView(label("Doğrulanan boylar: " + TextUtils.join(" · ", labels), 13, 0xFF715849, false));
+        }
+        JSONArray offers = product == null ? null : product.optJSONArray("offers");
+        if (offers != null && offers.length() > 0) {
+            addSpace(sheet, 14);
+            sheet.addView(label("TARİHLİ SATIŞ FİYATLARI", 12, 0xFF835018, true));
+            for (int i = 0; i < offers.length(); i++) {
+                JSONObject offer = offers.optJSONObject(i);
+                if (offer == null || !freshOffer(offer.optString("observed_at"))) continue;
+                String offerUrl = offer.optString("offer_url");
+                try {
+                    NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("tr-TR"));
+                    Currency currency = Currency.getInstance(offer.optString("currency"));
+                    formatter.setCurrency(currency);
+                    int decimals = currency.getDefaultFractionDigits();
+                    if (decimals < 0 || decimals > 3) continue;
+                    String amount = formatter.format(offer.getLong("amount_minor") / Math.pow(10, decimals));
+                    TextView price = label(offer.optString("variant_label") + " · " + amount + " · " +
+                        offer.optString("retailer") + " · kontrol " + shortDate(offer.optString("observed_at")),
+                        13, 0xFF835018, false);
+                    price.setOnClickListener(v -> openUrl(offerUrl));
+                    sheet.addView(price);
+                } catch (Exception ignored) { /* Malformed offer is not shown. */ }
+            }
         }
         addSpace(sheet, 14);
         sheet.addView(label(match.excluded ? "Tercihlerinle uyumsuz" : match.percent == null ? "Yeterli eşleşme verisi yok" :
@@ -868,6 +900,13 @@ public final class MainActivity extends Activity {
                 13, 0xFF835018, false);
             link.setOnClickListener(v -> openUrl(url));
             sheet.addView(link);
+        }
+        if (licensedPhoto != null) {
+            String licenseUrl = licensedPhoto.optString("license_url");
+            TextView credit = label("Fotoğraf: " + licensedPhoto.optString("attribution") + " · " +
+                licensedPhoto.optString("license_name"), 12, 0xFF835018, false);
+            credit.setOnClickListener(v -> openUrl(licenseUrl));
+            sheet.addView(credit);
         }
         addSpace(sheet, 7);
         TextView correction = label("Bu kayıtta hata mı var? Düzeltme bildir", 13, 0xFF835018, true);
@@ -944,6 +983,17 @@ public final class MainActivity extends Activity {
     }
 
     private String shortDate(String value) { return value.length() >= 10 ? value.substring(0, 10) : value; }
+
+    private boolean freshOffer(String observedAt) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            format.setLenient(false);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date day = format.parse(shortDate(observedAt));
+            long age = System.currentTimeMillis() - day.getTime();
+            return age >= -24L * 60 * 60 * 1000 && age <= 30L * 24 * 60 * 60 * 1000;
+        } catch (Exception ignored) { return false; }
+    }
 
     private LinearLayout bottomNav() {
         LinearLayout nav = row();

@@ -138,7 +138,7 @@ class StoreTests(unittest.TestCase):
         seed(self.db)
         seed(self.db)
         items = self.db.catalogue('', 50, 0)
-        self.assertEqual(len(items), 4)
+        self.assertEqual(len(items), 6)
         for item in items:
             detail = self.db.product(item['id'])
             self.assertTrue(detail['source']['url'].startswith('https://'))

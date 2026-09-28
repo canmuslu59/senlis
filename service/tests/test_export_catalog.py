@@ -17,7 +17,7 @@ class ExportCatalogTest(unittest.TestCase):
                            'kind': 'perfume', 'source_url': 'https://world.openbeautyfacts.org/product/12345678',
                            'observed_at': '2026-09-27T00:00:00+00:00'})
             data = snapshot(db)
-            self.assertEqual(len(data['items']), 4)
+            self.assertEqual(len(data['items']), 6)
             for item in data['items']:
                 self.assertEqual(item['reviewed'], 1)
                 self.assertNotIn('rating', item)
@@ -25,7 +25,7 @@ class ExportCatalogTest(unittest.TestCase):
                 self.assertTrue(item['source']['url'].startswith('https://'))
                 self.assertTrue(item['provenance'])
             output = Path(temp) / 'catalogue.json'
-            self.assertEqual(write_snapshot(db, output), 4)
+            self.assertEqual(write_snapshot(db, output), 6)
             before = output.read_bytes()
             self.assertEqual(write_snapshot(db, output, if_changed=True), 0)
             self.assertEqual(output.read_bytes(), before)

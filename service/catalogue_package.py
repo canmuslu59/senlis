@@ -1,7 +1,6 @@
 """Build an indexed, source-linked local catalogue without claiming missing notes.
 
-This package is an intermediate delivery format. The Android preview still
-reads its four-record JSON snapshot until the paged SQLite UI is integrated.
+Only editor-reviewed identities and independently verified notes are shipped.
 """
 import argparse
 import json
@@ -10,7 +9,7 @@ import sqlite3
 import tempfile
 from pathlib import Path
 
-from .core import Store, now
+from .core import Store, independent_https, now, recent_observation
 
 
 def build_package(editorial: Store, output: str | Path) -> dict:
@@ -20,10 +19,10 @@ def build_package(editorial: Store, output: str | Path) -> dict:
     fd, pending = tempfile.mkstemp(prefix='senlis-', suffix='.sqlite', dir=target.parent)
     os.close(fd)
     package = sqlite3.connect(pending)
-    count = note_count = reviewed = 0
+    count = note_count = reviewed = photo_count = offer_count = 0
     try:
         package.executescript('''
-            PRAGMA user_version=3;
+            PRAGMA user_version=4;
             CREATE TABLE fragrances (
               id TEXT PRIMARY KEY, name TEXT NOT NULL, brand TEXT NOT NULL,
               kind TEXT NOT NULL, family TEXT, source_url TEXT NOT NULL,
@@ -41,6 +40,18 @@ def build_package(editorial: Store, output: str | Path) -> dict:
               label TEXT NOT NULL, size_ml INTEGER, concentration TEXT,
               source_url TEXT NOT NULL, observed_at TEXT NOT NULL,
               PRIMARY KEY(fragrance_id,label));
+            CREATE TABLE fragrance_photos (
+              fragrance_id TEXT PRIMARY KEY REFERENCES fragrances(id),
+              image_url TEXT NOT NULL, source_url TEXT NOT NULL,
+              license_name TEXT NOT NULL, license_url TEXT NOT NULL,
+              attribution TEXT NOT NULL, verified_at TEXT NOT NULL);
+            CREATE TABLE fragrance_offers (
+              fragrance_id TEXT NOT NULL REFERENCES fragrances(id),
+              retailer TEXT NOT NULL, offer_url TEXT NOT NULL,
+              amount_minor INTEGER NOT NULL, currency TEXT NOT NULL,
+              country TEXT NOT NULL, variant_label TEXT NOT NULL,
+              observed_at TEXT NOT NULL,
+              PRIMARY KEY(fragrance_id,offer_url,variant_label));
             CREATE VIRTUAL TABLE fragrance_search USING fts4(
               fragrance_id, name, brand, tokenize=unicode61);
             CREATE TABLE package_meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -103,9 +114,39 @@ def build_package(editorial: Store, output: str | Path) -> dict:
                     package.execute('INSERT INTO fragrance_variants VALUES(?,?,?,?,?,?)',
                         (v['product_id'], v['label'], v['size_ml'], v['concentration'],
                          v['source_url'], v['observed_at']))
-        metadata = {'schema_version': 3, 'generated_at': now(), 'fragrances': count,
+            photos = editorial.query(source, '''SELECT m.* FROM product_photos m
+                JOIN products p ON p.id=m.product_id
+                JOIN product_facts n ON n.product_id=p.id AND n.field='notes'
+                WHERE p.reviewed=1 ORDER BY m.product_id''')
+            while batch := photos.fetchmany(500):
+                for photo in batch:
+                    m = dict(photo)
+                    if not all(independent_https(m[field]) for field in ('image_url', 'source_url', 'license_url')) or \
+                            not m['license_name'] or not m['attribution'] or not m['verified_at']:
+                        raise ValueError(f'photo provenance missing: {m["product_id"]}')
+                    package.execute('INSERT INTO fragrance_photos VALUES(?,?,?,?,?,?,?)',
+                        (m['product_id'], m['image_url'], m['source_url'], m['license_name'],
+                         m['license_url'], m['attribution'], m['verified_at']))
+                    photo_count += 1
+            offers = editorial.query(source, '''SELECT o.* FROM product_offers o
+                JOIN products p ON p.id=o.product_id
+                JOIN product_facts n ON n.product_id=p.id AND n.field='notes'
+                WHERE p.reviewed=1 ORDER BY o.product_id,o.observed_at DESC''')
+            while batch := offers.fetchmany(500):
+                for offer in batch:
+                    o = dict(offer)
+                    if not recent_observation(o['observed_at']):
+                        continue
+                    if not independent_https(o['offer_url']) or o['amount_minor'] <= 0:
+                        raise ValueError(f'offer provenance missing: {o["product_id"]}')
+                    package.execute('INSERT INTO fragrance_offers VALUES(?,?,?,?,?,?,?,?)',
+                        (o['product_id'], o['retailer'], o['offer_url'], o['amount_minor'],
+                         o['currency'], o['country'], o['variant_label'], o['observed_at']))
+                    offer_count += 1
+        metadata = {'schema_version': 4, 'generated_at': now(), 'fragrances': count,
                     'with_notes': count, 'note_claims': note_count,
-                    'reviewed_without_notes': reviewed - count}
+                    'reviewed_without_notes': reviewed - count,
+                    'photos': photo_count, 'current_offers': offer_count}
         if not count:
             raise ValueError('refusing to publish an empty note-backed catalogue')
         package.executemany('INSERT INTO package_meta VALUES(?,?)',
