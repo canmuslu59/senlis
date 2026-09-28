@@ -56,6 +56,15 @@ dataset-listed, and neither photos nor prices are copied. The **bundled APK
 still contains ten products**; the larger package awaits Android device checks
 and the source decision before it can replace the published snapshot.
 
+For the database-only research work, [the source-preserving research snapshot](docs/research-database.md)
+retains all 154,154 observations, quarantines ten repeated headers, and uses a
+more conservative identity key that keeps differently named flankers apart.
+It measures 131,604 candidate groups, 88,485 with listed notes, and 12,443
+with conflicting note lists. Rebuild it with
+`python3 -m service.research_database INPUT.txt --output research.sqlite`.
+This private staging database is separate from the Android package; the older
+audit's punctuation-stripping key explains its smaller 126,826 count.
+
 To reproduce the local package from the supplied file:
 
 ```sh
