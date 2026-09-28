@@ -141,9 +141,10 @@ public final class IndexedCatalog {
         } else {
             // Name/brand FTS and indexed note lookup; never interpolate user input into SQL.
             sql = "SELECT id FROM (SELECT fragrance_id AS id FROM fragrance_search WHERE fragrance_search MATCH ? "
-                + "UNION SELECT fragrance_id AS id FROM fragrance_notes WHERE note LIKE ?) "
+                + "UNION SELECT fragrance_id AS id FROM fragrance_notes WHERE note>=? AND note<?) "
                 + "ORDER BY id LIMIT ? OFFSET ?";
-            args = new String[]{words, firstWord(query) + "%", String.valueOf(limit), String.valueOf(offset)};
+            String prefix = firstWord(query);
+            args = new String[]{words, prefix, prefix + "\uffff", String.valueOf(limit), String.valueOf(offset)};
         }
         List<MatchEngine.Fragrance> results = new ArrayList<>();
         try (Cursor cursor = db.rawQuery(sql, args)) {

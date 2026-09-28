@@ -37,6 +37,9 @@ class CataloguePackageTest(unittest.TestCase):
                     WHERE name LIKE '%Cheirosa 62%' ''').fetchone()[0], 'Sol de Janeiro')
                 self.assertEqual(conn.execute('''SELECT count(*) FROM fragrance_search
                     WHERE fragrance_search MATCH 'Cheirosa*' ''').fetchone()[0], 2)
+                plan = conn.execute('''EXPLAIN QUERY PLAN SELECT fragrance_id FROM fragrance_notes
+                    WHERE note>=? AND note<?''', ('vanilya', 'vanilya\uffff')).fetchall()
+                self.assertTrue(any('USING INDEX fragrance_notes_lookup' in row[3] for row in plan))
 
     def test_invalid_note_provenance_does_not_replace_previous_package(self):
         with tempfile.TemporaryDirectory() as directory:
