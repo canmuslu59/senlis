@@ -1,4 +1,4 @@
-name: Build perfume 150k dataset
+name: Export perfume 150k dataset
 
 on:
   push:
@@ -8,257 +8,28 @@ on:
       - .github/workflows/build-perfume-150k.yml
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build:
+  export:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: data/perfume-150k-20260928
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Verify dataset
+        run: |
+          test -f data/parfum_bodymist_150k.txt
+          wc -l data/parfum_bodymist_150k.txt
+          ls -lh data/parfum_bodymist_150k.txt
+
+      - name: Upload TXT artifact
+        uses: actions/upload-artifact@v4
         with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pandas pyarrow datasets requests huggingface_hub
-
-      - name: Build TXT dataset
-        env:
-          HF_HUB_DISABLE_XET: "1"
-        run: |
-          python - <<'PY'
-          import ast
-          import csv
-          import re
-          from pathlib import Path
-          from urllib.parse import urlparse, unquote
-
-          import pandas as pd
-          import requests
-          from datasets import load_dataset
-
-          OUT = Path("data")
-          OUT.mkdir(parents=True, exist_ok=True)
-
-          def clean(v):
-              if v is None:
-                  return ""
-              try:
-                  if pd.isna(v):
-                      return ""
-              except Exception:
-                  pass
-              s = str(v).strip()
-              if s.lower() in {"nan","none","null","na","n/a"}:
-                  return ""
-              return re.sub(r"\s+", " ", s)
-
-          def listish(v):
-              if isinstance(v, (list, tuple, set)):
-                  vals = list(v)
-              else:
-                  s = clean(v)
-                  if not s:
-                      return []
-                  vals = None
-                  if s[:1] in "[(" and s[-1:] in "])":
-                      try:
-                          p = ast.literal_eval(s)
-                          if isinstance(p, (list, tuple, set)):
-                              vals = list(p)
-                      except Exception:
-                          pass
-                  if vals is None:
-                      if ";" in s or "|" in s:
-                          vals = re.split(r"\s*[;|]\s*", s)
-                      elif "," in s:
-                          vals = re.split(r"\s*,\s*", s)
-                      else:
-                          vals = [s]
-              out=[]; seen=set()
-              for x in vals:
-                  x=clean(x).strip("[]'\" ")
-                  if not x: continue
-                  k=x.casefold()
-                  if k not in seen:
-                      seen.add(k); out.append(x)
-              return out
-
-          def txt(v):
-              return "; ".join(listish(v))
-
-          def phrase_notes(s):
-              s=clean(s).strip(" .;")
-              if not s: return ""
-              s=re.sub(r"\s+(?:and|&)\s+", ", ", s, flags=re.I)
-              out=[]; seen=set()
-              for p in [x.strip(" .;") for x in s.split(",")]:
-                  if p and p.casefold() not in seen:
-                      seen.add(p.casefold()); out.append(p)
-              return "; ".join(out)
-
-          def parse_desc(d):
-              d=clean(d)
-              if not d: return "","",""
-              def grab(pat):
-                  m=re.search(pat,d,flags=re.I|re.S)
-                  return phrase_notes(m.group(1)) if m else ""
-              top=grab(r"\btop\s+notes?\s+(?:are|is)\s+(.+?)(?=;\s*(?:middle|heart)\s+notes?|\.\s*(?:middle|heart)\s+notes?|\.$|$)")
-              middle=grab(r"\b(?:middle|heart)\s+notes?\s+(?:are|is)\s+(.+?)(?=;\s*base\s+notes?|\.\s*base\s+notes?|\.$|$)")
-              base=grab(r"\bbase\s+notes?\s+(?:are|is)\s+(.+?)(?=\.\s|$)")
-              return top,middle,base
-
-          def type_hint(*vals):
-              s=" ".join(clean(v).casefold() for v in vals)
-              if any(k in s for k in ["body mist","fragrance mist","body spray","body splash","hair & body mist","hair and body mist"]):
-                  return "body_mist"
-              return "perfume"
-
-          def merge_notes(top,middle,base,other=""):
-              vals=[]
-              for group in [top,middle,base,other]:
-                  for n in listish(group):
-                      if n.casefold() not in {x.casefold() for x in vals}:
-                          vals.append(n)
-              return "; ".join(vals)
-
-          frames=[]
-
-          # 1) TidyTuesday / Parfumo
-          url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-12-10/parfumo_data_clean.csv"
-          d1=pd.read_csv(url, low_memory=False)
-          r1=[]
-          for _,r in d1.iterrows():
-              top=txt(r.get("Top_Notes")); mid=txt(r.get("Middle_Notes")); base=txt(r.get("Base_Notes"))
-              r1.append({
-                  "brand":clean(r.get("Brand")),
-                  "name":clean(r.get("Name")),
-                  "type_hint":type_hint(r.get("Name"),r.get("Concentration")),
-                  "top_notes":top,
-                  "middle_notes":mid,
-                  "base_notes":base,
-                  "all_notes":merge_notes(top,mid,base),
-                  "main_accords":txt(r.get("Main_Accords")),
-                  "source":"TidyTuesday-Parfumo",
-                  "source_url":clean(r.get("URL")),
-              })
-          f1=pd.DataFrame(r1)
-          frames.append(f1)
-          print("TidyTuesday rows:", len(f1))
-
-          # 2) doevent/perfume
-          # The CSV in this repo has malformed quoting, so use the canonical JSON file.
-          j2 = requests.get(
-              "https://huggingface.co/datasets/doevent/perfume/resolve/main/perfumes.json",
-              timeout=180
-          )
-          j2.raise_for_status()
-          d2 = pd.DataFrame(j2.json())
-          r2=[]
-          for _,r in d2.iterrows():
-              desc=clean(r.get("description"))
-              top,mid,base=parse_desc(desc)
-              ing=txt(r.get("ingredients"))
-              r2.append({
-                  "brand":clean(r.get("brand")),
-                  "name":clean(r.get("name_perfume")),
-                  "type_hint":type_hint(r.get("name_perfume"),desc),
-                  "top_notes":top,
-                  "middle_notes":mid,
-                  "base_notes":base,
-                  "all_notes":ing or merge_notes(top,mid,base),
-                  "main_accords":"",
-                  "source":"doevent-perfume",
-                  "source_url":"https://huggingface.co/datasets/doevent/perfume",
-              })
-          f2=pd.DataFrame(r2)
-          frames.append(f2)
-          print("doevent rows:", len(f2))
-
-          # 3) anvo2/perfume-rec-assets
-          ds3=load_dataset("anvo2/perfume-rec-assets", split="train")
-          d3=ds3.to_pandas()
-          r3=[]
-          for _,r in d3.iterrows():
-              u=clean(r.get("url"))
-              brand=""; name=""
-              try:
-                  parts=[unquote(x) for x in urlparse(u).path.split("/") if x]
-                  if len(parts)>=3 and parts[0].casefold()=="perfume":
-                      brand=re.sub(r"[-_]+"," ",parts[1]).strip()
-                      name=re.sub(r"-\d+\.html$","",parts[2],flags=re.I)
-                      name=re.sub(r"\.html$","",name,flags=re.I)
-                      name=re.sub(r"[-_]+"," ",name).strip()
-              except Exception:
-                  pass
-              if not name:
-                  name=clean(r.get("Name"))
-                  name=re.sub(r"\s*for\s+(?:women(?:\s+and\s+men)?|men)\s*$","",name,flags=re.I).strip()
-              desc=clean(r.get("Description"))
-              top,mid,base=parse_desc(desc)
-              accords=txt(r.get("Main Accords")) or txt(r.get("accords"))
-              r3.append({
-                  "brand":brand,
-                  "name":name,
-                  "type_hint":type_hint(name,desc),
-                  "top_notes":top,
-                  "middle_notes":mid,
-                  "base_notes":base,
-                  "all_notes":merge_notes(top,mid,base),
-                  "main_accords":accords,
-                  "source":"anvo2-perfume-rec-assets",
-                  "source_url":u,
-              })
-          f3=pd.DataFrame(r3)
-          frames.append(f3)
-          print("anvo2 rows:", len(f3))
-
-          cols=["brand","name","type_hint","top_notes","middle_notes","base_notes","all_notes","main_accords","source","source_url"]
-          raw=pd.concat(frames, ignore_index=True)[cols]
-          raw=raw[raw["name"].fillna("").astype(str).str.strip().ne("")].copy()
-
-          # Keep raw multi-source rows to stay close to the user's ~150k target.
-          out=OUT/"parfum_bodymist_150k.txt"
-          raw.to_csv(out, sep="\t", index=False, encoding="utf-8-sig", quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
-
-          # A cleaner unique companion file as well.
-          def key(s):
-              return re.sub(r"[\W_]+","",clean(s).casefold(),flags=re.UNICODE)
-          u=raw.copy()
-          u["_key"]=u["brand"].map(key)+"|"+u["name"].map(key)
-          u["_score"]=(u["top_notes"].ne("").astype(int)+u["middle_notes"].ne("").astype(int)+u["base_notes"].ne("").astype(int))*10+u["all_notes"].str.len().fillna(0)
-          u=u.sort_values(["_key","_score"],ascending=[True,False],kind="stable").drop_duplicates("_key",keep="first").drop(columns=["_key","_score"])
-          u.to_csv(OUT/"parfum_bodymist_tekil.txt", sep="\t", index=False, encoding="utf-8-sig", quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
-
-          stats=[
-              f"Ham toplam kayıt: {len(raw):,}",
-              f"Tekil kayıt: {len(u):,}",
-              f"Herhangi bir nota alanı dolu ham kayıt: {(raw['all_notes'].fillna('').str.len()>0).sum():,}",
-              f"Üst nota dolu: {(raw['top_notes'].fillna('').str.len()>0).sum():,}",
-              f"Orta nota dolu: {(raw['middle_notes'].fillna('').str.len()>0).sum():,}",
-              f"Alt nota dolu: {(raw['base_notes'].fillna('').str.len()>0).sum():,}",
-              f"Body mist işaretli: {(raw['type_hint']=='body_mist').sum():,}",
-              "",
-              "Kaynaklar:",
-          ]
-          for src,n in raw["source"].value_counts().items():
-              stats.append(f"- {src}: {n:,}")
-          (OUT/"parfum_bodymist_150k_istatistik.txt").write_text("\n".join(stats),encoding="utf-8")
-          print("\n".join(stats))
-          PY
-
-      - name: Commit generated TXT files
-        run: |
-          git config user.name "ChatGPT Dataset Builder"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/parfum_bodymist_150k.txt data/parfum_bodymist_tekil.txt data/parfum_bodymist_150k_istatistik.txt
-          git commit -m "Generate ~150k perfume and body mist dataset"
-          git push origin data/perfume-150k-20260928
+          name: parfum-bodymist-150k-txt
+          path: data/parfum_bodymist_150k.txt
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 3
