@@ -1,12 +1,12 @@
 """Exercise production SQL syntax on an ephemeral CI PostgreSQL instance."""
 import os
 from service.core import Store
-from service.curated import seed
+from service.curated import OFFICIAL_PRODUCTS, seed
 
 db = Store(os.environ['DATABASE_URL'])
 db.migrate()
 seed(db)
-assert db.health()['catalogue_count'] == 4
+assert db.health()['catalogue_count'] == len(OFFICIAL_PRODUCTS)
 product = db.catalogue('Libre')[0]
 assert db.product(product['id'])['notes']
 user, token = db.register('ci@example.test', 'strong test password')
