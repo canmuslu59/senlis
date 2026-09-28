@@ -4,8 +4,15 @@ Research checked on 2026-09-28. The revised target is **approximately 141,000
 distinct perfumes or body mists with a real, attributed scent note for each**.
 Bottle sizes, concentration variants, brands, ingredient molecules, user reviews
 and note vocabulary entries do not increase the perfume count. We have not met
-this requirement; the currently bundled catalogue has six source-checked
+this requirement; the currently bundled catalogue has ten source-checked
 fragrances. No synthetic records or guessed note pyramids may fill the gap.
+Four additional reviewed mists in this revision come from the manufacturer's
+[Cheirosa 48](https://soldejaneiro.com/products/cheirosa-48-perfume-mist),
+[Cheirosa 59](https://soldejaneiro.com/products/cheirosa-59-perfume-mist),
+[Cheirosa 59 Intense](https://soldejaneiro.com/products/cheirosa-59-intense-perfume-mist),
+and [Cheirosa 76](https://soldejaneiro.com/products/cheirosa-76-perfume-mist)
+product pages. Their note lists and available sizes were checked on
+28 September 2026; prices and brand photos were not copied.
 
 | Source | What is actually available | Fit for the requirement |
 | --- | --- | --- |
@@ -17,10 +24,10 @@ fragrances. No synthetic records or guessed note pyramids may fill the gap.
 | [Fragrantica Türkiye](https://www.fragrantica.tr/) | The Turkish site itself displays approximately 141,000 perfumes and links to [Fragrantica's service terms](https://www.fragrantica.com/terms-of-service.phtml). Its footer says not to copy without written permission. The terms restrict automated extraction and dataset creation without prior written consent. | It can inform individual research questions, but its displayed count does not grant us a reusable dataset. Visiting items one by one and writing their notes into our own text file still builds a dataset from the site; using its bottle images in our app also needs an appropriate right to reuse them. No Fragrantica-derived import or image download is enabled. |
 
 The current monthly runner collects OBF **candidates** and the reviewer exports
-approved product identities. It never derives scent notes from INCI. Six
+approved product identities. It never derives scent notes from INCI. Ten
 hand-checked official-brand entries already have attributed notes. Android
 now bundles an indexed SQLite package, with paged search and local detail
-lookups, but the dataset remains only six records. The earlier JSON export
+lookups, but the dataset remains only ten records. The earlier JSON export
 is a human-readable review aid.
 
 ## Acceptance gates for a large catalogue
@@ -50,7 +57,7 @@ The editor now keeps independent identity and notes, dated variant-specific
 retailer offers, and separately licensed photo records. The published SQLite
 snapshot exports only recent offers (last 30 days) and photos with a checked
 reuse license and attribution; the Android detail page rechecks offer age. The
-September 2026 snapshot has **6 products, 35 note claims, 0 offers and 0 product
+September 2026 snapshot has **10 products, 65 note claims, 0 offers and 0 product
 photos**. Its imagery is SENLIS editorial art. The workflow never treats a
 Google Images hit as image rights or harvests names systematically from
 Fragrantica. Manufacturer pages and Open Beauty Facts are identity leads,

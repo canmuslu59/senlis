@@ -1,7 +1,7 @@
 # SENLIS
 
 Native Turkish Android fragrance discovery app. The fragrance catalogue lives on
-the device. The development APK contains six real products reviewed against official
+the device. The development APK contains ten real products reviewed against official
 brand pages, with source links and dates. Taste choices, favourites and private
 notes stay on the phone. This branch remains a development preview; live
 community and news push need a SENLIS Firebase project before the final APK
@@ -35,11 +35,11 @@ and images would come from elsewhere, is outside this pipeline under its terms.
 individually sourced notes. The monthly workflow uploads it for manual review.
 It reports actual counts and refuses to replace a valid package if attribution
 is malformed. After review, publish the same package to `docs/` and the Android
-asset on the default branch. The current package contains **six** products.
+asset on the default branch. The current package contains **ten** products.
 
 The revised target of approximately 141,000 distinct fragrances **with sourced scent
 notes** is not yet met. See [the source and scale assessment](docs/catalogue-scale-assessment.md)
-for verified source counts and usage limitations. The present six-record
+for verified source counts and usage limitations. The present ten-record
 SQLite package must not be
 reported as a large catalogue.
 

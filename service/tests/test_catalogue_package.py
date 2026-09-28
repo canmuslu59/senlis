@@ -57,11 +57,11 @@ class CataloguePackageTest(unittest.TestCase):
             output = Path(directory) / 'catalogue.sqlite'
             report = build_package(source, output)
 
-            self.assertEqual(report['fragrances'], 6)
-            self.assertEqual(report['with_notes'], 6)
-            self.assertEqual(report['note_claims'], 35)
+            self.assertEqual(report['fragrances'], 10)
+            self.assertEqual(report['with_notes'], 10)
+            self.assertEqual(report['note_claims'], 65)
             with sqlite3.connect(output) as conn:
-                self.assertEqual(conn.execute('SELECT count(*) FROM fragrances').fetchone()[0], 6)
+                self.assertEqual(conn.execute('SELECT count(*) FROM fragrances').fetchone()[0], 10)
                 self.assertIsNone(conn.execute('SELECT id FROM fragrances WHERE id=?', (candidate,)).fetchone())
                 self.assertEqual(conn.execute('PRAGMA integrity_check').fetchone()[0], 'ok')
                 self.assertGreater(conn.execute('SELECT count(*) FROM fragrance_variants').fetchone()[0], 0)
@@ -72,7 +72,7 @@ class CataloguePackageTest(unittest.TestCase):
                 self.assertEqual(conn.execute('''SELECT note_source_name FROM fragrances
                     WHERE name LIKE '%Cheirosa 62%' ''').fetchone()[0], 'Sol de Janeiro')
                 self.assertEqual(conn.execute('''SELECT count(*) FROM fragrance_search
-                    WHERE fragrance_search MATCH 'Cheirosa*' ''').fetchone()[0], 4)
+                    WHERE fragrance_search MATCH 'Cheirosa*' ''').fetchone()[0], 8)
                 plan = conn.execute('''EXPLAIN QUERY PLAN SELECT fragrance_id FROM fragrance_notes
                     WHERE note>=? AND note<?''', ('vanilya', 'vanilya\uffff')).fetchall()
                 self.assertTrue(any('USING INDEX fragrance_notes_lookup' in row[3] for row in plan))

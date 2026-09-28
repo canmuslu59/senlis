@@ -51,7 +51,7 @@ The local editorial database now holds **26,229 distinct doevent names in a
 private `external_name_leads` queue**; 90 of its rows were duplicates or failed
 the lead field check. It stores only brand/name and a dataset reference, not
 upstream notes, photos or a guessed body-mist type. These leads are absent from
-the Android package and do not increase the six verified product count. Inspect
+the Android package and do not increase the ten verified product count. Inspect
 them using `python -m service.editor --database PATH/TO/editorial.sqlite leads`.
 An editor must verify a separate official product identity and note page using
 `add-brand-product` before any record reaches the note-backed app snapshot.
