@@ -1,0 +1,12 @@
+Ham toplam kayıt: 154,154
+Tekil kayıt: 126,820
+Herhangi bir nota alanı dolu ham kayıt: 104,363
+Üst nota dolu: 77,909
+Orta nota dolu: 77,864
+Alt nota dolu: 77,912
+Body mist işaretli: 1,058
+
+Kaynaklar:
+- anvo2-perfume-rec-assets: 68,511
+- TidyTuesday-Parfumo: 59,324
+- doevent-perfume: 26,319
