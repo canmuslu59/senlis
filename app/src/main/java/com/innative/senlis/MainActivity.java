@@ -28,6 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Switch;
+import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -169,6 +170,7 @@ public final class MainActivity extends Activity {
                     redrawCatalogScreen();
                 }));
             } catch (Exception error) {
+                Log.e("SENLIS-Catalog", "Local package load failed", error);
                 runOnUiThread(() -> {
                     if (isFinishing() || isDestroyed()) return;
                     catalogueError = "Yerel katalog açılamadı.";

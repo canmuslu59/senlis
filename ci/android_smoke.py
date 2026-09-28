@@ -107,3 +107,6 @@ try:
 finally:
     with open(f'{OUT}/logcat.txt', 'w') as file:
         file.write(subprocess.run(['adb', 'logcat', '-d', '-t', '400'], capture_output=True, text=True).stdout)
+    with open(f'{OUT}/catalog-errors.txt', 'w') as file:
+        file.write(subprocess.run(['adb', 'logcat', '-d', '-s', 'SENLIS-Catalog:E', 'SQLiteLog:E',
+                                   'AndroidRuntime:E'], capture_output=True, text=True).stdout)
