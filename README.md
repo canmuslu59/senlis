@@ -25,6 +25,12 @@ prices and ratings are left unknown. Open Beauty Facts candidates need a human
 source check before approval. A changed source identity returns to the queue.
 No fictional products, speculative prices or copied brand imagery are bundled.
 
+The requested minimum of 150,000 distinct fragrances **with sourced scent
+notes** is not yet met. See [the source and scale assessment](docs/catalogue-scale-assessment.md)
+for verified source counts, usage limitations and the required indexed local
+catalogue migration. The present four-record JSON snapshot must not be
+reported as a 150,000-record catalogue.
+
 To bootstrap and verify the snapshot locally:
 
 ```sh
