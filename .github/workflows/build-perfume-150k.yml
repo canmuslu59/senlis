@@ -155,11 +155,13 @@ jobs:
           print("TidyTuesday rows:", len(f1))
 
           # 2) doevent/perfume
-          try:
-              d2=pd.read_csv("https://huggingface.co/datasets/doevent/perfume/resolve/main/perfumes.csv", low_memory=False)
-          except Exception:
-              ds2=load_dataset("doevent/perfume", split="test")
-              d2=ds2.to_pandas()
+          # The CSV in this repo has malformed quoting, so use the canonical JSON file.
+          j2 = requests.get(
+              "https://huggingface.co/datasets/doevent/perfume/resolve/main/perfumes.json",
+              timeout=180
+          )
+          j2.raise_for_status()
+          d2 = pd.DataFrame(j2.json())
           r2=[]
           for _,r in d2.iterrows():
               desc=clean(r.get("description"))
