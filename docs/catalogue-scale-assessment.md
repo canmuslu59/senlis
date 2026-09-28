@@ -14,7 +14,7 @@ fragrances. No synthetic records or guessed note pyramids may fill the gap.
 | [Parfica's provenance-gated open export](https://github.com/parfica/parfica-open-data) | 237 matched OBF fragrances and 760 note-vocabulary rows in the checked README. Its maintainers explicitly withhold note pyramids from the free export. | Useful taxonomy and limited identities, not a 150,000 product-note dataset. |
 | [FragDB v5.16](https://github.com/FragDB/fragrance-database) | The vendor lists 140,230 actual fragrances, 2,606 note-vocabulary rows and 154,400+ **combined** CSV rows; the freely available sample is 10 records per file. [Full data and updates are sold](https://fragdb.net/). | Neither 154,400 combined rows nor a 10-record sample meet the requirement or the zero-cost constraint. |
 | [ParfumDB](https://www.parfumdb.net/parfumo) | The vendor lists 230,835 fragrances with a note schema; [full access is sold](https://parfumdb.net/purchase), with only a free sample. | Numerically large enough, but conflicts with the requested entirely free data path. Note coverage and redistribution rights would also need an actual licensed-file audit. |
-| [Fragrantica terms](https://www.fragrantica.com/terms-of-service.phtml) | The site restricts automated extraction and dataset creation without prior written consent. | A third-party scrape or unofficial API is not a dependable free refresh mechanism for this app. |
+| [Fragrantica Türkiye](https://www.fragrantica.tr/) | The Turkish site itself displays approximately 141,000 perfumes and links to [Fragrantica's service terms](https://www.fragrantica.com/terms-of-service.phtml). Its footer says not to copy without written permission. The terms restrict automated extraction and dataset creation without prior written consent. | Even the displayed total is below the 150,000 target. Visiting items one by one and writing their notes into our own text file still builds a dataset from the site; using its bottle images in our app also needs an appropriate right to reuse them. No Fragrantica-derived import or image download is enabled. |
 
 The current monthly runner collects OBF **candidates** and the reviewer exports
 approved product identities. It never derives scent notes from INCI. Four
@@ -44,3 +44,8 @@ candidate review plus explicitly reusable community-contributed facts. No
 source checked today supplies 150,000 distinct note-backed products freely as
 a ready-to-import file. Therefore the 150,000-at-launch gate remains blocked
 until such a source is established or the free/launch-count constraint changes.
+
+For product pictures, prefer images made or licensed by SENLIS, a brand press
+kit with explicit app reuse rights, or images with an applicable open license
+and attribution. A photo merely visible on a perfume website is not thereby
+licensed for copying into the APK or our site.
