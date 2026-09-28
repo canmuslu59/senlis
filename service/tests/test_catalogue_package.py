@@ -28,10 +28,15 @@ class CataloguePackageTest(unittest.TestCase):
                 self.assertEqual(conn.execute('SELECT count(*) FROM fragrances').fetchone()[0], 4)
                 self.assertIsNone(conn.execute('SELECT id FROM fragrances WHERE id=?', (candidate,)).fetchone())
                 self.assertEqual(conn.execute('PRAGMA integrity_check').fetchone()[0], 'ok')
+                self.assertGreater(conn.execute('SELECT count(*) FROM fragrance_variants').fetchone()[0], 0)
                 row = conn.execute('''SELECT f.name,n.note,f.note_source_url FROM fragrances f
                     JOIN fragrance_notes n ON n.fragrance_id=f.id WHERE f.name LIKE '%Cheirosa 62%'
                     AND n.note='vanilya' ''').fetchone()
                 self.assertEqual(row[1:], ('vanilya', 'https://soldejaneiro.com/products/cheirosa-62-hair-body-fragrance-mist'))
+                self.assertEqual(conn.execute('''SELECT note_source_name FROM fragrances
+                    WHERE name LIKE '%Cheirosa 62%' ''').fetchone()[0], 'Sol de Janeiro')
+                self.assertEqual(conn.execute('''SELECT count(*) FROM fragrance_search
+                    WHERE fragrance_search MATCH 'Cheirosa*' ''').fetchone()[0], 2)
 
     def test_invalid_note_provenance_does_not_replace_previous_package(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -2,10 +2,9 @@ package com.innative.senlis;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -13,8 +12,9 @@ import java.util.Set;
 /** Source-backed records from the bundled and monthly-updated local catalogue. */
 public final class Catalogue {
     private Catalogue() {}
-    public static final List<MatchEngine.Fragrance> ITEMS = new ArrayList<>();
-    public static final Map<String, JSONObject> DETAILS = new HashMap<>();
+    public static final Map<String, JSONObject> DETAILS = Collections.synchronizedMap(new LinkedHashMap<String, JSONObject>(256, .75f, true) {
+        @Override protected boolean removeEldestEntry(Map.Entry<String, JSONObject> eldest) { return size() > 256; }
+    });
 
     public static MatchEngine.Fragrance parse(JSONObject item) {
         DETAILS.put(item.optString("id"), item);

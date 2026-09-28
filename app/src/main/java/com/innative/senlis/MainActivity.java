@@ -11,6 +11,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,13 +52,15 @@ public final class MainActivity extends Activity {
 
     private ProfileStore store;
     private CommunityClient api;
-    private CatalogRepository catalogueRepository;
+    private IndexedCatalog indexedCatalog;
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
     private String catalogueError = "";
     private final Set<String> moods = new HashSet<>(), notes = new HashSet<>(), avoided = new HashSet<>(),
         families = new HashSet<>(), occasions = new HashSet<>(), lovedIds = new HashSet<>();
     private String lovedProducts = "";
     private int intensity = 0, budget = 0, step = 0, tab = 0;
     private MatchEngine.Fragrance selected;
+    private String pendingDetailId = "";
     private boolean inOnboarding = false, inDetail = false;
     private boolean editing = false;
     private String detailDraft = "", detailDraftId = "";
@@ -68,7 +72,7 @@ public final class MainActivity extends Activity {
         getWindow().setNavigationBarColor(INK);
         store = new ProfileStore(this);
         api = new CommunityClient(this);
-        catalogueRepository = new CatalogRepository(this);
+        indexedCatalog = new IndexedCatalog(this);
         loadCatalogue();
         loadProfile();
         if (state != null) {
@@ -92,8 +96,9 @@ public final class MainActivity extends Activity {
         detailDraft = state.getString("detailDraft", "");
         detailDraftId = state.getString("detailDraftId", "");
         String id = state.getString("selectedId", "");
-        for (MatchEngine.Fragrance f : Catalogue.ITEMS) if (f.id.equals(id)) selected = f;
+        selected = indexedCatalog.get(id);
         String screen = state.getString("screen", "tab");
+        if ("detail".equals(screen) && selected == null) pendingDetailId = id;
         if ("welcome".equals(screen)) showWelcome();
         else if ("step".equals(screen)) showStep();
         else if ("detail".equals(screen) && selected != null) showDetail();
@@ -140,58 +145,50 @@ public final class MainActivity extends Activity {
 
     private MatchEngine.Profile currentProfile() {
         Set<String> lovedNotes = new HashSet<>();
-        for (MatchEngine.Fragrance f : Catalogue.ITEMS)
-            if (lovedIds.contains(f.id)) lovedNotes.addAll(f.notes);
+        for (String id : lovedIds) {
+            MatchEngine.Fragrance f = indexedCatalog.get(id);
+            if (f != null) lovedNotes.addAll(f.notes);
+        }
         return new MatchEngine.Profile(new HashSet<>(notes), new HashSet<>(avoided),
             new HashSet<>(families), new HashSet<>(moods), new HashSet<>(occasions),
             intensity, budget == 0 ? null : budget, lovedNotes);
     }
 
     private void loadCatalogue() {
-        try {
-            JSONObject current = catalogueRepository.load();
-            applyCatalogue(current);
-            catalogueRepository.checkMonthly(current, update -> runOnUiThread(() -> {
-                if (isFinishing() || isDestroyed()) return;
-                applyCatalogue(update);
-                if (inDetail && selected != null) {
-                    for (MatchEngine.Fragrance item : Catalogue.ITEMS)
-                        if (item.id.equals(selected.id)) { selected = item; showDetail(); return; }
-                }
-                if (!inOnboarding && store.complete()) showTab(tab);
-                else if (inOnboarding) showStep();
-            }));
-        } catch (Exception error) {
-            catalogueError = "Yerel katalog açılamadı.";
-        }
-    }
-
-    private void applyCatalogue(JSONObject snapshot) {
-        JSONArray items = snapshot.optJSONArray("items");
-        List<MatchEngine.Fragrance> parsed = new ArrayList<>();
-        Catalogue.DETAILS.clear();
-        if (items != null) for (int i = 0; i < items.length(); i++) {
-            JSONObject item = items.optJSONObject(i);
-            if (item != null) parsed.add(Catalogue.parse(item));
-        }
-        Catalogue.ITEMS.clear();
-        Catalogue.ITEMS.addAll(parsed);
-        catalogueError = parsed.isEmpty() ? "Doğrulanmış ürün kaydı henüz bulunamadı." : "";
-    }
-
-    private List<MatchEngine.Fragrance> localSearch(String query) {
-        String needle = query.trim().toLowerCase(Locale.forLanguageTag("tr"));
-        List<MatchEngine.Fragrance> found = new ArrayList<>();
-        for (MatchEngine.Fragrance item : Catalogue.ITEMS) {
-            JSONObject detail = Catalogue.DETAILS.get(item.id);
-            String brand = detail == null ? "" : detail.optString("brand");
-            if (needle.isEmpty() || (item.name + " " + brand + " " +
-                (item.family == null ? "" : item.family) + " " + TextUtils.join(" ", item.notes))
-                .toLowerCase(Locale.forLanguageTag("tr")).contains(needle)) {
-                found.add(item);
+        catalogueError = "Katalog açılıyor…";
+        new Thread(() -> {
+            try {
+                indexedCatalog.open();
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    catalogueError = "";
+                    redrawCatalogScreen();
+                });
+                indexedCatalog.checkMonthly(() -> runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    redrawCatalogScreen();
+                }));
+            } catch (Exception error) {
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    catalogueError = "Yerel katalog açılamadı.";
+                    redrawCatalogScreen();
+                });
             }
+        }, "senlis-catalog-open").start();
+    }
+
+    private void redrawCatalogScreen() {
+        if (!pendingDetailId.isEmpty()) {
+            selected = indexedCatalog.get(pendingDetailId);
+            pendingDetailId = "";
+            if (selected != null) { showDetail(); return; }
         }
-        return found;
+        if (inDetail && selected != null) {
+            MatchEngine.Fragrance updated = indexedCatalog.get(selected.id);
+            if (updated != null) { selected = updated; showDetail(); }
+        } else if (inOnboarding) showStep();
+        else if (store.complete()) showTab(tab);
     }
 
     private void showWelcome() {
@@ -278,19 +275,17 @@ public final class MainActivity extends Activity {
             addSpace(body, 18);
             body.addView(label("KATALOGDAN SEVDİĞİN ÜRÜNLER", 12, GOLD, true));
             addSpace(body, 8);
-            if (Catalogue.ITEMS.isEmpty()) body.addView(label("Kaynaklı ürünler yüklenince burada seçebilirsin.", 13, MUTED, false));
-            for (MatchEngine.Fragrance fragrance : Catalogue.ITEMS) {
-                TextView choice = chip(fragrance.name, lovedIds.contains(fragrance.id));
-                choice.setOnClickListener(v -> {
-                    if (!lovedIds.add(fragrance.id)) lovedIds.remove(fragrance.id);
-                    boolean active = lovedIds.contains(fragrance.id);
-                    choice.setBackground(round(active ? GOLD : CARD, 13, active ? 0 : 0xFF6D5640));
-                    choice.setTextColor(active ? INK : CREAM);
-                });
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-                lp.bottomMargin = dp(7);
-                body.addView(choice, lp);
-            }
+            if (indexedCatalog.count() == 0) body.addView(label("Kaynaklı ürünler yüklenince burada seçebilirsin.", 13, MUTED, false));
+            EditText lovedSearch = input("Katalogda parfüm ara", "");
+            body.addView(lovedSearch);
+            addSpace(body, 9);
+            LinearLayout lovedResults = column();
+            body.addView(lovedResults);
+            renderLovedChoices(lovedResults, "");
+            lovedSearch.addTextChangedListener(watch(value -> {
+                searchHandler.removeCallbacksAndMessages(null);
+                searchHandler.postDelayed(() -> renderLovedChoices(lovedResults, value), 220);
+            }));
             addSpace(body, 26);
             body.addView(label("SEVDİĞİN KOKU AİLELERİ", 12, GOLD, true));
             addSpace(body, 12);
@@ -339,6 +334,30 @@ public final class MainActivity extends Activity {
             else { store.save(currentProfile(), lovedProducts, lovedIds); editing = false; showTab(0); }
         }, true));
         present(root);
+    }
+
+    private void renderLovedChoices(LinearLayout holder, String query) {
+        holder.removeAllViews();
+        List<MatchEngine.Fragrance> choices = new ArrayList<>();
+        for (String id : lovedIds) {
+            MatchEngine.Fragrance selectedItem = indexedCatalog.get(id);
+            if (selectedItem != null && (query.isEmpty() || selectedItem.name.toLowerCase(Locale.forLanguageTag("tr"))
+                .contains(query.toLowerCase(Locale.forLanguageTag("tr"))))) choices.add(selectedItem);
+        }
+        for (MatchEngine.Fragrance item : indexedCatalog.search(query, 0, 12))
+            if (!lovedIds.contains(item.id)) choices.add(item);
+        for (MatchEngine.Fragrance fragrance : choices) {
+                TextView choice = chip(fragrance.name, lovedIds.contains(fragrance.id));
+                choice.setOnClickListener(v -> {
+                    if (!lovedIds.add(fragrance.id)) lovedIds.remove(fragrance.id);
+                    boolean active = lovedIds.contains(fragrance.id);
+                    choice.setBackground(round(active ? GOLD : CARD, 13, active ? 0 : 0xFF6D5640));
+                    choice.setTextColor(active ? INK : CREAM);
+                });
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+                lp.bottomMargin = dp(7);
+                holder.addView(choice, lp);
+            }
     }
 
     private void backFromStep() {
@@ -425,7 +444,7 @@ public final class MainActivity extends Activity {
         addSpace(body, 12);
         if (!catalogueError.isEmpty()) notice(body, "YEREL KATALOG", catalogueError);
         addSpace(body, 14);
-        List<MatchEngine.Fragrance> suggestions = sorted();
+        List<MatchEngine.Fragrance> suggestions = indexedCatalog.recommend(currentProfile(), 12);
         if (!suggestions.isEmpty()) addProducts(body, suggestions, false);
         else if (catalogueError.isEmpty())
             notice(body, "ÖNERİ BULUNAMADI", "Tercihlerini veya kaçındığın notaları gözden geçirebilirsin.");
@@ -444,18 +463,44 @@ public final class MainActivity extends Activity {
         addSpace(body, 15);
         LinearLayout results = column();
         body.addView(results);
-        addProducts(results, localSearch(""), false);
+        renderSearchPage(results, "", 0);
         field.addTextChangedListener(watch(value -> {
-            results.removeAllViews();
-            addProducts(results, localSearch(value), false);
+            searchHandler.removeCallbacksAndMessages(null);
+            searchHandler.postDelayed(() -> renderSearchPage(results, value, 0), 220);
         }));
+    }
+
+    private void renderSearchPage(LinearLayout results, String query, int offset) {
+        if (offset == 0) results.removeAllViews();
+        if (indexedCatalog.count() == 0) {
+            notice(results, "KATALOG", catalogueError.isEmpty() ? "Doğrulanmış katalog henüz yok." : catalogueError);
+            return;
+        }
+        List<MatchEngine.Fragrance> page = indexedCatalog.search(query, offset, 30);
+        if (page.isEmpty() && offset == 0) {
+            notice(results, "SONUÇ BULUNAMADI", "İsim, marka veya nota ile yeniden ara.");
+            return;
+        }
+        // Replace the previous next-page button before appending the next page.
+        if (offset > 0 && results.getChildCount() > 1) {
+            results.removeViewAt(results.getChildCount() - 1);
+            results.removeViewAt(results.getChildCount() - 1);
+        }
+        for (MatchEngine.Fragrance item : page) addProduct(results, item);
+        if (page.size() == 30) {
+            addSpace(results, 8);
+            results.addView(button("Daha fazla göster  →", () -> renderSearchPage(results, query, offset + 30), false));
+        }
     }
 
     private void favourites(LinearLayout body) {
         body.addView(title("Favori kokuların", 29, CREAM));
         addSpace(body, 15);
         List<MatchEngine.Fragrance> saved = new ArrayList<>();
-        for (MatchEngine.Fragrance f : Catalogue.ITEMS) if (store.favourite(f.id)) saved.add(f);
+        for (String id : store.favouriteIds()) {
+            MatchEngine.Fragrance f = indexedCatalog.get(id);
+            if (f != null) saved.add(f);
+        }
         if (saved.isEmpty()) notice(body, "HENÜZ FAVORİN YOK", "Bir kokunun detayındaki kalbe dokunarak burada saklayabilirsin.");
         else addProducts(body, saved, false);
     }
@@ -560,8 +605,10 @@ public final class MainActivity extends Activity {
         summary(body, "Kullanım anları", occasions);
         body.addView(label("Sevdiğin parfümler", 15, GOLD, true));
         body.addView(label(lovedProducts.isEmpty() ? "Henüz eklenmedi" : lovedProducts, 15, CREAM, false));
-        for (MatchEngine.Fragrance fragrance : Catalogue.ITEMS)
-            if (lovedIds.contains(fragrance.id)) body.addView(label("✦ " + fragrance.name, 14, CREAM, false));
+        for (String id : lovedIds) {
+            MatchEngine.Fragrance fragrance = indexedCatalog.get(id);
+            if (fragrance != null) body.addView(label("✦ " + fragrance.name, 14, CREAM, false));
+        }
         addSpace(body, 22);
         body.addView(button("Tercihlerimi Düzenle  →", () -> { editing = true; step = 0; showStep(); }, true));
         addSpace(body, 12);
@@ -700,27 +747,15 @@ public final class MainActivity extends Activity {
         addSpace(body, 15);
     }
 
-    private List<MatchEngine.Fragrance> sorted() {
-        List<MatchEngine.Fragrance> items = new ArrayList<>();
-        for (MatchEngine.Fragrance f : Catalogue.ITEMS) {
-            if (!MatchEngine.score(currentProfile(), f).excluded) items.add(f);
-        }
-        Collections.sort(items, new Comparator<MatchEngine.Fragrance>() {
-            @Override public int compare(MatchEngine.Fragrance a, MatchEngine.Fragrance b) {
-                Integer first = MatchEngine.score(currentProfile(), a).percent;
-                Integer second = MatchEngine.score(currentProfile(), b).percent;
-                return Integer.compare(second == null ? -1 : second, first == null ? -1 : first);
-            }
-        });
-        return items;
-    }
-
     private void addProducts(LinearLayout body, List<MatchEngine.Fragrance> items, boolean unused) {
         if (items.isEmpty()) {
             notice(body, "SONUÇ BULUNAMADI", "Aramayı değiştir veya kaçındığın notaları gözden geçir.");
             return;
         }
-        for (MatchEngine.Fragrance f : items) {
+        for (MatchEngine.Fragrance f : items) addProduct(body, f);
+    }
+
+    private void addProduct(LinearLayout body, MatchEngine.Fragrance f) {
             MatchEngine.Result result = MatchEngine.score(currentProfile(), f);
             LinearLayout card = row();
             card.setGravity(Gravity.CENTER_VERTICAL);
@@ -746,7 +781,6 @@ public final class MainActivity extends Activity {
             card.addView(words, new LinearLayout.LayoutParams(0, -2, 1));
             card.setOnClickListener(v -> openDetail(f));
             body.addView(card, clp);
-        }
     }
 
     private void openDetail(MatchEngine.Fragrance fragrance) {

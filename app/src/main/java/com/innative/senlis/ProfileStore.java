@@ -25,6 +25,12 @@ public final class ProfileStore {
     public String lovedProducts() { return prefs.getString("lovedProducts", ""); }
     public Set<String> lovedIds() { return getSet("lovedIds"); }
     public boolean favourite(String id) { return prefs.getBoolean("favourite_" + id, false); }
+    public Set<String> favouriteIds() {
+        Set<String> ids = new HashSet<>();
+        for (String key : prefs.getAll().keySet())
+            if (key.startsWith("favourite_") && prefs.getBoolean(key, false)) ids.add(key.substring(10));
+        return ids;
+    }
     public String privateNote(String id) { return prefs.getString("note_" + id, ""); }
 
     public void privateNote(String id, String value) {

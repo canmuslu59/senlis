@@ -23,17 +23,24 @@ def build_package(editorial: Store, output: str | Path) -> dict:
     count = note_count = reviewed = 0
     try:
         package.executescript('''
-            PRAGMA user_version=2;
+            PRAGMA user_version=3;
             CREATE TABLE fragrances (
               id TEXT PRIMARY KEY, name TEXT NOT NULL, brand TEXT NOT NULL,
               kind TEXT NOT NULL, family TEXT, source_url TEXT NOT NULL,
               source_name TEXT NOT NULL, observed_at TEXT NOT NULL,
-              note_source_url TEXT NOT NULL, notes_verified_at TEXT NOT NULL);
+              source_license TEXT NOT NULL, note_source_url TEXT NOT NULL,
+              note_source_name TEXT NOT NULL, notes_verified_at TEXT NOT NULL,
+              family_source_url TEXT, family_source_name TEXT, family_verified_at TEXT);
             CREATE TABLE fragrance_notes (
               fragrance_id TEXT NOT NULL REFERENCES fragrances(id),
               position INTEGER NOT NULL, note TEXT NOT NULL,
               PRIMARY KEY(fragrance_id,position));
             CREATE INDEX fragrance_notes_lookup ON fragrance_notes(note);
+            CREATE TABLE fragrance_variants (
+              fragrance_id TEXT NOT NULL REFERENCES fragrances(id),
+              label TEXT NOT NULL, size_ml INTEGER, concentration TEXT,
+              source_url TEXT NOT NULL, observed_at TEXT NOT NULL,
+              PRIMARY KEY(fragrance_id,label));
             CREATE VIRTUAL TABLE fragrance_search USING fts4(
               fragrance_id, name, brand, tokenize=unicode61);
             CREATE TABLE package_meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -43,9 +50,11 @@ def build_package(editorial: Store, output: str | Path) -> dict:
                 'SELECT count(*) AS total FROM products WHERE reviewed=1'))['total']
             cursor = editorial.query(source, '''SELECT p.id,p.name,p.brand,p.kind,
                 identity.source_url,identity.source_name,identity.observed_at,
+                identity.license AS source_license,
                 notes.value AS notes,notes.source_url AS note_source_url,
-                notes.verified_at AS notes_verified_at,
-                family.value AS family
+                notes.source_name AS note_source_name,notes.verified_at AS notes_verified_at,
+                family.value AS family,family.source_url AS family_source_url,
+                family.source_name AS family_source_name,family.verified_at AS family_verified_at
                 FROM products p
                 JOIN product_sources identity ON identity.product_id=p.id AND identity.field='name'
                 JOIN product_facts notes ON notes.product_id=p.id AND notes.field='notes'
@@ -64,13 +73,16 @@ def build_package(editorial: Store, output: str | Path) -> dict:
                         raise ValueError(f'invalid notes: {row["id"]}')
                     if not row['note_source_url'].startswith('https://') or not row['notes_verified_at']:
                         raise ValueError(f'note provenance missing: {row["id"]}')
+                    if not row['note_source_name']:
+                        raise ValueError(f'note source name missing: {row["id"]}')
                     if not row['source_url'].startswith('https://') or not row['source_name'] or not row['observed_at']:
                         raise ValueError(f'identity provenance missing: {row["id"]}')
                     family = json.loads(row['family']) if row['family'] else None
-                    package.execute('''INSERT INTO fragrances VALUES(?,?,?,?,?,?,?,?,?,?)''',
+                    package.execute('''INSERT INTO fragrances VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
                         (row['id'], row['name'], row['brand'], row['kind'], family,
-                         row['source_url'], row['source_name'], row['observed_at'],
-                         row['note_source_url'], row['notes_verified_at']))
+                         row['source_url'], row['source_name'], row['observed_at'], row['source_license'],
+                         row['note_source_url'], row['note_source_name'], row['notes_verified_at'],
+                         row['family_source_url'], row['family_source_name'], row['family_verified_at']))
                     package.executemany('INSERT INTO fragrance_notes VALUES(?,?,?)',
                         ((row['id'], position, note.strip().casefold())
                          for position, note in enumerate(notes)))
@@ -78,7 +90,20 @@ def build_package(editorial: Store, output: str | Path) -> dict:
                         (row['id'], row['name'], row['brand']))
                     count += 1
                     note_count += len(notes)
-        metadata = {'schema_version': 2, 'generated_at': now(), 'fragrances': count,
+            variants = editorial.query(source, '''SELECT v.product_id,v.label,v.size_ml,
+                v.concentration,v.source_url,v.observed_at FROM product_variants v
+                JOIN products p ON p.id=v.product_id
+                JOIN product_facts n ON n.product_id=p.id AND n.field='notes'
+                WHERE p.reviewed=1 ORDER BY v.product_id,v.label''')
+            while batch := variants.fetchmany(500):
+                for v in batch:
+                    v = dict(v)
+                    if not v['source_url'].startswith('https://') or not v['observed_at']:
+                        raise ValueError(f'variant provenance missing: {v["product_id"]}')
+                    package.execute('INSERT INTO fragrance_variants VALUES(?,?,?,?,?,?)',
+                        (v['product_id'], v['label'], v['size_ml'], v['concentration'],
+                         v['source_url'], v['observed_at']))
+        metadata = {'schema_version': 3, 'generated_at': now(), 'fragrances': count,
                     'with_notes': count, 'note_claims': note_count,
                     'reviewed_without_notes': reviewed - count}
         if not count:

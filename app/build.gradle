@@ -11,6 +11,7 @@ android {
         versionCode 6
         versionName '0.6.0-dev'
         buildConfigField 'String', 'SENLIS_CATALOG_URL', '"' + (project.findProperty('senlisCatalogUrl') ?: 'https://raw.githubusercontent.com/canmuslu59/senlis/main/docs/catalogue.json') + '"'
+        buildConfigField 'String', 'SENLIS_INDEX_URL', '"' + (project.findProperty('senlisIndexUrl') ?: 'https://raw.githubusercontent.com/canmuslu59/senlis/main/docs/catalogue.sqlite') + '"'
         buildConfigField 'String', 'FIREBASE_APP_ID', '"' + (project.findProperty('firebaseAppId') ?: '') + '"'
         buildConfigField 'String', 'FIREBASE_API_KEY', '"' + (project.findProperty('firebaseApiKey') ?: '') + '"'
         buildConfigField 'String', 'FIREBASE_PROJECT_ID', '"' + (project.findProperty('firebaseProjectId') ?: '') + '"'

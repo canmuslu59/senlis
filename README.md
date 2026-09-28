@@ -9,14 +9,16 @@ can be verified end to end.
 
 ## Catalogue without a product server
 
-`app/src/main/assets/catalogue.json` is the initial source-attributed snapshot.
-The same JSON is published as `docs/catalogue.json` in the repository. The app
-loads the bundled or newer validated local file, searches and scores offline,
-and checks the published HTTPS file when opened after 30 days. An unavailable
-network or invalid update leaves the last good catalogue usable. No taste
-profile or personal note is sent in this request. The static update URL defaults
-to the repository's `main` branch; a different HTTPS location can be set with
-`-PsenlisCatalogUrl=...` at build time.
+`app/src/main/assets/catalogue.sqlite` is the initial indexed, source-attributed
+snapshot. The same file is published as `docs/catalogue.sqlite` in the
+repository. Android installs and verifies the local SQLite file, then searches
+and scores offline with bounded result pages. On opening after 30 days it
+checks for a newer reviewed HTTPS snapshot. An unavailable network or invalid
+update leaves the last good catalogue usable. No taste profile or personal note
+is sent in this request. The static update URL defaults to the repository's
+`main` branch; a different HTTPS location can be set with
+`-PsenlisIndexUrl=...` at build time. The JSON export is retained for human
+review and comparison, but Android no longer parses it as its working catalog.
 
 The editorial SQLite database is a **single curator workspace**, not a database
 for each user. It stores candidate product records, source attribution and
@@ -26,17 +28,16 @@ source check before approval. A changed source identity returns to the queue.
 No fictional products, speculative prices or copied brand imagery are bundled.
 
 `python -m service.catalogue_package --database PATH/TO/catalogue.sqlite
---output docs/catalogue.sqlite` also creates an indexed SQLite export of only
-reviewed fragrances with individually sourced notes. The monthly workflow
-uploads this file as a review artifact. It is a preparation for a paged Android
-catalogue and is **not yet loaded by the current APK**; the Android app still
-uses the four-item JSON asset. The export reports actual counts and refuses to
-replace a valid package if the new source attribution is malformed.
+--output docs/catalogue.sqlite` exports only reviewed fragrances with
+individually sourced notes. The monthly workflow uploads it for manual review.
+It reports actual counts and refuses to replace a valid package if attribution
+is malformed. After review, publish the same package to `docs/` and the Android
+asset on the default branch. The current package contains **four** products.
 
 The revised target of approximately 140,000 distinct fragrances **with sourced scent
 notes** is not yet met. See [the source and scale assessment](docs/catalogue-scale-assessment.md)
-for verified source counts, usage limitations and the required indexed local
-catalogue migration. The present four-record JSON snapshot must not be
+for verified source counts and usage limitations. The present four-record
+SQLite package must not be
 reported as a large catalogue.
 
 To bootstrap and verify the snapshot locally:
@@ -44,6 +45,9 @@ To bootstrap and verify the snapshot locally:
 ```sh
 python3 -m service.export_catalog --database senlis-editorial.sqlite \
   --output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json --seed
+python3 -m service.catalogue_package --database senlis-editorial.sqlite \
+  --output docs/catalogue.sqlite
+cp docs/catalogue.sqlite app/src/main/assets/catalogue.sqlite
 python3 -m unittest discover -s service/tests -v
 ```
 
@@ -52,8 +56,8 @@ collects Open Beauty Facts candidates on the second day of each month into its
 own persistent SQLite file. Set a monitored `SOURCE_CONTACT` repository secret
 and install/register the runner. The workflow runs on the default branch after
 merge; a manual dispatch is also available. An editor checks candidates and
-their source links, approves those that are correct, and republishes the two
-matching JSON files. The exporter keeps the previous timestamp when product
+their source links, approves those that are correct, and republishes the
+reviewed JSON and matching SQLite package. The JSON exporter keeps the previous timestamp when product
 facts are unchanged. Publishing a new snapshot remains a review action; an
 automated source import alone is never evidence that its facts are correct.
 
@@ -64,12 +68,13 @@ and checking the named source page, explicitly approve one by ID using
 `python -m service.export_catalog --database PATH/TO/catalogue.sqlite
 --output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json
 --if-changed`, review the JSON diff, and publish it through a reviewed commit to
-`main`. The APK is still useful offline if this process is delayed.
+`main` together with the reviewed SQLite file copied to the Android asset.
+The APK is still useful offline if this process is delayed.
 
 ## Shared features
 
 Product/general conversation and user ratings cannot synchronize between
-phones through a local JSON file. Android uses Firebase Authentication and
+phones through a local catalogue file. Android uses Firebase Authentication and
 Cloud Firestore directly for those shared records. `firestore.rules` restricts
 client writes to their own account, messages, reports, corrections and ratings;
 the two query indexes are in `firestore.indexes.json`. Messages and ratings are
