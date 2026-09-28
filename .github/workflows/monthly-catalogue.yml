@@ -36,13 +36,16 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'News queue export failed' }
           python -m service.export_catalog --database $env:DATABASE_URL --output docs/catalogue.json --asset-output app/src/main/assets/catalogue.json --if-changed
           if ($LASTEXITCODE -ne 0) { throw 'Reviewed snapshot export failed' }
-          git status --short -- docs/catalogue.json app/src/main/assets/catalogue.json
+          python -m service.catalogue_package --database $env:DATABASE_URL --output docs/catalogue.sqlite
+          if ($LASTEXITCODE -ne 0) { throw 'Indexed source-linked catalogue export failed' }
+          git status --short -- docs/catalogue.json docs/catalogue.sqlite app/src/main/assets/catalogue.json
       - name: Upload editorial queue and reviewed snapshot for manual publication
         uses: actions/upload-artifact@v4
         with:
           name: senlis-reviewed-catalogue
           path: |
             docs/catalogue.json
+            docs/catalogue.sqlite
             app/src/main/assets/catalogue.json
             products-review.json
             news-review.json

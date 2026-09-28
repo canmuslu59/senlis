@@ -25,11 +25,19 @@ prices and ratings are left unknown. Open Beauty Facts candidates need a human
 source check before approval. A changed source identity returns to the queue.
 No fictional products, speculative prices or copied brand imagery are bundled.
 
-The requested minimum of 150,000 distinct fragrances **with sourced scent
+`python -m service.catalogue_package --database PATH/TO/catalogue.sqlite
+--output docs/catalogue.sqlite` also creates an indexed SQLite export of only
+reviewed fragrances with individually sourced notes. The monthly workflow
+uploads this file as a review artifact. It is a preparation for a paged Android
+catalogue and is **not yet loaded by the current APK**; the Android app still
+uses the four-item JSON asset. The export reports actual counts and refuses to
+replace a valid package if the new source attribution is malformed.
+
+The revised target of approximately 140,000 distinct fragrances **with sourced scent
 notes** is not yet met. See [the source and scale assessment](docs/catalogue-scale-assessment.md)
 for verified source counts, usage limitations and the required indexed local
 catalogue migration. The present four-record JSON snapshot must not be
-reported as a 150,000-record catalogue.
+reported as a large catalogue.
 
 To bootstrap and verify the snapshot locally:
 
