@@ -1,6 +1,6 @@
-# Approximately 140,000 fragrances: source and delivery assessment
+# Approximately 141,000 fragrances: source and delivery assessment
 
-Research checked on 2026-09-28. The revised target is **approximately 140,000
+Research checked on 2026-09-28. The revised target is **approximately 141,000
 distinct perfumes or body mists with a real, attributed scent note for each**.
 Bottle sizes, concentration variants, brands, ingredient molecules, user reviews
 and note vocabulary entries do not increase the perfume count. We have not met
@@ -38,11 +38,11 @@ is a human-readable review aid.
    download size and storage before launch.
 4. Benchmark install size, storage, migration and search on low-end Android
    devices with the actual dataset. Count and provenance checks run before a
-   release is labeled as meeting the approximate 140,000 target.
+   release is labeled as meeting the approximate 141,000 target.
 
 The zero-cost, source-backed path can grow from official-brand and OBF
 candidate review plus explicitly reusable community-contributed facts. No
-source checked today supplies approximately 140,000 distinct note-backed products freely as
+source checked today supplies approximately 141,000 distinct note-backed products freely as
 a ready-to-import file. Therefore the large-catalogue launch gate remains blocked
 until such a source is established or the free/launch-count constraint changes.
 

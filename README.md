@@ -34,7 +34,7 @@ It reports actual counts and refuses to replace a valid package if attribution
 is malformed. After review, publish the same package to `docs/` and the Android
 asset on the default branch. The current package contains **four** products.
 
-The revised target of approximately 140,000 distinct fragrances **with sourced scent
+The revised target of approximately 141,000 distinct fragrances **with sourced scent
 notes** is not yet met. See [the source and scale assessment](docs/catalogue-scale-assessment.md)
 for verified source counts and usage limitations. The present four-record
 SQLite package must not be

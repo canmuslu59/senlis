@@ -67,6 +67,16 @@ def tap(text, label):
     command('adb', 'shell', 'input', 'tap', str((left + right)//2), str((top + bottom)//2))
 
 
+def type_in_search(text):
+    tree = snapshot('search-ready')
+    fields = [node for node in tree.iter('node')
+              if node.attrib.get('class') == 'android.widget.EditText']
+    assert len(fields) == 1, 'Search must expose one editable field'
+    left, top, right, bottom = map(int, re.findall(r'\d+', fields[0].attrib['bounds']))
+    command('adb', 'shell', 'input', 'tap', str((left + right)//2), str((top + bottom)//2))
+    command('adb', 'shell', 'input', 'text', text)
+
+
 try:
     manifest = command(sdk_tool('aapt'), 'dump', 'badging', APK)
     assert "name='com.innative.senlis.preview'" in manifest
@@ -85,6 +95,8 @@ try:
     command('adb', 'shell', 'svc', 'wifi', 'disable')
     command('adb', 'shell', 'svc', 'data', 'disable')
     tap('Ara', 'discover')
+    type_in_search('vanilya')
+    wait_text('Cheirosa 62', 'offline-note-search')
     tap('Cheirosa 62', 'offline-search')
     wait_text('Cheirosa 62 Perfume Mist', 'offline-detail')
     tap('Geri', 'offline-detail')

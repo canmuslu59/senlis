@@ -486,7 +486,8 @@ public final class MainActivity extends Activity {
             results.removeViewAt(results.getChildCount() - 1);
             results.removeViewAt(results.getChildCount() - 1);
         }
-        for (MatchEngine.Fragrance item : page) addProduct(results, item);
+        MatchEngine.Profile profile = currentProfile();
+        for (MatchEngine.Fragrance item : page) addProduct(results, item, profile);
         if (page.size() == 30) {
             addSpace(results, 8);
             results.addView(button("Daha fazla göster  →", () -> renderSearchPage(results, query, offset + 30), false));
@@ -496,13 +497,26 @@ public final class MainActivity extends Activity {
     private void favourites(LinearLayout body) {
         body.addView(title("Favori kokuların", 29, CREAM));
         addSpace(body, 15);
-        List<MatchEngine.Fragrance> saved = new ArrayList<>();
-        for (String id : store.favouriteIds()) {
-            MatchEngine.Fragrance f = indexedCatalog.get(id);
-            if (f != null) saved.add(f);
+        List<String> ids = new ArrayList<>(store.favouriteIds());
+        Collections.sort(ids);
+        if (ids.isEmpty()) notice(body, "HENÜZ FAVORİN YOK", "Bir kokunun detayındaki kalbe dokunarak burada saklayabilirsin.");
+        else renderFavouritePage(body, ids, 0);
+    }
+
+    private void renderFavouritePage(LinearLayout body, List<String> ids, int offset) {
+        if (offset > 0 && body.getChildCount() > 1) {
+            body.removeViewAt(body.getChildCount() - 1);
+            body.removeViewAt(body.getChildCount() - 1);
         }
-        if (saved.isEmpty()) notice(body, "HENÜZ FAVORİN YOK", "Bir kokunun detayındaki kalbe dokunarak burada saklayabilirsin.");
-        else addProducts(body, saved, false);
+        MatchEngine.Profile profile = currentProfile();
+        for (int i = offset; i < Math.min(offset + 30, ids.size()); i++) {
+            MatchEngine.Fragrance f = indexedCatalog.get(ids.get(i));
+            if (f != null) addProduct(body, f, profile);
+        }
+        if (offset + 30 < ids.size()) {
+            addSpace(body, 8);
+            body.addView(button("Daha fazla göster  →", () -> renderFavouritePage(body, ids, offset + 30), false));
+        }
     }
 
     private void community(LinearLayout body) {
@@ -752,11 +766,12 @@ public final class MainActivity extends Activity {
             notice(body, "SONUÇ BULUNAMADI", "Aramayı değiştir veya kaçındığın notaları gözden geçir.");
             return;
         }
-        for (MatchEngine.Fragrance f : items) addProduct(body, f);
+        MatchEngine.Profile profile = currentProfile();
+        for (MatchEngine.Fragrance f : items) addProduct(body, f, profile);
     }
 
-    private void addProduct(LinearLayout body, MatchEngine.Fragrance f) {
-            MatchEngine.Result result = MatchEngine.score(currentProfile(), f);
+    private void addProduct(LinearLayout body, MatchEngine.Fragrance f, MatchEngine.Profile profile) {
+            MatchEngine.Result result = MatchEngine.score(profile, f);
             LinearLayout card = row();
             card.setGravity(Gravity.CENTER_VERTICAL);
             card.setBackground(round(CARD, 15, 0xFF56402F));

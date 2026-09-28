@@ -90,12 +90,15 @@ public final class IndexedCatalog {
                 try (InputStream in = connection.getInputStream()) { copy(in, pending); }
                 SQLiteDatabase candidate = verified(pending);
                 String date = meta(candidate, "generated_at");
+                int count = Integer.parseInt(meta(candidate, "fragrances"));
                 candidate.close();
                 synchronized (this) {
                     if (date.compareTo(generatedAt) <= 0) {
                         preferences.edit().putLong("checked", System.currentTimeMillis()).apply();
                         return;
                     }
+                    // A source failure must not silently replace a large catalogue with a tiny one.
+                    if (db != null && count < Math.ceil(Integer.parseInt(meta(db, "fragrances")) * .95)) return;
                     // Keep the old handle until the replacement has passed all checks.
                     File cache = new File(context.getFilesDir(), "catalogue.cached.sqlite");
                     if (db != null && cache.equals(new File(db.getPath()))) db.close();
