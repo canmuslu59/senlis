@@ -25,6 +25,10 @@ def main():
     results=[]
     for r in rows:
         print("TEST",r["id"],r["brand_name"],r["product_name"],flush=True)
+        if r["id"] in {"36578","47794"}:
+            q=f'"{r["brand_name"]}" "{r["product_name"]}" fiyat TRY'
+            dbg=core.search_web(core.make_session(),q)
+            print("SEARCH_DEBUG",r["id"],json.dumps(dbg[:10],ensure_ascii=False),flush=True)
         x=core.process(r)
         results.append(x)
         print("RESULT",json.dumps({
