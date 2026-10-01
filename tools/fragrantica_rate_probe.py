@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# trigger after workflow install
 import csv,glob,gzip,json,time,urllib.parse
 from pathlib import Path
 import requests
