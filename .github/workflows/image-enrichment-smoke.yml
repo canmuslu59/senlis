@@ -6,6 +6,7 @@ on:
       - overnight/full-enrichment-20261001
     paths:
       - "tools/image_enrichment.py"
+      - "tools/image_sources.py"
       - ".github/workflows/image-enrichment-smoke.yml"
   workflow_dispatch:
 
@@ -14,11 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      START_ID: "1"
-      END_ID: "200"
+      START_ID: "90001"
+      END_ID: "90060"
       FAST_WORKERS: "6"
-      FRAG_WORKERS: "3"
-      FRAG_DELAY: "0.25"
+      FRAG_WORKERS: "6"
+      VERIFY_CDN: "1"
+      PAGE_MIN_INTERVAL: "1.0"
+      MAX_SECONDS: "600"
+      CHECKPOINT_EVERY: "20"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
