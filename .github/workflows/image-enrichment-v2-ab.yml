@@ -1,0 +1,41 @@
+name: SENLIS Image Enrichment V2 A/B
+
+on:
+  push:
+    branches:
+      - overnight/full-enrichment-20261001
+    paths:
+      - "tools/image_v2_trigger.txt"
+  workflow_dispatch:
+
+concurrency:
+  group: senlis-image-v2-ab
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    name: Image V2 A/B / 1000 products
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml rapidfuzz
+      - name: Run 1000-product A/B benchmark
+        env:
+          AB_LIMIT: "1000"
+          WORKERS: "8"
+          SEARCH_WORKERS: "4"
+          MAX_CANDIDATES: "5"
+        run: python tools/image_enrichment_v2_ab.py
+      - name: Upload V2 benchmark checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-image-v2-ab-1000
+          path: image_v2_out/
+          if-no-files-found: warn
+          retention-days: 14
