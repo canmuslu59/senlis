@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, glob, gzip, html, json, os, re, time, random, sqlite3, urllib.parse
+import csv, glob, gzip, gzip, html, json, os, re, time, random, sqlite3, urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
