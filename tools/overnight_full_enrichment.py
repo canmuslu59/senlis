@@ -40,7 +40,8 @@ def norm(s):
 
 GENERIC_PRODUCT_TOKENS={"eau","de","parfum","perfume","edp","edt","spray","fragrance","ml","the","and","of","erkek","kadin","unisex","parfumu"}
 VARIANT_MARKERS={"intense","elixir","flame","energy","absolu","absolut","collector","collectors","limited","edition","sport","night","noir","rouge",
-                 "bloom","floral","pour","femme","homme","women","woman","men","man","her","him","le"}
+                 "bloom","floral","pour","femme","homme","women","woman","men","man","her","him","le",
+                 "gold","silver","black","white","blue","red","pink","green","purple","platinum"}
 
 def load_tr_retail_brands():
     if not TR_RETAIL_BRANDS_PATH.exists(): return set()
