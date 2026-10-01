@@ -5,6 +5,7 @@ on:
     paths:
       - "tools/matching_regression_test.py"
       - "tools/overnight_full_enrichment.py"
+      - "tools/image_sources.py"
       - ".github/workflows/matching-regression.yml"
   workflow_dispatch:
 jobs:
