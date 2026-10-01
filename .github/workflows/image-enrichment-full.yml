@@ -8,6 +8,7 @@ on:
       - ".github/workflows/image-enrichment-full.yml"
       - "data/master_manifest_174259/**"
       - "tools/image_enrichment.py"
+      - "tools/image_sources.py"
       - "tools/merge_image_chunks.py"
   workflow_dispatch:
 
@@ -72,8 +73,11 @@ jobs:
           START_ID: "${{ matrix.start }}"
           END_ID: "${{ matrix.end }}"
           FAST_WORKERS: "6"
-          FRAG_WORKERS: "3"
-          FRAG_DELAY: "0.25"
+          FRAG_WORKERS: "6"
+          VERIFY_CDN: "1"
+          PAGE_MIN_INTERVAL: "1.0"
+          MAX_SECONDS: "9900"
+          CHECKPOINT_EVERY: "1000"
         run: python tools/image_enrichment.py
       - name: Upload image checkpoint
         if: always()
