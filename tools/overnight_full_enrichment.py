@@ -242,6 +242,30 @@ def boyner_search(session,brand,product):
         return [(title,url) for score,title,url in out[:8]]
     except: return []
 
+def beymen_search(session,brand,product):
+    try:
+        r=session.get("https://www.beymen.com/tr/search",params={"q":f"{brand} {product}"},timeout=20,allow_redirects=True)
+        if r.status_code!=200 or "text/html" not in r.headers.get("content-type",""): return []
+        soup=BeautifulSoup(r.text,"lxml")
+        target=norm(f"{brand} {product}")
+        out=[]; seen=set()
+        for a in soup.find_all("a",href=True):
+            href=a.get("href","")
+            if "/tr/p_" not in href: continue
+            title=" ".join(a.get_text(" ",strip=True).split())
+            if not title: continue
+            url=urllib.parse.urljoin(r.url,href)
+            if url in seen: continue
+            seen.add(url)
+            score=fuzz.token_set_ratio(target,norm(title))
+            if norm(brand) in norm(title): score+=8
+            if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): score-=30
+            if score>=58 and variant_compatible(brand,product,title):
+                out.append((score,title,url))
+        out.sort(reverse=True)
+        return [(title,url) for score,title,url in out[:8]]
+    except: return []
+
 def parse_offer_page(session,url,brand,product):
     try:
         r=session.get(url,timeout=18,allow_redirects=True)
@@ -340,6 +364,9 @@ def extract_commerce(session,row):
     for title,url in boyner_search(session,brand,product):
         if url not in seen:
             seen.add(url); results.append((title,url))
+    for title,url in beymen_search(session,brand,product):
+        if url not in seen:
+            seen.add(url); results.append((title,url))
     for q in queries:
         for title,url in search_web(session,q):
             if url not in seen:
@@ -360,16 +387,21 @@ def extract_commerce(session,row):
     candidates.sort(reverse=True)
 
     best_candidate=None
-    for _,title,url in candidates[:5]:
+    verified=[]
+    for _,title,url in candidates[:8]:
         p=parse_offer_page(session,url,brand,product)
         if not p: continue
         if best_candidate is None or (p.get("price_try") and not best_candidate.get("price_try")) or p["score"]>best_candidate["score"]:
             best_candidate=p
         if p.get("price_try") and p["score"]>=82:
-            res.update(p)
-            res["match_confidence"]=round(p["score"]/100,3)
-            res["commerce_status"]="verified"
-            return res
+            verified.append(p)
+
+    if verified:
+        p=min(verified,key=lambda x:(float(x.get("price_try") or 1e18),-float(x.get("score") or 0)))
+        res.update(p)
+        res["match_confidence"]=round(p["score"]/100,3)
+        res["commerce_status"]="verified"
+        return res
 
     if best_candidate and best_candidate["score"]>=78:
         res.update(best_candidate)
