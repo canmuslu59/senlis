@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 15
     env:
       COMMERCE_SHARD_INDEX: "0"
-      COMMERCE_SHARD_COUNT: "35142"
+      COMMERCE_SHARD_COUNT: "200000"
       COMMERCE_WORKERS: "1"
       COMMERCE_SCOPE: "tr_retail"
       SEARCH_ENGINE_FALLBACK: "0"
