@@ -2,6 +2,11 @@ name: SENLIS Full Turkey Commerce
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - overnight/full-enrichment-20261001
+    paths:
+      - "tools/full_commerce_trigger.txt"
 
 concurrency:
   group: senlis-full-turkey-commerce
