@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, glob, gzip, json, sqlite3
+import csv, glob, gzip, gzip, json, sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
