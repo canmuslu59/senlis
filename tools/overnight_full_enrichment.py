@@ -39,7 +39,7 @@ def norm(s):
 
 
 GENERIC_PRODUCT_TOKENS={"eau","de","parfum","perfume","edp","edt","spray","fragrance","ml","the","and","of","erkek","kadin","unisex","parfumu"}
-VARIANT_MARKERS={"intense","elixir","flame","energy","absolu","absolut","collector","edition","sport","night","noir","rouge",
+VARIANT_MARKERS={"intense","elixir","flame","energy","absolu","absolut","collector","collectors","limited","edition","sport","night","noir","rouge",
                  "bloom","floral","pour","femme","homme","women","woman","men","man","her","him","le"}
 
 def load_tr_retail_brands():
@@ -71,6 +71,29 @@ def commerce_eligible(row):
     if COMMERCE_SCOPE=="off": return False
     return brand_in_tr_retail(row.get("brand_name",""))
 
+NON_FRAGRANCE_PHRASES={
+ "deostick","deo stick","deodorant","body lotion","vucut losyonu","vücut losyonu","shower gel","dus jeli","duş jeli",
+ "body wash","yikama jeli","yıkama jeli","hand wash","el ve vucut","el ve vücut","body cream","vucut kremi","vücut kremi",
+ "after shave","aftershave","beard oil","sakal yagi","sakal yağı","soap","sabun"
+}
+SET_PHRASES={"gift set","parfum set","parfüm set","seti","coffret"}
+
+def has_any_phrase(text,phrases):
+    t=norm(text)
+    return any(norm(p) in t for p in phrases)
+
+def form_compatible(product,candidate):
+    tp=norm(product); cp=norm(candidate)
+    if has_any_phrase(candidate,NON_FRAGRANCE_PHRASES) and not has_any_phrase(product,NON_FRAGRANCE_PHRASES):
+        return False
+    tset=has_any_phrase(product,SET_PHRASES)
+    cset=has_any_phrase(candidate,SET_PHRASES)
+    if cset and not tset: return False
+    tmist=bool(re.search(r"\b(?:body mist|hair body mist|fragrance mist|mist)\b",tp))
+    cmist=bool(re.search(r"\b(?:body mist|hair body mist|fragrance mist|mist)\b",cp))
+    if tmist != cmist: return False
+    return True
+
 def fragrance_type(s):
     t=norm(s)
     if re.search(r"\beau de parfum\b|\bedp\b",t): return "edp"
@@ -82,11 +105,15 @@ def fragrance_type(s):
 
 def variant_compatible(brand,product,candidate):
     tp=norm(product); cp=norm(candidate); bn=set(norm(brand).split())
+    if not form_compatible(product,candidate): return False
     ttype=fragrance_type(product); ctype=fragrance_type(candidate)
     if ttype and ctype and ttype!=ctype: return False
 
     tt=[x for x in tp.split() if x not in bn and x not in GENERIC_PRODUCT_TOKENS]
     ct=set(cp.split())
+    distinctive=[x for x in tt if len(x)>=5 and not x.isdigit()]
+    if distinctive and any(x not in ct for x in distinctive):
+        return False
     if tt:
         coverage=sum(x in ct for x in tt)/len(tt)
         if len(tt)<=2 and coverage<1.0: return False
