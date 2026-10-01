@@ -4,6 +4,7 @@ on:
     branches: [overnight/full-enrichment-20261001]
     paths:
       - "tools/build_official_price_index.py"
+      - "tools/overnight_full_enrichment.py"
       - ".github/workflows/official-price-index.yml"
   workflow_dispatch:
 jobs:
