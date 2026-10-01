@@ -45,6 +45,24 @@ def main():
                 print("BOYNER_DEBUG",rr.status_code,len(rr.text),soup.title.get_text(" ",strip=True) if soup.title else "",json.dumps(links,ensure_ascii=False),flush=True)
             except Exception as e:
                 print("BOYNER_DEBUG_ERROR",repr(e),flush=True)
+            probes=[
+                ("SEVIL","https://www.sevil.com.tr/catalogsearch/result/",{"q":f'{r["brand_name"]} {r["product_name"]}'}),
+                ("SEPHORA","https://www.sephora.com.tr/search",{"q":f'{r["brand_name"]} {r["product_name"]}'}),
+                ("BEYMEN","https://www.beymen.com/tr/search",{"q":f'{r["brand_name"]} {r["product_name"]}'})
+            ]
+            for label,url,params in probes:
+                try:
+                    pr=ss.get(url,params=params,timeout=20,allow_redirects=True)
+                    ps=core.BeautifulSoup(pr.text,"lxml")
+                    pl=[]
+                    for a in ps.find_all("a",href=True):
+                        href=a.get("href",""); txt=" ".join(a.get_text(" ",strip=True).split())
+                        if txt and any(k in href.lower() for k in ("product","-p-","/p_","/p/")):
+                            pl.append((txt,href))
+                        if len(pl)>=8: break
+                    print(label+"_DEBUG",pr.status_code,len(pr.text),pr.url,ps.title.get_text(" ",strip=True) if ps.title else "",json.dumps(pl,ensure_ascii=False),flush=True)
+                except Exception as e:
+                    print(label+"_DEBUG_ERROR",repr(e),flush=True)
         x=core.process(r)
         results.append(x)
         print("RESULT",json.dumps({
