@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+import csv, glob, gzip, json
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import overnight_full_enrichment as core
+
+TEST_IDS={"36578","36581","47794","66459","159972","163927","33963","171509","172855","172858"}
+
+def load_test_rows():
+    found={}
+    paths=sorted(glob.glob("data/master_manifest_174259/part_*.csv") + glob.glob("data/master_manifest_174259/part_*.csv.gz"))
+    for p in paths:
+        opener=gzip.open if p.endswith(".gz") else open
+        with opener(p,"rt",encoding="utf-8-sig",newline="") as f:
+            for r in csv.DictReader(f):
+                if r.get("id") in TEST_IDS:
+                    found[r["id"]]=r
+    return [found[i] for i in sorted(TEST_IDS,key=int) if i in found]
+
+def main():
+    out=Path("commerce_smoke"); out.mkdir(exist_ok=True)
+    rows=load_test_rows()
+    results=[]
+    for r in rows:
+        print("TEST",r["id"],r["brand_name"],r["product_name"],flush=True)
+        x=core.process(r)
+        results.append(x)
+        print("RESULT",json.dumps({
+            "product_id":x.get("product_id"),
+            "commerce_status":x.get("commerce_status"),
+            "price_try":x.get("price_try"),
+            "seller_name":x.get("seller_name"),
+            "purchase_url":x.get("purchase_url"),
+            "match_confidence":x.get("match_confidence")
+        },ensure_ascii=False),flush=True)
+
+    cols=core.COLS
+    with (out/"commerce_smoke.csv").open("w",encoding="utf-8-sig",newline="") as f:
+        w=csv.DictWriter(f,fieldnames=cols,extrasaction="ignore"); w.writeheader(); w.writerows(results)
+    summary={
+        "tested":len(results),
+        "verified":sum(r.get("commerce_status")=="verified" for r in results),
+        "candidate":sum(r.get("commerce_status")=="candidate" for r in results),
+        "with_price":sum(bool(r.get("price_try")) for r in results),
+        "with_purchase_url":sum(bool(r.get("purchase_url")) for r in results),
+        "statuses":{}
+    }
+    for r in results:
+        k=r.get("commerce_status") or ""
+        summary["statuses"][k]=summary["statuses"].get(k,0)+1
+    (out/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
+    print("SUMMARY",json.dumps(summary,ensure_ascii=False),flush=True)
+
+if __name__=="__main__":
+    main()
