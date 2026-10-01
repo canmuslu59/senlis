@@ -1,0 +1,29 @@
+name: SENLIS Official Retail Pilot
+on:
+  push:
+    branches: [overnight/full-enrichment-20261001]
+    paths:
+      - "tools/official_retail_pilot.py"
+      - ".github/workflows/official-retail-pilot.yml"
+      - "tools/overnight_full_enrichment.py"
+  workflow_dispatch:
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      COMMERCE_SCOPE: all
+      SEARCH_ENGINE_FALLBACK: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4 lxml rapidfuzz
+      - run: python tools/official_retail_pilot.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-official-retail-pilot
+          path: official_retail_pilot/
+          retention-days: 3
