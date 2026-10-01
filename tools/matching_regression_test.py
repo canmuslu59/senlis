@@ -1,3 +1,4 @@
+# regression rerun after accent-scope fix
 #!/usr/bin/env python3
 import sys
 from pathlib import Path
