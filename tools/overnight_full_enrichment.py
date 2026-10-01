@@ -102,12 +102,14 @@ def form_compatible(product,candidate):
     return True
 
 def fragrance_type(s):
+    raw=str(s or "").lower()
     t=norm(s)
     if re.search(r"\beau de parfum\b|\bedp\b",t): return "edp"
     if re.search(r"\beau de toilette\b|\bedt\b",t): return "edt"
     if "extrait" in t: return "extrait"
     if re.search(r"\beau de cologne\b|\bcologne\b",t): return "edc"
-    if re.search(r"\bparfum\b",t): return "parfum"
+    # Turkish "parfüm" is commonly a generic product-category label, not a Parfum concentration.
+    if re.search(r"\bparfum\b",t) and "parfüm" not in raw: return "parfum"
     return ""
 
 def special_format(s):
