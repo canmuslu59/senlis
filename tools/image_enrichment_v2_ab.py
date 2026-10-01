@@ -22,6 +22,7 @@ from rapidfuzz import fuzz
 
 import image_enrichment as baseline
 import overnight_full_enrichment as core
+from image_sources import GENERIC_IMAGE_PATTERNS
 
 LIMIT=int(os.environ.get("AB_LIMIT","1000"))
 WORKERS=int(os.environ.get("WORKERS","8"))
@@ -33,13 +34,7 @@ OUTJSON=OUT/"image_v2_ab_1000_summary.json"
 HF_META_URL="https://huggingface.co/datasets/doevent/perfume/resolve/main/perfumes.csv?download=true"
 HF_ZIP_URL="https://huggingface.co/datasets/doevent/perfume/resolve/main/images.zip?download=true"
 
-BAD_IMAGE_PATTERNS=[
-    "social-thumbnails/datasets/",
-    "/assets/images/perfume_bottle/480.png",
-    "alix-avien-paylasim-1200x628",
-    "placeholder","no-image","no_image","default-image","default_image",
-    "favicon","sprite","logo."
-]
+BAD_IMAGE_PATTERNS=list(GENERIC_IMAGE_PATTERNS)
 BAD_PAGE_HOSTS={
     "facebook.com","instagram.com","youtube.com","tiktok.com","pinterest.com",
     "reddit.com","bing.com","google.com","duckduckgo.com"
