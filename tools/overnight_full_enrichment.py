@@ -26,6 +26,7 @@ TR_SELLERS=[
 ]
 BAD=["tester","sample","numune","dekant","decant","muadil","benzeri","açık parfüm","acik parfum","esans"]
 TR_RETAIL_BRANDS_PATH=Path("data/turkiye_retail_brands_501.txt")
+OFFICIAL_PRICE_INDEX_PATH=Path("data/official_price_index.csv")
 
 INFO_DOMAINS=[
  "fragrantica.com","parfumo.com","basenotes.com","wikipedia.org","facebook.com","instagram.com",
@@ -60,6 +61,20 @@ GENERIC_PRODUCT_TOKENS={"eau","de","parfum","perfume","edp","edt","spray","fragr
 VARIANT_MARKERS={"intense","elixir","flame","energy","absolu","absolut","collector","collectors","limited","edition","sport","night","noir","rouge",
                  "bloom","floral","pour","femme","homme","women","woman","men","man","her","him","le",
                  "gold","silver","black","white","blue","red","pink","green","purple","platinum"}
+
+def load_official_price_index():
+    if not OFFICIAL_PRICE_INDEX_PATH.exists(): return {}
+    out={}
+    try:
+        with OFFICIAL_PRICE_INDEX_PATH.open("r",encoding="utf-8-sig",newline="") as f:
+            for r in csv.DictReader(f):
+                pid=str(r.get("product_id") or "").strip()
+                if pid and r.get("price_try"): out[pid]=r
+    except Exception:
+        return {}
+    return out
+
+OFFICIAL_PRICE_INDEX=load_official_price_index()
 
 def load_tr_retail_brands():
     if not TR_RETAIL_BRANDS_PATH.exists(): return set()
@@ -674,6 +689,23 @@ def extract_commerce(session,row):
                 "purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":""}
     res={"commerce_status":"not_found","price_try":"","currency":"TRY","volume_ml":"","seller_name":"",
          "purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":""}
+    indexed=OFFICIAL_PRICE_INDEX.get(str(row.get("id") or ""))
+    if indexed:
+        try: price=float(indexed.get("price_try") or 0)
+        except: price=indexed.get("price_try") or ""
+        try:
+            volume=float(indexed.get("volume_ml")) if indexed.get("volume_ml") else ""
+        except: volume=indexed.get("volume_ml") or ""
+        try:
+            confidence=float(indexed.get("match_confidence")) if indexed.get("match_confidence") else 1.0
+        except: confidence=1.0
+        return {
+            "commerce_status":"verified","price_try":price,"currency":indexed.get("currency") or "TRY",
+            "volume_ml":volume,"seller_name":indexed.get("seller_name") or "",
+            "purchase_url":indexed.get("purchase_url") or "","stock_status":"unknown",
+            "commerce_image":"","match_confidence":confidence,
+            "source_product_name":indexed.get("source_product_name") or product
+        }
     official=official_catalog_offer(session,brand,product)
     if official:
         res.update(official)
