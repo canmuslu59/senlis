@@ -33,6 +33,40 @@ def norm(s):
     s=s.replace("ı","i").replace("ş","s").replace("ğ","g").replace("ü","u").replace("ö","o").replace("ç","c")
     return re.sub(r"\s+"," ",re.sub(r"[^a-z0-9]+"," ",s)).strip()
 
+
+GENERIC_PRODUCT_TOKENS={"eau","de","parfum","perfume","edp","edt","spray","fragrance","ml","the","and","of"}
+VARIANT_MARKERS={"intense","elixir","flame","energy","absolu","absolut","collector","edition","sport","night","noir","rouge",
+                 "bloom","floral","pour","femme","homme","women","woman","men","man","her","him","le"}
+
+def fragrance_type(s):
+    t=norm(s)
+    if re.search(r"\beau de parfum\b|\bedp\b",t): return "edp"
+    if re.search(r"\beau de toilette\b|\bedt\b",t): return "edt"
+    if "extrait" in t: return "extrait"
+    if re.search(r"\beau de cologne\b|\bcologne\b",t): return "edc"
+    if re.search(r"\bparfum\b",t): return "parfum"
+    return ""
+
+def variant_compatible(brand,product,candidate):
+    tp=norm(product); cp=norm(candidate); bn=set(norm(brand).split())
+    ttype=fragrance_type(product); ctype=fragrance_type(candidate)
+    if ttype and ctype and ttype!=ctype: return False
+
+    tt=[x for x in tp.split() if x not in bn and x not in GENERIC_PRODUCT_TOKENS]
+    ct=set(cp.split())
+    if tt:
+        coverage=sum(x in ct for x in tt)/len(tt)
+        if len(tt)<=2 and coverage<1.0: return False
+        if len(tt)>2 and coverage<0.75: return False
+        for x in tt:
+            if (x.isdigit() and len(x)==4) or x in VARIANT_MARKERS:
+                if x not in ct: return False
+
+    tm=set(tp.split()) & VARIANT_MARKERS
+    cm=set(cp.split()) & VARIANT_MARKERS
+    if cm-tm: return False
+    return True
+
 def host(url):
     try:
         h=urllib.parse.urlparse(url).netloc.lower().split(":")[0]
@@ -203,7 +237,7 @@ def boyner_search(session,brand,product):
             score=fuzz.token_set_ratio(target,norm(title))
             if norm(brand) in norm(title): score+=8
             if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): score-=30
-            if score>=58: out.append((score,title,url))
+            if score>=58 and variant_compatible(brand,product,title): out.append((score,title,url))
         out.sort(reverse=True)
         return [(title,url) for score,title,url in out[:8]]
     except: return []
@@ -220,6 +254,7 @@ def parse_offer_page(session,url,brand,product):
             typ=o.get("@type")
             if not (typ=="Product" or (isinstance(typ,list) and "Product" in typ)): continue
             name=o.get("name") or title
+            if not variant_compatible(brand,product,name): continue
             score=.65*fuzz.token_set_ratio(target,norm(name))+.35*fuzz.ratio(target,norm(name))
             if norm(brand) in norm(name): score+=8
             offers=o.get("offers"); offers=offers if isinstance(offers,list) else [offers] if isinstance(offers,dict) else []
@@ -246,6 +281,7 @@ def parse_offer_page(session,url,brand,product):
         # Common OpenGraph / product meta price fallback.
         if best is None:
             name=title
+            if not variant_compatible(brand,product,name): return None
             score=.65*fuzz.token_set_ratio(target,norm(name))+.35*fuzz.ratio(target,norm(name))
             if norm(brand) in norm(name): score+=8
             amount=None; cur=""
@@ -272,7 +308,7 @@ def parse_offer_page(session,url,brand,product):
             if norm(brand) in norm(title): score+=8
             hm=host(r.url)
             localish=hm.endswith(".com.tr") or hm.endswith(".tr") or "/tr/" in r.url.lower()
-            if score>=82 and localish:
+            if score>=82 and localish and variant_compatible(brand,product,title):
                 pm=re.search(r"(?<!\d)(\d{1,3}(?:[ .\u00a0]\d{3})+|\d{3,6})(?:[,.]\d{1,2})?\s*(?:TRY|TL|₺)",flat,re.I)
                 if pm:
                     raw=pm.group(1).replace(" ","").replace("\u00a0","").replace(".","")
@@ -319,7 +355,7 @@ def extract_commerce(session,row):
         if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): sc-=30
         trusted=any(h==d or h.endswith("."+d) for d in TR_SELLERS)
         localish=h.endswith(".com.tr") or h.endswith(".tr") or "/tr/" in url.lower()
-        if sc>=58 and (trusted or localish or sc>=76):
+        if sc>=58 and variant_compatible(brand,product,title) and (trusted or localish or sc>=76):
             candidates.append((sc,title,url))
     candidates.sort(reverse=True)
 
