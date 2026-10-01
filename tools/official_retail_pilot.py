@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# trigger official retail pilot 20261001
 import csv,glob,gzip,json,sys
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from pathlib import Path
