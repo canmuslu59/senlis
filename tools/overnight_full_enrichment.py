@@ -140,6 +140,10 @@ def special_format(s):
     if re.search(r"\b(gift set|parfum set|perfume set|seti|set)\b",t): return "set"
     return ""
 
+def is_travel_format(s):
+    t=match_norm(s)
+    return bool(re.search(r"\b(seyahat boy|seyahat boyu|travel size|travel|mini)\b",t))
+
 def variant_compatible(brand,product,candidate):
     tp=match_norm(product); cp=match_norm(candidate); bn=set(match_norm(brand).split())
     if not form_compatible(product,candidate): return False
@@ -147,6 +151,7 @@ def variant_compatible(brand,product,candidate):
     if ttype and ctype and ttype!=ctype: return False
     tformat=special_format(product); cformat=special_format(candidate)
     if (tformat or cformat) and tformat!=cformat: return False
+    if is_travel_format(product) != is_travel_format(candidate): return False
 
     tt=[x for x in tp.split() if x not in bn and x not in GENERIC_PRODUCT_TOKENS]
     ct=set(cp.split())
@@ -164,6 +169,24 @@ def variant_compatible(brand,product,candidate):
     tm=set(tp.split()) & VARIANT_MARKERS
     cm=set(cp.split()) & VARIANT_MARKERS
     if cm-tm: return False
+
+    # Require the actual fragrance-name tokens to survive the retailer mapping.
+    # This blocks base-name collisions such as Coco -> Bombshell Mini,
+    # Pure Seduction -> Bombshell Seduction and Vanilla Lace -> Bare Sueded Vanilla.
+    alias_tokens=set()
+    for a in BRAND_ALIASES.get(norm(brand),[]):
+        alias_tokens.update(a.split())
+    name_safe=set(GENERIC_PRODUCT_TOKENS) | {
+      "body","mist","hair","misti","vucut","sac","seyahat","boy","boyu","travel","size","mini",
+      "refillable","refill","refil","notes","note","citrus","vanilla","woody","fresh","floral","amber",
+      "oz","fl","natural","alcohol","free","beauty","collection","cok","yakinda","yeniden","stoklarda","yeni","urun"
+    }
+    tname=[x for x in tp.split() if x not in bn and x not in alias_tokens and x not in name_safe and not x.isdigit()]
+    cname=[x for x in cp.split() if x not in bn and x not in alias_tokens and x not in name_safe and not x.isdigit()]
+    if tname and any(x not in cname for x in tname): return False
+    if 1 <= len(tname) <= 4:
+        extras=[x for x in cname if x not in tname]
+        if extras: return False
 
     # Short fragrance names are highly ambiguous: a retailer result may be a flanker
     # with the complete base name plus one or two extra name tokens
