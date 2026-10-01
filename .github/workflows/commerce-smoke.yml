@@ -1,0 +1,31 @@
+name: SENLIS Commerce Smoke Test
+
+on:
+  push:
+    branches:
+      - overnight/full-enrichment-20261001
+    paths:
+      - ".github/workflows/commerce-smoke.yml"
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml rapidfuzz
+      - name: Test commerce lookup
+        run: python tools/commerce_smoke_test.py
+      - name: Upload smoke results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-commerce-smoke
+          path: commerce_smoke/
+          if-no-files-found: warn
+          retention-days: 3
