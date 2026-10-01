@@ -830,6 +830,11 @@ def match_norm(s):
     return re.sub(r"\s+"," ",t).strip()
 
 def variant_compatible(brand,product,candidate):
+    def named_eau(s):
+        t=norm(s)
+        t=re.sub(r"\beau\s+de\s+(?:parfum|perfume|toilette|cologne)\b"," ",t)
+        return bool(re.search(r"\beau\b",t))
+    if named_eau(product)!=named_eau(candidate):return False
     cp=match_norm(candidate)
     for tok in BRAND_NAME_TOKENS.get(norm(brand),set()):
         cp=re.sub(rf"\b{re.escape(tok)}\b"," ",cp)
