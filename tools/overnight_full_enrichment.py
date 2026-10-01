@@ -280,6 +280,27 @@ def boyner_search(session,brand,product):
         return [(title,url) for score,title,url in out[:8]]
     except: return []
 
+def gratis_search(session,brand,product):
+    try:
+        r=session.get("https://www.gratis.com/search",params={"q":f"{brand} {product}"},timeout=20,allow_redirects=True)
+        if r.status_code!=200 or "text/html" not in r.headers.get("content-type",""): return []
+        soup=BeautifulSoup(r.text,"lxml")
+        out=[]; seen=set()
+        for a in soup.find_all("a",href=True):
+            href=a.get("href","")
+            title=" ".join(a.get_text(" ",strip=True).split())
+            if not title or "-p-" not in href: continue
+            url=urllib.parse.urljoin(r.url,href)
+            if url in seen: continue
+            seen.add(url)
+            score=product_match_score(brand,product,title)
+            if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): score-=30
+            if score>=58 and brand_compatible(brand,title) and variant_compatible(brand,product,title):
+                out.append((score,title,url))
+        out.sort(reverse=True)
+        return [(title,url) for score,title,url in out[:8]]
+    except: return []
+
 def beymen_search(session,brand,product):
     try:
         r=session.get("https://www.beymen.com/tr/search",params={"q":f"{brand} {product}"},timeout=20,allow_redirects=True)
@@ -399,6 +420,9 @@ def extract_commerce(session,row):
         if url not in seen:
             seen.add(url); results.append((title,url))
     for title,url in beymen_search(session,brand,product):
+        if url not in seen:
+            seen.add(url); results.append((title,url))
+    for title,url in gratis_search(session,brand,product):
         if url not in seen:
             seen.add(url); results.append((title,url))
     if SEARCH_ENGINE_FALLBACK:
