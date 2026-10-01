@@ -39,8 +39,20 @@ def norm(s):
 
 def match_norm(s):
     t=norm(s)
-    t=t.replace("vucut spreyi","body mist").replace("body spray","body mist").replace("fragrance mist","body mist")
-    t=t.replace("vucut spreyi","body mist")
+    replacements=[
+      ("vucut ve sac parfum misti","body mist"),
+      ("sac ve vucut parfum misti","body mist"),
+      ("sac parfum misti","body mist"),
+      ("vucut parfum misti","body mist"),
+      ("parfum misti","body mist"),
+      ("vucut misti","body mist"),
+      ("body misti","body mist"),
+      ("vucut spreyi","body mist"),
+      ("body spray","body mist"),
+      ("fragrance mist","body mist"),
+      ("hair mist","body mist"),
+    ]
+    for a,b in replacements: t=t.replace(a,b)
     return t
 
 
@@ -90,7 +102,7 @@ def has_any_phrase(text,phrases):
     return any(norm(p) in t for p in phrases)
 
 def form_compatible(product,candidate):
-    tp=norm(product); cp=norm(candidate)
+    tp=match_norm(product); cp=match_norm(candidate)
     if has_any_phrase(candidate,NON_FRAGRANCE_PHRASES) and not has_any_phrase(product,NON_FRAGRANCE_PHRASES):
         return False
     tset=has_any_phrase(product,SET_PHRASES)
@@ -153,14 +165,18 @@ def variant_compatible(brand,product,candidate):
     cm=set(cp.split()) & VARIANT_MARKERS
     if cm-tm: return False
 
-    # One-word fragrance names without an explicit concentration are highly ambiguous.
-    # Reject extra flanker words (e.g. "Star" vs "Star Cherie").
-    if len(tt)==1 and not ttype:
+    # Short fragrance names are highly ambiguous: a retailer result may be a flanker
+    # with the complete base name plus one or two extra name tokens
+    # (e.g. Bombshell -> Bombshell Bronze, Tease -> Tease Sugar Fleur,
+    # Cherry Blossom -> Japanese Cherry Blossom). Reject those extras even when
+    # both sides share the same concentration.
+    if 1 <= len(tt) <= 3:
         alias_tokens=set()
         for a in BRAND_ALIASES.get(norm(brand),[]):
             alias_tokens.update(a.split())
-        safe={"refillable","refill","refil","notes","note","citrus","vanilla","woody","fresh","erkek","kadin","unisex",
-              "parfumu","parfum","perfume","fragrance","spray","ml","edp","edt","eau","de","the","and","for"}
+        safe={"refillable","refill","refil","notes","note","citrus","vanilla","woody","fresh","floral","amber",
+              "erkek","kadin","unisex","parfumu","parfum","perfume","fragrance","spray","ml","edp","edt","edc",
+              "eau","de","the","and","for","oz","fl","natural","alcohol","free"}
         cand_dist=[x for x in cp.split() if x not in bn and x not in alias_tokens and x not in safe and not x.isdigit()]
         extras=[x for x in cand_dist if x not in tt]
         if extras: return False
