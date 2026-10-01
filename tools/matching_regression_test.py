@@ -45,4 +45,16 @@ for expected,brand,product,candidate in CASES:
 if bad:
     print("REGRESSION_FAILURES",len(bad))
     raise SystemExit(1)
+
+class NoNetwork:
+    def get(self,*args,**kwargs):
+        raise RuntimeError("network access attempted for indexed product")
+
+indexed_row={"id":"121536","brand_name":"Oriflame","product_name":"Amber Elixir Mystery","release_year":""}
+indexed=core.extract_commerce(NoNetwork(),indexed_row)
+assert indexed["commerce_status"]=="verified", indexed
+assert float(indexed["price_try"])==1199.0, indexed
+assert indexed["seller_name"]=="tr.oriflame.com", indexed
+assert "code=35681" in indexed["purchase_url"], indexed
+print("STATIC_INDEX_OK",indexed["price_try"],indexed["seller_name"],indexed["purchase_url"])
 print("REGRESSION_OK",len(CASES))
