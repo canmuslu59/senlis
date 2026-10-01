@@ -29,6 +29,21 @@ def main():
             q=f'"{r["brand_name"]}" "{r["product_name"]}" fiyat TRY'
             dbg=core.search_web(core.make_session(),q)
             print("SEARCH_DEBUG",r["id"],json.dumps(dbg[:10],ensure_ascii=False),flush=True)
+        if r["id"]=="47794":
+            ss=core.make_session()
+            try:
+                rr=ss.get("https://www.boyner.com.tr/search",params={"q":f'{r["brand_name"]} {r["product_name"]}'},timeout=20)
+                soup=core.BeautifulSoup(rr.text,"lxml")
+                links=[]
+                for a in soup.find_all("a",href=True):
+                    href=a.get("href","")
+                    txt=" ".join(a.get_text(" ",strip=True).split())
+                    if ("-p-" in href or "/p_" in href) and txt:
+                        links.append((txt,href))
+                    if len(links)>=12: break
+                print("BOYNER_DEBUG",rr.status_code,len(rr.text),soup.title.get_text(" ",strip=True) if soup.title else "",json.dumps(links,ensure_ascii=False),flush=True)
+            except Exception as e:
+                print("BOYNER_DEBUG_ERROR",repr(e),flush=True)
         x=core.process(r)
         results.append(x)
         print("RESULT",json.dumps({
