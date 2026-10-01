@@ -1,0 +1,18 @@
+name: SENLIS Commerce Scope Stats
+
+on:
+  push:
+    branches:
+      - overnight/full-enrichment-20261001
+    paths:
+      - "tools/commerce_scope_stats.py"
+      - ".github/workflows/commerce-scope-stats.yml"
+  workflow_dispatch:
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: python tools/commerce_scope_stats.py
