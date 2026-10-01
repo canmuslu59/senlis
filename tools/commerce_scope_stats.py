@@ -30,6 +30,10 @@ recent=[r for r in e if str(r.get("release_year") or "").isdigit() and int(r["re
 recent2023=[r for r in e if str(r.get("release_year") or "").isdigit() and int(r["release_year"])>=2023]
 unknown=[r for r in e if not str(r.get("release_year") or "").isdigit()]
 counts=Counter(norm(r.get("brand_name","")) for r in e)
+ids=sorted(int(r["id"]) for r in rows if str(r.get("id","")).isdigit())
+expected=set(range(1,174260))
+present=set(ids)
+missing=sorted(expected-present)
 summary={
  "catalog_total":len(rows),
  "turkey_scope_products":len(e),
@@ -38,6 +42,11 @@ summary={
  "turkey_scope_2023_plus":len(recent2023),
  "turkey_scope_unknown_year":len(unknown),
  "eligible_brands_present":len(counts),
+ "manifest_min_id":min(ids) if ids else None,
+ "manifest_max_id":max(ids) if ids else None,
+ "manifest_unique_ids":len(present),
+ "manifest_missing_ids_count":len(missing),
+ "manifest_missing_ids":missing[:500],
  "top_20_brands":counts.most_common(20)
 }
 print("SCOPE_SUMMARY",json.dumps(summary,ensure_ascii=False),flush=True)
