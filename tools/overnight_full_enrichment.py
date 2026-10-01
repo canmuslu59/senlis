@@ -23,6 +23,10 @@ TR_SELLERS=[
  "oriflame.com","thebodyshop.com.tr","lush.com.tr"
 ]
 BAD=["tester","sample","numune","dekant","decant","muadil","benzeri","açık parfüm","acik parfum","esans"]
+INFO_DOMAINS=[
+ "fragrantica.com","parfumo.com","basenotes.com","wikipedia.org","facebook.com","instagram.com",
+ "youtube.com","tiktok.com","pinterest.com","reddit.com","duckduckgo.com","bing.com","google.com"
+]
 
 def norm(s):
     s=html.unescape(str(s or "")).lower()
@@ -132,16 +136,54 @@ def ddg(session,q):
         r=session.get("https://html.duckduckgo.com/html/",params={"q":q,"kl":"tr-tr"},timeout=16)
         if r.status_code!=200: return []
         soup=BeautifulSoup(r.text,"lxml"); out=[]
-        for a in soup.select("a.result__a"):
-            u=a.get("href",""); t=a.get_text(" ",strip=True)
-            try:
-                p=urllib.parse.urlparse(u); qs=urllib.parse.parse_qs(p.query)
-                if "uddg" in qs: u=qs["uddg"][0]
-            except: pass
-            if u.startswith("http"): out.append((t,u))
-            if len(out)>=8: break
+        selectors=["a.result__a","h2.result__title a"]
+        seen=set()
+        for sel in selectors:
+            for a in soup.select(sel):
+                u=a.get("href",""); t=a.get_text(" ",strip=True)
+                try:
+                    p=urllib.parse.urlparse(u); qs=urllib.parse.parse_qs(p.query)
+                    if "uddg" in qs: u=qs["uddg"][0]
+                except: pass
+                if u.startswith("http") and u not in seen:
+                    seen.add(u); out.append((t,u))
+                if len(out)>=10: return out
         return out
     except: return []
+
+def bing(session,q):
+    out=[]; seen=set()
+    try:
+        r=session.get("https://www.bing.com/search",params={"q":q,"setlang":"tr-tr","cc":"tr"},timeout=16)
+        if r.status_code==200:
+            soup=BeautifulSoup(r.text,"lxml")
+            for a in soup.select("li.b_algo h2 a"):
+                u=a.get("href",""); t=a.get_text(" ",strip=True)
+                if u.startswith("http") and u not in seen:
+                    seen.add(u); out.append((t,u))
+                if len(out)>=10: return out
+    except: pass
+    try:
+        r=session.get("https://www.bing.com/search",params={"q":q,"format":"rss","setlang":"tr-tr","cc":"tr"},timeout=16)
+        if r.status_code==200:
+            soup=BeautifulSoup(r.content,"xml")
+            for item in soup.find_all("item"):
+                t=item.title.get_text(" ",strip=True) if item.title else ""
+                u=item.link.get_text(" ",strip=True) if item.link else ""
+                if u.startswith("http") and u not in seen:
+                    seen.add(u); out.append((t,u))
+                if len(out)>=10: break
+    except: pass
+    return out
+
+def search_web(session,q):
+    out=[]; seen=set()
+    for fn in (bing,ddg):
+        for title,url in fn(session,q):
+            if url not in seen:
+                seen.add(url); out.append((title,url))
+            if len(out)>=14: return out
+    return out
 
 def parse_offer_page(session,url,brand,product):
     try:
@@ -149,12 +191,13 @@ def parse_offer_page(session,url,brand,product):
         if r.status_code!=200 or "text/html" not in r.headers.get("content-type",""): return None
         soup=BeautifulSoup(r.text,"lxml"); objs=parse_jsonld(soup)
         title=soup.title.get_text(" ",strip=True) if soup.title else ""
+        target=norm(f"{brand} {product}")
         best=None
         for o in objs:
             typ=o.get("@type")
             if not (typ=="Product" or (isinstance(typ,list) and "Product" in typ)): continue
             name=o.get("name") or title
-            score=.65*fuzz.token_set_ratio(norm(f"{brand} {product}"),norm(name))+.35*fuzz.ratio(norm(f"{brand} {product}"),norm(name))
+            score=.65*fuzz.token_set_ratio(target,norm(name))+.35*fuzz.ratio(target,norm(name))
             if norm(brand) in norm(name): score+=8
             offers=o.get("offers"); offers=offers if isinstance(offers,list) else [offers] if isinstance(offers,dict) else []
             im=o.get("image")
@@ -162,22 +205,62 @@ def parse_offer_page(session,url,brand,product):
             if isinstance(im,dict): im=im.get("url") or im.get("contentUrl") or ""
             for off in offers or [{}]:
                 price=off.get("price") or off.get("lowPrice")
-                cur=off.get("priceCurrency") or "TRY"
+                cur=off.get("priceCurrency") or ""
                 try:
                     if price is not None:
-                        raw=str(price).strip()
-                        if re.search(r"\d+\.\d{3},\d",raw): raw=raw.replace(".","").replace(",",".")
-                        else: raw=raw.replace(",",".")
+                        raw=str(price).strip().replace("\xa0"," ")
+                        if re.search(r"\d+[.]\d{3},\d",raw): raw=raw.replace(".","").replace(",",".")
+                        else: raw=raw.replace(" ","").replace(",",".")
                         price=float(re.sub(r"[^0-9.]","",raw))
                 except: price=None
-                if cur not in ("TRY","TL","₺",None): price=None
+                if str(cur).upper() not in ("TRY","TL","₺","") and price is not None: price=None
                 rec={"score":min(100,score),"price_try":price,"currency":"TRY","purchase_url":off.get("url") or r.url,
                      "seller_name":host(r.url),"stock_status":"in_stock" if "instock" in str(off.get("availability","")).lower() else
                      ("out_of_stock" if "outofstock" in str(off.get("availability","")).lower() else "unknown"),
                      "commerce_image":urllib.parse.urljoin(r.url,str(im)) if im else "","source_product_name":name}
-                if best is None or rec["score"]>best["score"] or (rec["score"]==best["score"] and rec["price_try"] and not best["price_try"]): best=rec
+                if best is None or rec["score"]>best["score"] or (rec["score"]==best["score"] and rec["price_try"] and not best.get("price_try")): best=rec
+
+        # Common OpenGraph / product meta price fallback.
         if best is None:
-            return None
+            name=title
+            score=.65*fuzz.token_set_ratio(target,norm(name))+.35*fuzz.ratio(target,norm(name))
+            if norm(brand) in norm(name): score+=8
+            amount=None; cur=""
+            for key in ("product:price:amount","og:price:amount"):
+                m=soup.find("meta",attrs={"property":key}) or soup.find("meta",attrs={"name":key})
+                if m and m.get("content"): amount=m.get("content"); break
+            for key in ("product:price:currency","og:price:currency"):
+                m=soup.find("meta",attrs={"property":key}) or soup.find("meta",attrs={"name":key})
+                if m and m.get("content"): cur=m.get("content"); break
+            price=None
+            if amount:
+                try: price=float(re.sub(r"[^0-9.]","",str(amount).replace(",",".").replace(" ","")))
+                except: pass
+            if str(cur).upper() not in ("TRY","TL","₺","") and price is not None: price=None
+            if price is not None:
+                best={"score":min(100,score),"price_try":price,"currency":"TRY","purchase_url":r.url,
+                      "seller_name":host(r.url),"stock_status":"unknown","commerce_image":"",
+                      "source_product_name":name}
+
+        # Visible Turkish price fallback for official/local product pages.
+        if best is None:
+            flat=" ".join(soup.get_text(" ",strip=True).split())
+            score=.65*fuzz.token_set_ratio(target,norm(title))+.35*fuzz.ratio(target,norm(title))
+            if norm(brand) in norm(title): score+=8
+            hm=host(r.url)
+            localish=hm.endswith(".com.tr") or hm.endswith(".tr") or "/tr/" in r.url.lower()
+            if score>=82 and localish:
+                pm=re.search(r"(?<!\d)(\d{1,3}(?:[ .\u00a0]\d{3})+|\d{3,6})(?:[,.]\d{1,2})?\s*(?:TRY|TL|₺)",flat,re.I)
+                if pm:
+                    raw=pm.group(1).replace(" ","").replace("\u00a0","").replace(".","")
+                    try: price=float(raw)
+                    except: price=None
+                    if price:
+                        best={"score":min(100,score),"price_try":price,"currency":"TRY","purchase_url":r.url,
+                              "seller_name":hm,"stock_status":"unknown","commerce_image":"",
+                              "source_product_name":title}
+
+        if best is None: return None
         text=soup.get_text(" ",strip=True)
         m=re.search(r"(?<!\d)(\d{1,4}(?:[.,]\d+)?)\s*ml\b",text,re.I)
         if m:
@@ -190,25 +273,49 @@ def extract_commerce(session,row):
     brand=row["brand_name"]; product=row["product_name"]
     res={"commerce_status":"not_found","price_try":"","currency":"TRY","volume_ml":"","seller_name":"",
          "purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":""}
-    # Current products first. Very old products still get searched, but exact-match threshold remains strict.
-    q=f'"{brand}" "{product}" parfüm Türkiye'
-    results=ddg(session,q)
+    queries=[
+      f'"{brand}" "{product}" fiyat TRY',
+      f'"{brand}" "{product}" Türkiye parfüm'
+    ]
+    results=[]; seen=set()
+    for q in queries:
+        for title,url in search_web(session,q):
+            if url not in seen:
+                seen.add(url); results.append((title,url))
+        if len(results)>=12: break
+
     candidates=[]
     for title,url in results:
         h=host(url)
-        if any(h==d or h.endswith("."+d) for d in TR_SELLERS):
-            sc=fuzz.token_set_ratio(norm(f"{brand} {product}"),norm(title))
-            if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): sc-=30
+        if any(h==d or h.endswith("."+d) for d in INFO_DOMAINS): continue
+        sc=fuzz.token_set_ratio(norm(f"{brand} {product}"),norm(title))
+        if norm(brand) in norm(title): sc+=8
+        if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): sc-=30
+        trusted=any(h==d or h.endswith("."+d) for d in TR_SELLERS)
+        localish=h.endswith(".com.tr") or h.endswith(".tr") or "/tr/" in url.lower()
+        if sc>=58 and (trusted or localish or sc>=76):
             candidates.append((sc,title,url))
     candidates.sort(reverse=True)
-    for _,title,url in candidates[:2]:
+
+    best_candidate=None
+    for _,title,url in candidates[:5]:
         p=parse_offer_page(session,url,brand,product)
-        if p and p["score"]>=78:
+        if not p: continue
+        if best_candidate is None or (p.get("price_try") and not best_candidate.get("price_try")) or p["score"]>best_candidate["score"]:
+            best_candidate=p
+        if p.get("price_try") and p["score"]>=82:
             res.update(p)
             res["match_confidence"]=round(p["score"]/100,3)
-            res["commerce_status"]="verified" if p.get("price_try") and p["score"]>=86 else "candidate"
+            res["commerce_status"]="verified"
             return res
-    if results and not candidates: res["commerce_status"]="no_trusted_seller_result"
+
+    if best_candidate and best_candidate["score"]>=78:
+        res.update(best_candidate)
+        res["match_confidence"]=round(best_candidate["score"]/100,3)
+        res["commerce_status"]="candidate"
+        return res
+    if results and not candidates: res["commerce_status"]="search_results_no_candidate"
+    elif results: res["commerce_status"]="candidate_pages_no_match"
     return res
 
 def process(row):
