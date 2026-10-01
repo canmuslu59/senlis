@@ -13,6 +13,7 @@ SHARD_COUNT=int(os.environ.get("SHARD_COUNT","8"))
 WORKERS=int(os.environ.get("WORKERS","4"))
 MAX_SECONDS=int(os.environ.get("MAX_SECONDS","18000"))
 SEARCH_ENGINE_FALLBACK=os.environ.get("SEARCH_ENGINE_FALLBACK","0")=="1"
+COMMERCE_SCOPE=os.environ.get("COMMERCE_SCOPE","tr_retail").strip().lower()
 OUT=Path("out"); OUT.mkdir(exist_ok=True)
 OUTCSV=OUT/f"shard_{SHARD_INDEX:02d}.csv"
 OUTJSON=OUT/f"summary_{SHARD_INDEX:02d}.json"
@@ -24,6 +25,8 @@ TR_SELLERS=[
  "oriflame.com","thebodyshop.com.tr","lush.com.tr"
 ]
 BAD=["tester","sample","numune","dekant","decant","muadil","benzeri","açık parfüm","acik parfum","esans"]
+TR_RETAIL_BRANDS_PATH=Path("data/turkiye_retail_brands_501.txt")
+
 INFO_DOMAINS=[
  "fragrantica.com","parfumo.com","basenotes.com","wikipedia.org","facebook.com","instagram.com",
  "youtube.com","tiktok.com","pinterest.com","reddit.com","duckduckgo.com","bing.com","google.com"
@@ -38,6 +41,34 @@ def norm(s):
 GENERIC_PRODUCT_TOKENS={"eau","de","parfum","perfume","edp","edt","spray","fragrance","ml","the","and","of","erkek","kadin","unisex","parfumu"}
 VARIANT_MARKERS={"intense","elixir","flame","energy","absolu","absolut","collector","edition","sport","night","noir","rouge",
                  "bloom","floral","pour","femme","homme","women","woman","men","man","her","him","le"}
+
+def load_tr_retail_brands():
+    if not TR_RETAIL_BRANDS_PATH.exists(): return set()
+    return {norm(x) for x in TR_RETAIL_BRANDS_PATH.read_text(encoding="utf-8-sig").splitlines() if x.strip()}
+
+TR_RETAIL_BRANDS=load_tr_retail_brands()
+TR_RETAIL_ALIAS={
+ "al haramain perfumes":"al haramain",
+ "lattafa perfumes":"lattafa",
+ "demeter fragrance":"demeter",
+ "dior":"christian dior",
+ "rabanne":"paco rabanne",
+ "giorgio armani":"armani",
+ "emporio armani":"armani",
+ "salvatore ferragamo":"ferragamo"
+}
+
+def brand_in_tr_retail(brand):
+    b=norm(brand)
+    if b in TR_RETAIL_BRANDS: return True
+    a=TR_RETAIL_ALIAS.get(b)
+    if a and norm(a) in TR_RETAIL_BRANDS: return True
+    return False
+
+def commerce_eligible(row):
+    if COMMERCE_SCOPE=="all": return True
+    if COMMERCE_SCOPE=="off": return False
+    return brand_in_tr_retail(row.get("brand_name",""))
 
 def fragrance_type(s):
     t=norm(s)
@@ -409,6 +440,9 @@ def parse_offer_page(session,url,brand,product):
 
 def extract_commerce(session,row):
     brand=row["brand_name"]; product=row["product_name"]
+    if not commerce_eligible(row):
+        return {"commerce_status":"skipped_non_tr_brand","price_try":"","currency":"TRY","volume_ml":"","seller_name":"",
+                "purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":""}
     res={"commerce_status":"not_found","price_try":"","currency":"TRY","volume_ml":"","seller_name":"",
          "purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":""}
     queries=[
