@@ -1,0 +1,7 @@
+SENLIS Image Enrichment V2 A/B trigger
+master_scope=174259
+sample=1000
+mode=deterministic_even_sample
+baseline=current_image_enrichment
+v2=quality_filter+hf_metadata+parfumo_canonical+bing_ddg_discovery+rich_html_parser
+started=2026-10-01
