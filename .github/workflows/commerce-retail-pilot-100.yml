@@ -1,0 +1,33 @@
+name: SENLIS Retail Commerce Pilot 100
+
+on:
+  push:
+    branches:
+      - overnight/full-enrichment-20261001
+    paths:
+      - "tools/commerce_retail_pilot_100.py"
+      - ".github/workflows/commerce-retail-pilot-100.yml"
+      - "tools/overnight_full_enrichment.py"
+      - "data/turkiye_retail_brands_501.txt"
+  workflow_dispatch:
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      COMMERCE_SCOPE: all
+      SEARCH_ENGINE_FALLBACK: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4 lxml rapidfuzz
+      - run: python tools/commerce_retail_pilot_100.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-commerce-retail-pilot-100
+          path: commerce_retail_pilot_100/
+          retention-days: 3
