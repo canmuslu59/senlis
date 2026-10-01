@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# trigger DOM probe
 import json,re,urllib.parse
 import requests
 from bs4 import BeautifulSoup
