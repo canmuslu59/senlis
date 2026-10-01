@@ -12,6 +12,7 @@ SHARD_INDEX=int(os.environ.get("SHARD_INDEX","0"))
 SHARD_COUNT=int(os.environ.get("SHARD_COUNT","8"))
 WORKERS=int(os.environ.get("WORKERS","4"))
 MAX_SECONDS=int(os.environ.get("MAX_SECONDS","18000"))
+SEARCH_ENGINE_FALLBACK=os.environ.get("SEARCH_ENGINE_FALLBACK","0")=="1"
 OUT=Path("out"); OUT.mkdir(exist_ok=True)
 OUTCSV=OUT/f"shard_{SHARD_INDEX:02d}.csv"
 OUTJSON=OUT/f"summary_{SHARD_INDEX:02d}.json"
@@ -388,11 +389,12 @@ def extract_commerce(session,row):
     for title,url in beymen_search(session,brand,product):
         if url not in seen:
             seen.add(url); results.append((title,url))
-    for q in queries:
-        for title,url in search_web(session,q):
-            if url not in seen:
-                seen.add(url); results.append((title,url))
-        if len(results)>=12: break
+    if SEARCH_ENGINE_FALLBACK:
+        for q in queries:
+            for title,url in search_web(session,q):
+                if url not in seen:
+                    seen.add(url); results.append((title,url))
+            if len(results)>=12: break
 
     candidates=[]
     for title,url in results:
