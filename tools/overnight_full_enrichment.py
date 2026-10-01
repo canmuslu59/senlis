@@ -816,6 +816,8 @@ def norm(s):
     s="".join(ch for ch in s if not unicodedata.combining(ch))
     return re.sub(r"\s+"," ",re.sub(r"[^a-z0-9]+"," ",s)).strip()
 
+TR_RETAIL_BRANDS=load_tr_retail_brands()
+
 def match_norm(s):
     t=norm(s)
     t=re.sub(r"(\d)\s*ml\b",r"\1 ml",t)
