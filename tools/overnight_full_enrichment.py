@@ -349,7 +349,18 @@ _OFFICIAL_CATALOG_LOCK=threading.Lock()
 def _official_catalog_rows(session,brand):
     b=norm(brand)
     if b=="oriflame":
-        key="oriflame"; urls=["https://tr.oriflame.com/fragrance"]
+        key="oriflame"; urls=[
+            "https://tr.oriflame.com/fragrance",
+            "https://tr.oriflame.com/fragrance/shop-by-product/perfume",
+            "https://tr.oriflame.com/men/shop-by-product/fragrance",
+            "https://tr.oriflame.com/fragrance/family-type/floral-fragrances",
+            "https://tr.oriflame.com/fragrance/family-type/ambery-fragrances",
+            "https://tr.oriflame.com/fragrance/family-type/aromatic-fragrances",
+            "https://tr.oriflame.com/fragrance/family-type/chypre-fragrances",
+            "https://tr.oriflame.com/fragrance/family-type/citrus-fragrances",
+            "https://tr.oriflame.com/fragrance/family-type/fruity-fragrances",
+            "https://tr.oriflame.com/fragrance/family-type/woody-fragrances"
+        ]
     elif b=="bath body works":
         key="bath_body_works"; urls=["https://www.bathandbodyworks.com.tr/tum-vucut-spreyleri-ve-parfumler"]
     elif b=="victoria s secret":
