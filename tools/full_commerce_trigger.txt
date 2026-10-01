@@ -1,0 +1,5 @@
+Trigger full Turkey commerce run for the fixed SENLIS master catalog.
+Scope: existing master only; do not add new brands or products.
+Catalog: 174259 unique products.
+Turkey retail eligible products at latest validated scope: 37399.
+Triggered: 2026-10-01.
