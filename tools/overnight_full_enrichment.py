@@ -185,6 +185,29 @@ def search_web(session,q):
             if len(out)>=14: return out
     return out
 
+def boyner_search(session,brand,product):
+    try:
+        r=session.get("https://www.boyner.com.tr/search",params={"q":f"{brand} {product}"},timeout=20,allow_redirects=True)
+        if r.status_code!=200 or "text/html" not in r.headers.get("content-type",""): return []
+        soup=BeautifulSoup(r.text,"lxml")
+        target=norm(f"{brand} {product}")
+        out=[]; seen=set()
+        for a in soup.find_all("a",href=True):
+            href=a.get("href","")
+            if "-p-" not in href and "/p_" not in href: continue
+            title=" ".join(a.get_text(" ",strip=True).split())
+            if not title: continue
+            url=urllib.parse.urljoin(r.url,href)
+            if url in seen: continue
+            seen.add(url)
+            score=fuzz.token_set_ratio(target,norm(title))
+            if norm(brand) in norm(title): score+=8
+            if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): score-=30
+            if score>=58: out.append((score,title,url))
+        out.sort(reverse=True)
+        return [(title,url) for score,title,url in out[:8]]
+    except: return []
+
 def parse_offer_page(session,url,brand,product):
     try:
         r=session.get(url,timeout=18,allow_redirects=True)
@@ -278,6 +301,9 @@ def extract_commerce(session,row):
       f'"{brand}" "{product}" Türkiye parfüm'
     ]
     results=[]; seen=set()
+    for title,url in boyner_search(session,brand,product):
+        if url not in seen:
+            seen.add(url); results.append((title,url))
     for q in queries:
         for title,url in search_web(session,q):
             if url not in seen:
