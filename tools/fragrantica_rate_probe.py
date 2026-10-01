@@ -15,14 +15,14 @@ def load_rows():
                 if r["id"] in TEST_IDS: found[r["id"]]=r
     return [found[i] for i in sorted(TEST_IDS,key=int) if i in found]
 
-s=requests.Session()
-s.headers.update({"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154 Safari/537.36","Accept-Language":"en-US,en;q=0.9"})
-counts={}
-images=0
-for row in load_rows():
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+def fetch_one(row):
+    s=requests.Session()
+    s.headers.update({"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154 Safari/537.36","Accept-Language":"en-US,en;q=0.9"})
     url=row.get("source_url","")
     if "fragrantica.com" not in url:
-        print("SKIP",row["id"],url,flush=True); continue
+        return {"id":row["id"],"status":"skip","image":False}
     code="error"; image=""
     try:
         r=s.get(url,timeout=20,allow_redirects=True)
@@ -31,10 +31,18 @@ for row in load_rows():
             soup=BeautifulSoup(r.text,"lxml")
             m=soup.find("meta",attrs={"property":"og:image"}) or soup.find("meta",attrs={"name":"twitter:image"})
             if m and m.get("content"): image=m["content"]
-    except Exception as e:
+    except Exception:
         code="exception"
-    counts[code]=counts.get(code,0)+1
-    if image: images+=1
-    print("RESULT",json.dumps({"id":row["id"],"status":code,"image":bool(image)},ensure_ascii=False),flush=True)
     time.sleep(0.25)
-print("SUMMARY",json.dumps({"tested":sum(counts.values()),"codes":counts,"images":images},ensure_ascii=False),flush=True)
+    return {"id":row["id"],"status":code,"image":bool(image)}
+
+counts={}; images=0
+with ThreadPoolExecutor(max_workers=2) as ex:
+    futs=[ex.submit(fetch_one,row) for row in load_rows()]
+    for fut in as_completed(futs):
+        rec=fut.result()
+        if rec["status"]=="skip": continue
+        counts[rec["status"]]=counts.get(rec["status"],0)+1
+        if rec["image"]: images+=1
+        print("RESULT",json.dumps(rec,ensure_ascii=False),flush=True)
+print("SUMMARY",json.dumps({"tested":sum(counts.values()),"codes":counts,"images":images,"workers":2,"delay":0.25},ensure_ascii=False),flush=True)
