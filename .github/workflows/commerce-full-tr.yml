@@ -8,7 +8,42 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  preflight:
+    name: Validate commerce inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4 lxml rapidfuzz
+      - name: Verify manifest and Turkey scope
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv,glob,gzip,sys
+          from pathlib import Path
+          sys.path.insert(0,str(Path("tools").resolve()))
+          import overnight_full_enrichment as core
+          rows=[]
+          for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv*")):
+              opener=gzip.open if p.endswith(".gz") else open
+              with opener(p,"rt",encoding="utf-8-sig",newline="") as f:
+                  rows.extend(csv.DictReader(f))
+          ids=[int(r["id"]) for r in rows]
+          unique=set(ids); missing=sorted(set(range(1,174260))-unique)
+          scope=[r for r in rows if core.brand_in_tr_retail(r.get("brand_name",""))]
+          idx=list(csv.DictReader(open("data/official_price_index.csv",encoding="utf-8-sig",newline="")))
+          print({"rows":len(rows),"unique":len(unique),"missing":len(missing),
+                 "turkey_scope":len(scope),"official_price_index":len(idx)})
+          assert len(rows)==174259 and len(unique)==174259 and not missing
+          assert len(scope)>0
+          assert len(idx)>0
+          PY
+
   commerce:
+    needs: preflight
     name: "Commerce / shard ${{ matrix.shard }}"
     runs-on: ubuntu-latest
     timeout-minutes: 180
