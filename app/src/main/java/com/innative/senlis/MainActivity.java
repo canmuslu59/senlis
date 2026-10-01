@@ -1146,8 +1146,9 @@ public final class MainActivity extends Activity {
         content.addView(pair);
         addSpace(content, 20);
         compareSection(content, "ORTAK NOTALAR", comparison.shared, true);
-        compareSection(content, "YALNIZCA " + first.name.toUpperCase(TR), comparison.onlyFirst, false);
-        compareSection(content, "YALNIZCA " + second.name.toUpperCase(TR), comparison.onlySecond, false);
+        // Product names keep their own casing; Turkish upper-casing would turn "Mist" into "MİST".
+        compareSection(content, "YALNIZCA · " + first.name, comparison.onlyFirst, false);
+        compareSection(content, "YALNIZCA · " + second.name, comparison.onlySecond, false);
         addSpace(content, 8);
         content.addView(button("Karşılaştırmayı Temizle", () -> { diary.compareId(""); showTab(tab); }, false));
         present(root);
