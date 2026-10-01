@@ -47,6 +47,7 @@ def load_tr_retail_brands():
     return {norm(x) for x in TR_RETAIL_BRANDS_PATH.read_text(encoding="utf-8-sig").splitlines() if x.strip()}
 
 TR_RETAIL_BRANDS=load_tr_retail_brands()
+TR_RETAIL_EXTRA={"versace"}
 TR_RETAIL_ALIAS={
  "al haramain perfumes":"al haramain",
  "lattafa perfumes":"lattafa",
@@ -60,7 +61,7 @@ TR_RETAIL_ALIAS={
 
 def brand_in_tr_retail(brand):
     b=norm(brand)
-    if b in TR_RETAIL_BRANDS: return True
+    if b in TR_RETAIL_BRANDS or b in TR_RETAIL_EXTRA: return True
     a=TR_RETAIL_ALIAS.get(b)
     if a and norm(a) in TR_RETAIL_BRANDS: return True
     return False
