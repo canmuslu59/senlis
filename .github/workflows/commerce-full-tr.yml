@@ -1,0 +1,58 @@
+name: SENLIS Full Turkey Commerce
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: senlis-full-turkey-commerce
+  cancel-in-progress: false
+
+jobs:
+  commerce:
+    name: "Commerce / shard ${{ matrix.shard }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+    env:
+      COMMERCE_SHARD_INDEX: "${{ matrix.shard }}"
+      COMMERCE_SHARD_COUNT: "18"
+      COMMERCE_WORKERS: "6"
+      COMMERCE_SCOPE: "tr_retail"
+      SEARCH_ENGINE_FALLBACK: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4 lxml rapidfuzz
+      - run: python tools/commerce_full_tr.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: commerce-shard-${{ matrix.shard }}
+          path: commerce_full_out/
+          if-no-files-found: warn
+          retention-days: 5
+
+  finalize:
+    needs: commerce
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: commerce-shard-*
+          path: commerce_inputs/
+      - run: python tools/merge_commerce_full.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-commerce-tr-full
+          path: commerce_final/
+          if-no-files-found: error
+          retention-days: 14
