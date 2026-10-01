@@ -19,7 +19,8 @@ def load_test_rows():
                     found[r["id"]]=r
     return [found[i] for i in sorted(TEST_IDS,key=int) if i in found]
 
-# smoke rerun: direct Boyner adapter enabled\ndef main():
+# smoke rerun: direct Boyner adapter enabled
+def main():
     out=Path("commerce_smoke"); out.mkdir(exist_ok=True)
     rows=load_test_rows()
     results=[]
