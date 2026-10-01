@@ -407,6 +407,29 @@ def _official_catalog_rows(session,brand):
         _OFFICIAL_CATALOG_CACHE[key]=out
         return out
 
+def official_catalog_offer(session,brand,product):
+    rows=_official_catalog_rows(session,brand)
+    verified=[]
+    for item in rows:
+        if not item.get("price_try"): continue
+        title=item["title"]
+        enriched=f"{brand} {title}"
+        score=product_match_score(brand,product,enriched)
+        if any(x in match_norm(title) for x in BAD) and not any(x in match_norm(product) for x in BAD): score-=30
+        if score<82 or not variant_compatible(brand,product,enriched): continue
+        volume=""
+        m=re.search(r"(?<!\d)(\d{1,4}(?:[.,]\d+)?)\s*ml\b",title,re.I)
+        if m:
+            try: volume=float(m.group(1).replace(",","."))
+            except: volume=""
+        verified.append({
+            "score":min(100,score),"price_try":item["price_try"],"currency":"TRY",
+            "purchase_url":item["url"],"seller_name":host(item["url"]),"stock_status":"unknown",
+            "commerce_image":"","source_product_name":title,"volume_ml":volume
+        })
+    if not verified: return None
+    return min(verified,key=lambda x:(float(x.get("price_try") or 1e18),-float(x.get("score") or 0)))
+
 def official_catalog_search(session,brand,product):
     rows=_official_catalog_rows(session,brand)
     if not rows: return []
@@ -598,14 +621,17 @@ def extract_commerce(session,row):
                 "purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":""}
     res={"commerce_status":"not_found","price_try":"","currency":"TRY","volume_ml":"","seller_name":"",
          "purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":""}
+    official=official_catalog_offer(session,brand,product)
+    if official:
+        res.update(official)
+        res["match_confidence"]=round(official["score"]/100,3)
+        res["commerce_status"]="verified"
+        return res
     queries=[
       f'"{brand}" "{product}" fiyat TRY',
       f'"{brand}" "{product}" Türkiye parfüm'
     ]
     results=[]; seen=set()
-    for title,url in official_catalog_search(session,brand,product):
-        if url not in seen:
-            seen.add(url); results.append((title,url))
     for title,url in boyner_search(session,brand,product):
         if url not in seen:
             seen.add(url); results.append((title,url))
