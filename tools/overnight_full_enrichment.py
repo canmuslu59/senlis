@@ -110,11 +110,28 @@ def fragrance_type(s):
     if re.search(r"\bparfum\b",t): return "parfum"
     return ""
 
+def special_format(s):
+    t=match_norm(s)
+    if "body mist" in t: return "body_mist"
+    if re.search(r"\b(solid perfume|solid parfum|kati parfum|krem parfum|cream perfume|cream parfum)\b",t): return "solid"
+    if re.search(r"\b(seyahat boy|travel size|travel|mini parfum|mini perfume)\b",t): return "travel"
+    if re.search(r"\b(after shave|aftershave)\b",t): return "aftershave"
+    if re.search(r"\b(vucut peelingi|body scrub|peeling|scrub)\b",t): return "scrub"
+    if re.search(r"\b(body lotion|vucut losyonu|lotion|losyon|nemlendirici|moisturizer)\b",t): return "lotion"
+    if re.search(r"\b(shower gel|dus jeli|yikama jeli|body wash|hand wash|sabun|soap)\b",t): return "wash"
+    if re.search(r"\b(deodorant|deodorant|stick deodorant)\b",t): return "deodorant"
+    if re.search(r"\b(candle|mum|diffuser|oda kokusu|room spray)\b",t): return "home"
+    if re.search(r"\b(refill)\b",t): return "refill"
+    if re.search(r"\b(gift set|parfum set|perfume set|seti|set)\b",t): return "set"
+    return ""
+
 def variant_compatible(brand,product,candidate):
     tp=match_norm(product); cp=match_norm(candidate); bn=set(match_norm(brand).split())
     if not form_compatible(product,candidate): return False
     ttype=fragrance_type(product); ctype=fragrance_type(candidate)
     if ttype and ctype and ttype!=ctype: return False
+    tformat=special_format(product); cformat=special_format(candidate)
+    if (tformat or cformat) and tformat!=cformat: return False
 
     tt=[x for x in tp.split() if x not in bn and x not in GENERIC_PRODUCT_TOKENS]
     ct=set(cp.split())
@@ -520,7 +537,7 @@ def parse_offer_page(session,url,brand,product):
                         price=float(re.sub(r"[^0-9.]","",raw))
                 except: price=None
                 if str(cur).upper() not in ("TRY","TL","₺","") and price is not None: price=None
-                rec={"score":min(100,score),"price_try":price,"currency":"TRY","purchase_url":off.get("url") or r.url,
+                rec={"score":min(100,score),"price_try":price,"currency":"TRY","purchase_url":urllib.parse.urljoin(r.url,str(off.get("url"))) if off.get("url") else r.url,
                      "seller_name":host(r.url),"stock_status":"in_stock" if "instock" in str(off.get("availability","")).lower() else
                      ("out_of_stock" if "outofstock" in str(off.get("availability","")).lower() else "unknown"),
                      "commerce_image":urllib.parse.urljoin(r.url,str(im)) if im else "","source_product_name":name}
