@@ -6,6 +6,9 @@ on:
       - overnight/full-enrichment-20261001
     paths:
       - ".github/workflows/image-enrichment-full.yml"
+      - "data/master_manifest_174259/**"
+      - "tools/image_enrichment.py"
+      - "tools/merge_image_chunks.py"
   workflow_dispatch:
 
 concurrency:
@@ -13,7 +16,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  preflight:
+    name: Validate 174259 manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify manifest integrity
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, glob, gzip, sys
+          ids=[]
+          for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv*")):
+              opener=gzip.open if p.endswith(".gz") else open
+              with opener(p,"rt",encoding="utf-8-sig",newline="") as f:
+                  ids.extend(int(r["id"]) for r in csv.DictReader(f))
+          unique=set(ids)
+          missing=sorted(set(range(1,174260))-unique)
+          dupes=len(ids)-len(unique)
+          print({"rows":len(ids),"unique":len(unique),"min":min(unique),"max":max(unique),"missing":len(missing),"duplicates":dupes})
+          if len(unique)!=174259 or missing or dupes:
+              print("Manifest integrity failed. First missing:", missing[:20])
+              sys.exit(1)
+          PY
+
   images:
+    needs: preflight
     name: "Images / chunk ${{ matrix.chunk }}"
     runs-on: self-hosted
     timeout-minutes: 180
