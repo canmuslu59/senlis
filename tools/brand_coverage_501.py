@@ -37,7 +37,14 @@ SAFE_TARGET_TO_MASTER={
  "alfaparf":["alfaparf milano"],
  "rosemary paris":["rosemary"],
  "puccini":["puccini paris"],
- "reef":["reef perfumes"]
+ "reef":["reef perfumes"],
+ "ac and co altinyildiz classics":["altinyildiz classics"],
+ "damat":["d s damat"],
+ "jagler":["hunca"],
+ "viva cappio":["hunca"],
+ "carmina":["hunca"],
+ "manly":["morfose"],
+ "manly sport":["morfose"]
 }
 
 ALIASES={
