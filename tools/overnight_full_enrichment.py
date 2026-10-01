@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, glob, gzip, gzip, html, json, os, re, time, random, sqlite3, urllib.parse
+import csv, glob, gzip, html, json, os, re, time, random, sqlite3, threading, urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
@@ -36,6 +36,12 @@ def norm(s):
     s=html.unescape(str(s or "")).lower()
     s=s.replace("ı","i").replace("ş","s").replace("ğ","g").replace("ü","u").replace("ö","o").replace("ç","c")
     return re.sub(r"\s+"," ",re.sub(r"[^a-z0-9]+"," ",s)).strip()
+
+def match_norm(s):
+    t=norm(s)
+    t=t.replace("vucut spreyi","body mist").replace("body spray","body mist").replace("fragrance mist","body mist")
+    t=t.replace("vucut spreyi","body mist")
+    return t
 
 
 GENERIC_PRODUCT_TOKENS={"eau","de","parfum","perfume","edp","edt","spray","fragrance","ml","the","and","of","erkek","kadin","unisex","parfumu"}
@@ -105,7 +111,7 @@ def fragrance_type(s):
     return ""
 
 def variant_compatible(brand,product,candidate):
-    tp=norm(product); cp=norm(candidate); bn=set(norm(brand).split())
+    tp=match_norm(product); cp=match_norm(candidate); bn=set(match_norm(brand).split())
     if not form_compatible(product,candidate): return False
     ttype=fragrance_type(product); ctype=fragrance_type(candidate)
     if ttype and ctype and ttype!=ctype: return False
@@ -157,7 +163,7 @@ def brand_compatible(brand,candidate):
     return any(x in c.split() for x in bt)
 
 def product_match_score(brand,product,candidate):
-    p=norm(product); c=norm(candidate); b=norm(brand)
+    p=match_norm(product); c=match_norm(candidate); b=match_norm(brand)
     ps=fuzz.token_set_ratio(p,c)
     pr=fuzz.ratio(p,c)
     bs=fuzz.token_set_ratio(b,c) if b else 0
@@ -317,6 +323,86 @@ def search_web(session,q):
                 seen.add(url); out.append((title,url))
             if len(out)>=14: return out
     return out
+
+
+_OFFICIAL_CATALOG_CACHE={}
+_OFFICIAL_CATALOG_LOCK=threading.Lock()
+
+def _official_catalog_rows(session,brand):
+    b=norm(brand)
+    if b=="oriflame":
+        key="oriflame"; urls=["https://tr.oriflame.com/fragrance"]
+    elif b=="bath body works":
+        key="bath_body_works"; urls=["https://www.bathandbodyworks.com.tr/tum-vucut-spreyleri-ve-parfumler"]
+    elif b=="victoria s secret":
+        key="victorias_secret"; urls=[
+            "https://www.victoriassecret.com.tr/vs/parfum",
+            "https://www.victoriassecret.com.tr/vs/fragrance-vucut-spreyleri"
+        ]
+    else:
+        return []
+
+    with _OFFICIAL_CATALOG_LOCK:
+        if key in _OFFICIAL_CATALOG_CACHE:
+            return _OFFICIAL_CATALOG_CACHE[key]
+        out=[]; seen=set()
+        for url in urls:
+            try:
+                r=session.get(url,timeout=25,allow_redirects=True)
+                if r.status_code!=200 or "text/html" not in r.headers.get("content-type",""): continue
+                soup=BeautifulSoup(r.text,"lxml")
+                for a in soup.find_all("a",href=True):
+                    href=urllib.parse.urljoin(r.url,a.get("href",""))
+                    raw=" ".join(a.get_text(" ",strip=True).split())
+                    if not raw or href in seen: continue
+                    title=""; price=None
+                    if key=="oriflame":
+                        if "/products/product?code=" not in href: continue
+                        title=re.sub(r"^\(\s*\d+\s*\)\s*","",raw)
+                        title=re.sub(r"\s*₺[\d.,]+.*$","",title).strip()
+                        pm=re.search(r"₺\s*(\d{1,3}(?:[.]\d{3})*(?:,\d{2})?)",raw)
+                    elif key=="bath_body_works":
+                        if "-BBW" not in href: continue
+                        title=raw
+                        parent=a
+                        for _ in range(4):
+                            if not getattr(parent,"parent",None): break
+                            parent=parent.parent
+                        ctx=" ".join(parent.get_text(" ",strip=True).split()) if parent else raw
+                        pm=re.search(r"(\d{1,3}(?:[.]\d{3})*,\d{2})\s*₺",ctx)
+                    else:
+                        if "victoria-s-secret-" not in href or "-VS" not in href: continue
+                        title=raw
+                        parent=a
+                        for _ in range(4):
+                            if not getattr(parent,"parent",None): break
+                            parent=parent.parent
+                        ctx=" ".join(parent.get_text(" ",strip=True).split()) if parent else raw
+                        pm=re.search(r"(\d{1,3}(?:[.]\d{3})*,\d{2})\s*TL",ctx,re.I)
+                    if not title: continue
+                    if pm:
+                        try: price=float(pm.group(1).replace(".","").replace(",","."))
+                        except: price=None
+                    seen.add(href)
+                    out.append({"title":title,"url":href,"price_try":price})
+            except Exception:
+                continue
+        _OFFICIAL_CATALOG_CACHE[key]=out
+        return out
+
+def official_catalog_search(session,brand,product):
+    rows=_official_catalog_rows(session,brand)
+    if not rows: return []
+    out=[]
+    for item in rows:
+        title=item["title"]
+        enriched=f"{brand} {title}"
+        score=product_match_score(brand,product,enriched)
+        if any(x in match_norm(title) for x in BAD) and not any(x in match_norm(product) for x in BAD): score-=30
+        if score>=62 and variant_compatible(brand,product,enriched):
+            out.append((score,enriched,item["url"]))
+    out.sort(reverse=True)
+    return [(title,url) for score,title,url in out[:8]]
 
 def boyner_search(session,brand,product):
     try:
@@ -500,6 +586,9 @@ def extract_commerce(session,row):
       f'"{brand}" "{product}" Türkiye parfüm'
     ]
     results=[]; seen=set()
+    for title,url in official_catalog_search(session,brand,product):
+        if url not in seen:
+            seen.add(url); results.append((title,url))
     for title,url in boyner_search(session,brand,product):
         if url not in seen:
             seen.add(url); results.append((title,url))
@@ -542,7 +631,7 @@ def extract_commerce(session,row):
             verified.append(p)
 
     if verified:
-        direct_hosts={"boyner.com.tr","beymen.com","gratis.com"}
+        direct_hosts={"boyner.com.tr","beymen.com","gratis.com","tr.oriflame.com","victoriassecret.com.tr","bathandbodyworks.com.tr"}
         direct=[x for x in verified if x.get("seller_name") in direct_hosts]
         pool=direct or verified
         p=min(pool,key=lambda x:(float(x.get("price_try") or 1e18),-float(x.get("score") or 0)))
