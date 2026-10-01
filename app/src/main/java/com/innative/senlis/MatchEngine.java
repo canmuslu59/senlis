@@ -7,7 +7,7 @@ import java.util.Set;
 
 /** Transparent, local preview scorer; percentages are estimates, never measured enjoyment. */
 public final class MatchEngine {
-    public static final String MODEL_VERSION = "1";
+    public static final String MODEL_VERSION = "2-lab";
     private MatchEngine() {}
 
     public static final class Profile {
@@ -73,8 +73,10 @@ public final class MatchEngine {
 
     public static Result score(Profile profile, Fragrance fragrance) {
         for (String note : profile.avoidedNotes) {
-            if (fragrance.notes.contains(note)) {
-                return new Result(null, true, false, Collections.singletonList("Kaçındığın nota: " + note));
+            String found = firstContaining(fragrance.notes, note);
+            if (found != null) {
+                return new Result(null, true, false, Collections.singletonList("Kaçındığın nota: " +
+                    (found.equals(note) ? note : note + " (" + found + ")")));
             }
         }
         double earned = 0;
@@ -87,9 +89,10 @@ public final class MatchEngine {
             dimensions++;
             noteEvidence = true;
             available += 35;
-            int hits = overlap(profile.likedNotes, fragrance.notes);
+            List<String> matched = matches(profile.likedNotes, fragrance.notes);
+            int hits = matched.size();
             earned += 35d * hits / profile.likedNotes.size();
-            reasons.add(hits > 0 ? "Sevdiğin notalardan " + hits + " tanesi var" :
+            reasons.add(hits > 0 ? "Sevdiğin notalardan " + hits + " tanesi var: " + join(matched) :
                 "Sevdiğin notalar bu kokuda belirtilmemiş");
         }
         if (!profile.families.isEmpty() && fragrance.family != null) {
@@ -104,7 +107,7 @@ public final class MatchEngine {
             dimensions++;
             noteEvidence = true;
             available += 15;
-            int hits = overlap(profile.lovedProductNotes, fragrance.notes);
+            int hits = matches(profile.lovedProductNotes, fragrance.notes).size();
             earned += 15d * hits / profile.lovedProductNotes.size();
             reasons.add(hits > 0 ? "Sevdiğin kayıtlı kokularla " + hits + " ortak nota" :
                 "Sevdiğin kayıtlı kokularla ortak nota belirtilmemiş");
@@ -146,5 +149,35 @@ public final class MatchEngine {
         int count = 0;
         for (String value : a) if (b.contains(value)) count++;
         return count;
+    }
+
+    /**
+     * Model 2: a chosen note also matches longer catalogue names that contain it as whole words,
+     * so "vanilya" finds "karamelize vanilya" but "nar" never matches "narenciye".
+     */
+    static boolean noteMatches(String chosen, String catalogueNote) {
+        if (chosen.equals(catalogueNote)) return true;
+        return (" " + catalogueNote + " ").contains(" " + chosen + " ");
+    }
+
+    static String firstContaining(Set<String> catalogueNotes, String chosen) {
+        if (catalogueNotes.contains(chosen)) return chosen;
+        List<String> sorted = new ArrayList<>(catalogueNotes);
+        Collections.sort(sorted);
+        for (String note : sorted) if (noteMatches(chosen, note)) return note;
+        return null;
+    }
+
+    private static List<String> matches(Set<String> chosen, Set<String> catalogueNotes) {
+        List<String> hits = new ArrayList<>();
+        for (String value : chosen) if (firstContaining(catalogueNotes, value) != null) hits.add(value);
+        Collections.sort(hits);
+        return hits;
+    }
+
+    private static String join(List<String> values) {
+        StringBuilder text = new StringBuilder();
+        for (String value : values) text.append(text.length() == 0 ? "" : ", ").append(value);
+        return text.toString();
     }
 }

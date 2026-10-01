@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
@@ -31,6 +32,7 @@ import android.widget.Switch;
 import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashSet;
@@ -71,12 +73,16 @@ public final class MainActivity extends Activity {
     private boolean editing = false;
     private String detailDraft = "", detailDraftId = "";
     private boolean pendingReminder, pendingNews;
+    private DiaryStore diary;
+    private String pendingQuery = "";
+    private boolean inCompare = false;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         getWindow().setStatusBarColor(INK);
         getWindow().setNavigationBarColor(INK);
         store = new ProfileStore(this);
+        diary = new DiaryStore(this);
         api = new CommunityClient(this);
         indexedCatalog = new IndexedCatalog(this);
         loadCatalogue();
@@ -201,6 +207,7 @@ public final class MainActivity extends Activity {
     private void showWelcome() {
         inOnboarding = false;
         inDetail = false;
+        inCompare = false;
         FrameLayout frame = new FrameLayout(this);
         frame.setBackgroundColor(INK);
         ImageView photo = image(R.drawable.welcome_hero);
@@ -215,7 +222,9 @@ public final class MainActivity extends Activity {
         FrameLayout.LayoutParams pos = new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM);
         frame.addView(overlay, pos);
         overlay.addView(label("S E N L I S", 22, GOLD, true));
-        addSpace(overlay, 18);
+        addSpace(overlay, 4);
+        overlay.addView(label("LAB · DENEYSEL SÜRÜM", 11, MUTED, true));
+        addSpace(overlay, 14);
         overlay.addView(title("Koku, senin\nhikâyendir.", 40, CREAM));
         addSpace(overlay, 12);
         overlay.addView(label("Kendini yansıtan kokuyu keşfet.\nHer koku, hayatının farklı bir anını anlatır.", 15, CREAM, false));
@@ -233,6 +242,7 @@ public final class MainActivity extends Activity {
     private void showStep() {
         inOnboarding = true;
         inDetail = false;
+        inCompare = false;
         LinearLayout root = column();
         root.setBackgroundColor(INK);
         root.setPadding(dp(22), dp(14), dp(22), dp(16));
@@ -388,6 +398,7 @@ public final class MainActivity extends Activity {
                 final String key = choice.toLowerCase(java.util.Locale.forLanguageTag("tr"));
                 TextView c = chip(choice, selectedSet.contains(key));
                 c.setOnClickListener(v -> {
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
                     if (!selectedSet.add(key)) selectedSet.remove(key);
                     c.setBackground(round(selectedSet.contains(key) ? GOLD : CARD, 14, selectedSet.contains(key) ? 0 : 0xFF6D5640));
                     c.setTextColor(selectedSet.contains(key) ? INK : CREAM);
@@ -403,6 +414,7 @@ public final class MainActivity extends Activity {
         tab = index;
         inOnboarding = false;
         inDetail = false;
+        inCompare = false;
         LinearLayout root = column();
         root.setBackgroundColor(INK);
         LinearLayout header = column();
@@ -445,13 +457,15 @@ public final class MainActivity extends Activity {
         words.addView(title("Kokunu birlikte bulalım.", 25, CREAM));
         feature.addView(words, new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM));
         body.addView(feature, new LinearLayout.LayoutParams(-1, dp(210)));
-        addSpace(body, 24);
+        addSpace(body, 18);
+        List<MatchEngine.Fragrance> suggestions = indexedCatalog.recommend(currentProfile(), 12);
+        if (catalogueError.isEmpty()) todayCard(body, suggestions);
+        addSpace(body, 18);
         body.addView(title("Sana Özel Öneriler", 27, CREAM));
         body.addView(label("Kaynağı belirtilen kokular · Bilinen tercihlere göre", 13, MUTED, false));
         addSpace(body, 12);
         if (!catalogueError.isEmpty()) notice(body, "YEREL KATALOG", catalogueError);
         addSpace(body, 14);
-        List<MatchEngine.Fragrance> suggestions = indexedCatalog.recommend(currentProfile(), 12);
         if (!suggestions.isEmpty()) addProducts(body, suggestions, false);
         else if (catalogueError.isEmpty())
             notice(body, "ÖNERİ BULUNAMADI", "Tercihlerini veya kaçındığın notaları gözden geçirebilirsin.");
@@ -464,13 +478,15 @@ public final class MainActivity extends Activity {
         addSpace(body, 8);
         body.addView(label("Kaynaklı parfüm ve body mist kayıtlarında ara.", 14, MUTED, false));
         addSpace(body, 18);
-        EditText field = input("İsim, aile veya nota", "");
+        final String initial = pendingQuery;
+        pendingQuery = "";
+        EditText field = input("İsim, aile veya nota", initial);
         field.setSingleLine(true);
         body.addView(field);
         addSpace(body, 15);
         LinearLayout results = column();
         body.addView(results);
-        renderSearchPage(results, "", 0);
+        renderSearchPage(results, initial, 0);
         field.addTextChangedListener(watch(value -> {
             searchHandler.removeCallbacksAndMessages(null);
             searchHandler.postDelayed(() -> renderSearchPage(results, value, 0), 220);
@@ -598,6 +614,10 @@ public final class MainActivity extends Activity {
     private void profile(LinearLayout body) {
         body.addView(title("Senin koku dünyan", 29, CREAM));
         addSpace(body, 16);
+        dnaCard(body);
+        addSpace(body, 12);
+        diaryCard(body);
+        addSpace(body, 16);
         notice(body, "TERCİHLERİN BU CİHAZDA", "Tercihlerin ve özel notların bu cihazda saklanır. Topluluk hesabın yalnızca paylaştığın puan ve sohbet içeriğine bağlanır.");
         addSpace(body, 16);
         body.addView(button("Bildirim Tercihleri", this::notificationSettings, false));
@@ -635,10 +655,10 @@ public final class MainActivity extends Activity {
         addSpace(body, 12);
         body.addView(button("Bu Cihazdaki Verileri Sıfırla", () -> new AlertDialog.Builder(this)
             .setTitle("Veriler silinsin mi?")
-            .setMessage("Tercihler, favoriler ve özel notlar bu cihazdan silinecek.")
+            .setMessage("Tercihler, favoriler, özel notlar ve koku günlüğü bu cihazdan silinecek.")
             .setNegativeButton("Vazgeç", null)
             .setPositiveButton("Sil", (d, w) -> {
-                Runnable clear = () -> { store.reset(); ReminderReceiver.schedule(this, false); loadProfile(); showWelcome(); };
+                Runnable clear = () -> { store.reset(); diary.clear(); ReminderReceiver.schedule(this, false); loadProfile(); showWelcome(); };
                 if (store.newsPush() && api.signedIn())
                     api.notification("", false, (result, error) -> {
                         if (error != null) { Toast.makeText(this, error, Toast.LENGTH_LONG).show(); return; }
@@ -815,6 +835,7 @@ public final class MainActivity extends Activity {
         if (selected == null) return;
         inDetail = true;
         inOnboarding = false;
+        inCompare = false;
         final MatchEngine.Fragrance f = selected;
         final JSONObject product = Catalogue.DETAILS.get(f.id);
         MatchEngine.Result match = MatchEngine.score(currentProfile(), f);
@@ -861,6 +882,8 @@ public final class MainActivity extends Activity {
             }
             sheet.addView(label("Doğrulanan boylar: " + TextUtils.join(" · ", labels), 13, 0xFF715849, false));
         }
+        addSpace(sheet, 14);
+        detailActions(sheet, f);
         JSONArray offers = product == null ? null : product.optJSONArray("offers");
         if (offers != null && offers.length() > 0) {
             addSpace(sheet, 14);
@@ -892,8 +915,13 @@ public final class MainActivity extends Activity {
         addSpace(sheet, 24);
         sheet.addView(label("KOKU NOTALARI", 12, 0xFF835018, true));
         addSpace(sheet, 8);
-        sheet.addView(label(f.notes.isEmpty() ? "Kaynakta nota bilgisi yok." :
-            TextUtils.join("   ✦   ", f.notes), 15, INK, false));
+        if (f.notes.isEmpty()) sheet.addView(label("Kaynakta nota bilgisi yok.", 15, INK, false));
+        else {
+            sheet.addView(noteChips(f.notes));
+            addSpace(sheet, 6);
+            sheet.addView(label("Notaya dokun: o notayı içeren kokuları ara · Basılı tut: sevdiklerine veya kaçındıklarına ekle",
+                11, 0xFF715849, false));
+        }
         if (datasetRecord) sheet.addView(label("Bu notalar veri setinde listelenmiştir; üretici tarafından ayrıca kontrol edilmemiştir.",
             12, 0xFF715849, false));
         addSpace(sheet, 18);
@@ -982,6 +1010,297 @@ public final class MainActivity extends Activity {
         present(root);
     }
 
+    // ---- Lab experiments: daily pick, diary, comparison, note chips and scent DNA. ----
+
+    private static final Locale TR = Locale.forLanguageTag("tr");
+
+    private void todayCard(LinearLayout body, List<MatchEngine.Fragrance> suggestions) {
+        Calendar now = Calendar.getInstance();
+        ScentLab.Moment moment = ScentLab.moment(now.get(Calendar.MONTH), now.get(Calendar.HOUR_OF_DAY));
+        ScentLab.Pick pick = ScentLab.today(suggestions, moment, now.get(Calendar.DAY_OF_YEAR));
+        if (pick == null) return;
+        final MatchEngine.Fragrance f = pick.fragrance;
+        LinearLayout card = column();
+        GradientDrawable glow = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF3A281C, 0xFF21160F});
+        glow.setCornerRadius(dp(18));
+        glow.setStroke(dp(1), 0xFF9D7950);
+        card.setBackground(glow);
+        card.setPadding(dp(17), dp(16), dp(17), dp(16));
+        card.addView(label("BUGÜNÜN KOKUSU · " + moment.label.toUpperCase(TR), 11, GOLD, true));
+        addSpace(card, 7);
+        card.addView(title(f.name, 24, CREAM));
+        addSpace(card, 5);
+        card.addView(label(pick.matchedNotes.isEmpty()
+            ? "Profiline en yakın önerilerden bugün için seçildi."
+            : moment.season + " " + moment.part + " için uyan notalar: " + TextUtils.join(", ", pick.matchedNotes),
+            13, MUTED, false));
+        addSpace(card, 12);
+        FlowLayout actions = new FlowLayout(this, dp(8));
+        actions.addView(pill("İncele  →", true, false, () -> openDetail(f)));
+        boolean logged = diary.loggedToday(f.id);
+        actions.addView(pill(logged ? "Günlükte ✓" : "Bugün bunu sıktım", false, false, () -> {
+            if (diary.log(f.id, f.name)) Toast.makeText(this, "Koku günlüğüne eklendi", Toast.LENGTH_SHORT).show();
+            showTab(0);
+        }));
+        card.addView(actions);
+        card.setOnClickListener(v -> openDetail(f));
+        body.addView(card, new LinearLayout.LayoutParams(-1, -2));
+    }
+
+    private void detailActions(LinearLayout sheet, MatchEngine.Fragrance f) {
+        FlowLayout actions = new FlowLayout(this, dp(8));
+        boolean logged = diary.loggedToday(f.id);
+        actions.addView(pill(logged ? "✓ Günlükte" : "✓ Bugün bunu sıktım", !logged, true, () -> {
+            if (diary.loggedToday(f.id)) {
+                diary.remove(f.id, DiaryStore.today());
+                Toast.makeText(this, "Bugünkü kayıt kaldırıldı", Toast.LENGTH_SHORT).show();
+            } else {
+                diary.log(f.id, f.name);
+                Toast.makeText(this, "Koku günlüğüne eklendi", Toast.LENGTH_SHORT).show();
+            }
+            showDetail();
+        }));
+        String pinned = diary.compareId();
+        MatchEngine.Fragrance other = pinned.isEmpty() || pinned.equals(f.id) ? null : indexedCatalog.get(pinned);
+        actions.addView(pill(other == null ? (pinned.equals(f.id) ? "⇄ Karşılaştırmada seçili" : "⇄ Karşılaştırmaya ekle")
+            : "⇄ Karşılaştır", false, true, () -> {
+            if (other != null) { showCompare(other, f); return; }
+            if (pinned.equals(f.id)) {
+                diary.compareId("");
+                Toast.makeText(this, "Karşılaştırma seçimi kaldırıldı", Toast.LENGTH_SHORT).show();
+            } else {
+                diary.compareId(f.id);
+                Toast.makeText(this, "Şimdi karşılaştırmak için ikinci bir koku aç", Toast.LENGTH_LONG).show();
+            }
+            showDetail();
+        }));
+        sheet.addView(actions);
+        if (other != null) {
+            addSpace(sheet, 6);
+            sheet.addView(label("Karşılaştırma için seçili: " + other.name, 12, 0xFF715849, false));
+        }
+    }
+
+    private FlowLayout noteChips(Set<String> notes) {
+        List<String> sorted = new ArrayList<>(notes);
+        Collections.sort(sorted);
+        FlowLayout flow = new FlowLayout(this, dp(7));
+        for (String note : sorted) {
+            final String root = ScentLab.root(note);
+            boolean liked = this.notes.contains(root), disliked = avoided.contains(root);
+            TextView chip = label((liked ? "♥ " : disliked ? "⊘ " : "") + note, 14, INK, liked);
+            chip.setPadding(dp(12), dp(8), dp(12), dp(8));
+            chip.setBackground(round(liked ? 0xFFF0D29A : 0xFFF3E6CF, 16, 0xFFD9BF95));
+            chip.setOnClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                pendingQuery = root;
+                showTab(1);
+            });
+            chip.setOnLongClickListener(v -> { notePreference(root); return true; });
+            flow.addView(chip);
+        }
+        return flow;
+    }
+
+    private void notePreference(String root) {
+        boolean liked = notes.contains(root), disliked = avoided.contains(root);
+        String[] items = {
+            liked ? "Sevdiğim notalardan çıkar" : "Sevdiğim notalara ekle",
+            disliked ? "Kaçındığım notalardan çıkar" : "Kaçındığım notalara ekle"};
+        new AlertDialog.Builder(this).setTitle("Nota: " + root).setItems(items, (dialog, which) -> {
+            if (which == 0) { if (!notes.remove(root)) { notes.add(root); avoided.remove(root); } }
+            else if (!avoided.remove(root)) { avoided.add(root); notes.remove(root); }
+            store.save(currentProfile(), lovedProducts, lovedIds);
+            showDetail();
+        }).setNegativeButton("Vazgeç", null).show();
+    }
+
+    private void showCompare(MatchEngine.Fragrance first, MatchEngine.Fragrance second) {
+        inCompare = true;
+        inDetail = false;
+        inOnboarding = false;
+        MatchEngine.Profile profile = currentProfile();
+        ScentLab.Comparison comparison = ScentLab.compare(first.notes, second.notes);
+        LinearLayout root = column();
+        root.setBackgroundColor(INK);
+        LinearLayout bar = row();
+        bar.setPadding(dp(20), dp(8), dp(20), dp(8));
+        TextView back = label("‹  Geri", 18, CREAM, false);
+        back.setOnClickListener(v -> openDetail(second));
+        bar.addView(back, new LinearLayout.LayoutParams(0, dp(40), 1));
+        root.addView(bar);
+        ScrollView scroll = new ScrollView(this);
+        LinearLayout content = column();
+        content.setPadding(dp(20), dp(4), dp(20), dp(28));
+        scroll.addView(content);
+        root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
+        content.addView(label("KOKU KARŞILAŞTIRMA", 12, GOLD, true));
+        addSpace(content, 6);
+        content.addView(title(comparison.percent == null ? "Nota bilgisi eksik" :
+            "%" + comparison.percent + " ortak nota", 34, CREAM));
+        content.addView(label("Notalar köklerine göre gruplanır; örneğin vanilya ve vanilya kreması ortak sayılır.", 12, MUTED, false));
+        addSpace(content, 16);
+        LinearLayout pair = row();
+        pair.addView(compareCard(first, profile), weighted(0, 6));
+        pair.addView(compareCard(second, profile), weighted(6, 0));
+        content.addView(pair);
+        addSpace(content, 20);
+        compareSection(content, "ORTAK NOTALAR", comparison.shared, true);
+        compareSection(content, "YALNIZCA " + first.name.toUpperCase(TR), comparison.onlyFirst, false);
+        compareSection(content, "YALNIZCA " + second.name.toUpperCase(TR), comparison.onlySecond, false);
+        addSpace(content, 8);
+        content.addView(button("Karşılaştırmayı Temizle", () -> { diary.compareId(""); showTab(tab); }, false));
+        present(root);
+    }
+
+    private LinearLayout.LayoutParams weighted(int left, int right) {
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, -1, 1);
+        lp.setMargins(dp(left), 0, dp(right), 0);
+        return lp;
+    }
+
+    private LinearLayout compareCard(MatchEngine.Fragrance f, MatchEngine.Profile profile) {
+        MatchEngine.Result match = MatchEngine.score(profile, f);
+        LinearLayout card = column();
+        card.setBackground(round(CARD, 15, 0xFF56402F));
+        card.setPadding(dp(13), dp(13), dp(13), dp(13));
+        card.addView(label(f.name, 16, CREAM, true));
+        addSpace(card, 4);
+        card.addView(label(f.type + (f.family == null ? "" : " · " + f.family), 12, MUTED, false));
+        addSpace(card, 8);
+        card.addView(label(match.excluded ? "Kaçındığın nota var" : match.percent == null ? "Uyum verisi yok" :
+            "Sana uyum %" + match.percent, 13, GOLD, true));
+        card.setOnClickListener(v -> openDetail(f));
+        return card;
+    }
+
+    private void compareSection(LinearLayout body, String heading, List<String> values, boolean highlight) {
+        body.addView(label(heading, 11, GOLD, true));
+        addSpace(body, 7);
+        if (values.isEmpty()) body.addView(label("—", 14, MUTED, false));
+        else {
+            FlowLayout flow = new FlowLayout(this, dp(7));
+            for (String value : values) {
+                TextView chip = label(value, 14, highlight ? INK : CREAM, highlight);
+                chip.setPadding(dp(12), dp(7), dp(12), dp(7));
+                chip.setBackground(round(highlight ? GOLD : CARD, 16, highlight ? 0 : 0xFF6D5640));
+                flow.addView(chip);
+            }
+            body.addView(flow);
+        }
+        addSpace(body, 16);
+    }
+
+    private void dnaCard(LinearLayout body) {
+        List<Set<String>> lists = new ArrayList<>();
+        Set<String> sources = new HashSet<>(store.favouriteIds());
+        sources.addAll(lovedIds);
+        for (String id : sources) {
+            MatchEngine.Fragrance f = indexedCatalog.get(id);
+            if (f != null && !f.notes.isEmpty()) lists.add(f.notes);
+        }
+        for (DiaryStore.Entry entry : diary.entries()) {
+            MatchEngine.Fragrance f = indexedCatalog.get(entry.id);
+            if (f != null && !f.notes.isEmpty()) lists.add(f.notes);
+        }
+        if (!notes.isEmpty()) lists.add(new HashSet<>(notes));
+        List<ScentLab.Share> dna = ScentLab.dna(lists, 6);
+        LinearLayout card = column();
+        card.setBackground(round(CARD, 15, 0xFF695039));
+        card.setPadding(dp(15), dp(14), dp(15), dp(15));
+        card.addView(label("KOKU DNA'N", 11, GOLD, true));
+        addSpace(card, 4);
+        if (dna.isEmpty()) {
+            card.addView(label("Nota seçtikçe, favori ekledikçe ve günlüğe yazdıkça nota haritan burada oluşur.", 14, CREAM, false));
+            body.addView(card, new LinearLayout.LayoutParams(-1, -2));
+            return;
+        }
+        card.addView(label("Seçtiğin notalar, favorilerin ve koku günlüğünden", 12, MUTED, false));
+        addSpace(card, 12);
+        card.addView(new DnaView(this, dna, GOLD, 0xFF4A382B, CREAM, GOLD), new LinearLayout.LayoutParams(-1, -2));
+        addSpace(card, 6);
+        FlowLayout actions = new FlowLayout(this, dp(8));
+        actions.addView(pill("DNA'mı Paylaş", false, false, () -> {
+            StringBuilder text = new StringBuilder("SENLIS koku DNA'm ✦ ");
+            for (int i = 0; i < dna.size(); i++)
+                text.append(i == 0 ? "" : " · ").append(dna.get(i).note).append(" %").append(dna.get(i).percent);
+            Intent share = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text.toString());
+            startActivity(Intent.createChooser(share, "Koku DNA'nı paylaş"));
+        }));
+        card.addView(actions);
+        body.addView(card, new LinearLayout.LayoutParams(-1, -2));
+    }
+
+    private void diaryCard(LinearLayout body) {
+        List<DiaryStore.Entry> entries = diary.entries();
+        LinearLayout card = column();
+        card.setBackground(round(CARD, 15, 0xFF695039));
+        card.setPadding(dp(15), dp(14), dp(15), dp(15));
+        card.addView(label("KOKU GÜNLÜĞÜN", 11, GOLD, true));
+        addSpace(card, 6);
+        int streak = diary.streak();
+        card.addView(label(streak > 0 ? "✦ " + streak + " gün üst üste koku seçtin" :
+            "Bir kokunun detayında “Bugün bunu sıktım”a dokunarak günlüğünü başlat.", 14, CREAM, streak > 0));
+        addSpace(card, 12);
+        Set<String> loggedDays = new HashSet<>();
+        for (DiaryStore.Entry entry : entries) loggedDays.add(entry.day);
+        String[] letters = {"Pz", "Pt", "Sa", "Ça", "Pe", "Cu", "Ct"};
+        java.text.SimpleDateFormat iso = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        LinearLayout week = row();
+        for (int back = 6; back >= 0; back--) {
+            Calendar day = Calendar.getInstance();
+            day.add(Calendar.DAY_OF_YEAR, -back);
+            boolean on = loggedDays.contains(iso.format(day.getTime()));
+            LinearLayout cell = column();
+            cell.setGravity(Gravity.CENTER_HORIZONTAL);
+            View dot = new View(this);
+            dot.setBackground(round(on ? GOLD : 0xFF2B1F18, 9, on ? 0 : 0xFF6D5640));
+            cell.addView(dot, new LinearLayout.LayoutParams(dp(18), dp(18)));
+            addSpace(cell, 4);
+            TextView name = label(letters[day.get(Calendar.DAY_OF_WEEK) - 1], 11, back == 0 ? GOLD : MUTED, back == 0);
+            name.setGravity(Gravity.CENTER);
+            cell.addView(name);
+            week.addView(cell, new LinearLayout.LayoutParams(0, -2, 1));
+        }
+        card.addView(week);
+        if (!entries.isEmpty()) addSpace(card, 12);
+        for (int i = 0; i < Math.min(5, entries.size()); i++) {
+            DiaryStore.Entry entry = entries.get(i);
+            String day = entry.day.length() == 10 ? entry.day.substring(8, 10) + "." + entry.day.substring(5, 7) : entry.day;
+            TextView line = label(day + "  ·  " + entry.name, 14, CREAM, false);
+            line.setPadding(0, dp(6), 0, dp(6));
+            line.setOnClickListener(v -> {
+                MatchEngine.Fragrance f = indexedCatalog.get(entry.id);
+                if (f != null) openDetail(f);
+            });
+            line.setOnLongClickListener(v -> {
+                new AlertDialog.Builder(this).setTitle("Günlük kaydı silinsin mi?").setMessage(entry.name)
+                    .setNegativeButton("Vazgeç", null)
+                    .setPositiveButton("Sil", (d, w) -> { diary.remove(entry.id, entry.day); showTab(4); }).show();
+                return true;
+            });
+            card.addView(line);
+        }
+        body.addView(card, new LinearLayout.LayoutParams(-1, -2));
+    }
+
+    /** Compact wrap-content action; {@code onLight} styles it for the cream detail sheet. */
+    private TextView pill(String text, boolean primary, boolean onLight, Runnable action) {
+        int fill = primary ? (onLight ? 0xFF835018 : GOLD) : (onLight ? 0xFFF3E6CF : 0xFF2B1F18);
+        int ink = primary ? (onLight ? CREAM : INK) : (onLight ? 0xFF835018 : GOLD);
+        TextView view = label(text, 14, ink, true);
+        view.setGravity(Gravity.CENTER);
+        view.setSingleLine(true);
+        view.setBackground(round(fill, 20, primary ? 0 : (onLight ? 0xFFD9BF95 : 0xFF9D7950)));
+        view.setPadding(dp(16), dp(10), dp(16), dp(10));
+        view.setMinHeight(dp(44));
+        view.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+            action.run();
+        });
+        return view;
+    }
+
     private void openUrl(String url) {
         if (url != null && url.startsWith("https://"))
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -1006,11 +1325,20 @@ public final class MainActivity extends Activity {
         String[] names = {"Keşfet", "Ara", "Favoriler", "Sohbet", "Profil"};
         for (int i = 0; i < names.length; i++) {
             final int item = i;
+            LinearLayout cell = column();
+            cell.setGravity(Gravity.CENTER_HORIZONTAL);
+            View indicator = new View(this);
+            indicator.setBackground(round(tab == i ? GOLD : 0x00000000, 2, 0));
+            LinearLayout.LayoutParams ip = new LinearLayout.LayoutParams(dp(24), dp(3));
+            ip.bottomMargin = dp(4);
+            cell.addView(indicator, ip);
             TextView link = label(names[i], 11, tab == i ? GOLD : CREAM, tab == i);
             link.setGravity(Gravity.CENTER);
+            link.setMinHeight(dp(52));
+            cell.addView(link, new LinearLayout.LayoutParams(-1, -2));
+            cell.setOnClickListener(v -> showTab(item));
             link.setOnClickListener(v -> showTab(item));
-            link.setMinHeight(dp(62));
-            nav.addView(link, new LinearLayout.LayoutParams(0, -2, 1));
+            nav.addView(cell, new LinearLayout.LayoutParams(0, -2, 1));
         }
         return nav;
     }
@@ -1131,12 +1459,15 @@ public final class MainActivity extends Activity {
                 return insets;
             });
         }
+        root.setAlpha(0f);
         setContentView(root);
         if (Build.VERSION.SDK_INT >= 35) root.requestApplyInsets();
+        root.animate().alpha(1f).setDuration(170).start();
     }
 
     @Override public void onBackPressed() {
-        if (inDetail) showTab(tab);
+        if (inCompare) showTab(tab);
+        else if (inDetail) showTab(tab);
         else if (inOnboarding) backFromStep();
         else if (tab != 0) showTab(0);
         else super.onBackPressed();

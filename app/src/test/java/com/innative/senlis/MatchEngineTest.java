@@ -11,7 +11,10 @@ public final class MatchEngineTest {
         nonmatchingKnownDimensionsAreExplained();
         lovedCanonicalProductContributesOnlyKnownNotes();
         singleKnownNoteDimensionHasLabelledSimilarity();
-        System.out.println("MatchEngineTest: 7 passed");
+        chosenNoteMatchesCompoundCatalogueNames();
+        avoidedNoteExcludesCompoundCatalogueNames();
+        wholeWordsOnlyForCompoundMatching();
+        System.out.println("MatchEngineTest: 10 passed");
     }
 
     private static void emptyProfileHasNoScore() {
@@ -74,6 +77,34 @@ public final class MatchEngineTest {
         MatchEngine.Result result = MatchEngine.score(profile, product(null));
         check(result.percent != null && result.percent == 50, "One of two chosen notes should give 50% similarity");
         check(result.noteOnly, "One dimension must be visibly labelled as note similarity");
+    }
+
+    private static void chosenNoteMatchesCompoundCatalogueNames() {
+        MatchEngine.Profile profile = new MatchEngine.Profile(
+            Set.of("vanilya", "amber"), Set.of(), Set.of(), Set.of(), Set.of(), 0, null);
+        MatchEngine.Result result = MatchEngine.score(profile, notes("karamelize vanilya", "amber akoru", "deniz tuzu"));
+        check(result.percent != null && result.percent == 100, "Both chosen notes appear inside longer names");
+        check(result.reasons.get(0).contains("amber, vanilya"), "Matched notes are named in the reason");
+    }
+
+    private static void avoidedNoteExcludesCompoundCatalogueNames() {
+        MatchEngine.Profile profile = new MatchEngine.Profile(
+            Set.of("yasemin"), Set.of("vanilya"), Set.of(), Set.of(), Set.of(), 0, null);
+        MatchEngine.Result result = MatchEngine.score(profile, notes("yasemin", "vanilya kreması"));
+        check(result.excluded, "An avoided note inside a longer name still excludes");
+        check(result.reasons.get(0).contains("vanilya kreması"), "Exclusion names the catalogue note");
+    }
+
+    private static void wholeWordsOnlyForCompoundMatching() {
+        MatchEngine.Profile profile = new MatchEngine.Profile(
+            Set.of("nar", "gül"), Set.of(), Set.of(), Set.of(), Set.of(), 0, null);
+        MatchEngine.Result result = MatchEngine.score(profile, notes("narenciye", "gülsuyu", "sandal ağacı"));
+        check(result.percent != null && result.percent == 0, "Partial words must not match");
+    }
+
+    private static MatchEngine.Fragrance notes(String... values) {
+        return new MatchEngine.Fragrance("notes", "Örnek", "Parfüm", null,
+            Set.of(values), Set.of(), Set.of(), 0, null);
     }
 
     private static MatchEngine.Fragrance product(Integer price) {

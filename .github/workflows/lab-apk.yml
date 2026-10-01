@@ -1,0 +1,138 @@
+name: SENLIS Lab APK
+
+# Experimental lab build. Installs beside the preview app (com.innative.senlis.lab),
+# leaves the catalogue database untouched and publishes a downloadable pre-release.
+on:
+  push:
+    branches: [claude/senlis-repo-review-topyl4]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: senlis-lab-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  APK_NAME: SENLIS-Lab-v0.7.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Check hosted Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -d "$ANDROID_HOME/platforms/android-35" || sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Test match model and lab helpers
+        run: |
+          mkdir -p model-test
+          javac -d model-test \
+            app/src/main/java/com/innative/senlis/MatchEngine.java \
+            app/src/main/java/com/innative/senlis/ScentLab.java \
+            app/src/test/java/com/innative/senlis/MatchEngineTest.java \
+            app/src/test/java/com/innative/senlis/ScentLabTest.java
+          java -ea -cp model-test com.innative.senlis.MatchEngineTest
+          java -ea -cp model-test com.innative.senlis.ScentLabTest
+      - name: Build lab APK
+        run: |
+          gradle :app:assembleDebug --stacktrace
+          cp app/build/outputs/apk/debug/app-debug.apk "$APK_NAME.apk"
+          sha256sum "$APK_NAME.apk" > "$APK_NAME.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: senlis-lab-apk
+          path: |
+            ${{ env.APK_NAME }}.apk
+            ${{ env.APK_NAME }}.sha256
+          retention-days: 14
+
+  emulator-smoke:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [23, 35]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: senlis-lab-apk
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: python3 ci/lab_smoke.py ${{ env.APK_NAME }}.apk screenshots/api-${{ matrix.api-level }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: senlis-lab-screens-api-${{ matrix.api-level }}
+          path: screenshots/api-${{ matrix.api-level }}/
+          retention-days: 14
+
+  release:
+    needs: [build, emulator-smoke]
+    if: always() && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: senlis-lab-apk
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: senlis-lab-screens-api-*
+          path: screens
+      - name: Publish lab pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SMOKE: ${{ needs.emulator-smoke.result }}
+        run: |
+          tag="lab-v0.7.0-r${GITHUB_RUN_NUMBER}"
+          if [ -d screens ]; then
+            (cd screens && find . -name '*.png' -o -name '*.txt' | zip -q -@ ../SENLIS-Lab-screens.zip) || true
+          fi
+          if [ "$SMOKE" = "success" ]; then
+            smoke_line="Emülatör testi (API 23 ve 35): **geçti**."
+          else
+            smoke_line="Emülatör testi sonucu: **$SMOKE**. APK yine de derlendi; ekran görüntüleri ve loglar zip içinde."
+          fi
+          cat > notes.md <<EOF
+          Deneysel SENLIS Lab derlemesi (\`com.innative.senlis.lab\`, sürüm 0.7.0-lab).
+          Mevcut SENLIS önizleme uygulamasının yanına ayrı bir uygulama olarak kurulur; katalog veritabanı değiştirilmedi.
+
+          $smoke_line
+
+          - **$APK_NAME.apk**: telefona indirip kurun (bilinmeyen kaynaklara izin vermeniz gerekebilir).
+          - **SENLIS-Lab-screens.zip**: emülatör ekran görüntüleri.
+
+          Kaynak commit: $GITHUB_SHA
+          EOF
+          files=("$APK_NAME.apk" "$APK_NAME.sha256")
+          [ -f SENLIS-Lab-screens.zip ] && files+=("SENLIS-Lab-screens.zip")
+          gh release create "$tag" "${files[@]}" \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "SENLIS Lab 0.7.0 · deneme r${GITHUB_RUN_NUMBER}" --notes-file notes.md

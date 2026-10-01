@@ -5,11 +5,11 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'com.innative.senlis.preview'
+        applicationId 'com.innative.senlis.lab'
         minSdk 23
         targetSdk 35
-        versionCode 6
-        versionName '0.6.0-dev'
+        versionCode 7
+        versionName '0.7.0-lab'
         buildConfigField 'String', 'SENLIS_CATALOG_URL', '"' + (project.findProperty('senlisCatalogUrl') ?: 'https://raw.githubusercontent.com/canmuslu59/senlis/main/docs/catalogue.json') + '"'
         buildConfigField 'String', 'SENLIS_INDEX_URL', '"' + (project.findProperty('senlisIndexUrl') ?: 'https://raw.githubusercontent.com/canmuslu59/senlis/main/docs/catalogue.sqlite') + '"'
         buildConfigField 'String', 'FIREBASE_APP_ID', '"' + (project.findProperty('firebaseAppId') ?: '') + '"'

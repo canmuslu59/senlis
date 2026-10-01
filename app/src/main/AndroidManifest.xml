@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
-        android:label="SENLIS"
+        android:label="SENLIS Lab"
         android:icon="@drawable/launcher_icon"
         android:roundIcon="@drawable/launcher_icon"
         android:allowBackup="false"
