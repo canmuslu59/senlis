@@ -12,7 +12,7 @@ for p in glob.glob("final_inputs/**/*.csv",recursive=True):
             if pid and pid!="0": rows[pid]=r
 
 manifest={}
-for p in sorted(glob.glob("data/full_manifest/part_*.csv")):
+for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv")):
     with open(p,encoding="utf-8-sig",newline="") as f:
         for r in csv.DictReader(f): manifest[r["id"]]=r
 
