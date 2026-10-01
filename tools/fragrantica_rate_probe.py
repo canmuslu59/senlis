@@ -37,7 +37,7 @@ def fetch_one(row):
     return {"id":row["id"],"status":code,"image":bool(image)}
 
 counts={}; images=0
-with ThreadPoolExecutor(max_workers=2) as ex:
+with ThreadPoolExecutor(max_workers=3) as ex:
     futs=[ex.submit(fetch_one,row) for row in load_rows()]
     for fut in as_completed(futs):
         rec=fut.result()
@@ -45,4 +45,4 @@ with ThreadPoolExecutor(max_workers=2) as ex:
         counts[rec["status"]]=counts.get(rec["status"],0)+1
         if rec["image"]: images+=1
         print("RESULT",json.dumps(rec,ensure_ascii=False),flush=True)
-print("SUMMARY",json.dumps({"tested":sum(counts.values()),"codes":counts,"images":images,"workers":2,"delay":0.25},ensure_ascii=False),flush=True)
+print("SUMMARY",json.dumps({"tested":sum(counts.values()),"codes":counts,"images":images,"workers":3,"delay":0.25},ensure_ascii=False),flush=True)
