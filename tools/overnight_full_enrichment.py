@@ -58,7 +58,7 @@ def load_rows():
                 if r.get("source_url"): source[r["id"]]=r["source_url"]
     # stable sharding by sorted row ordinal
     shard=[r for i,r in enumerate(products) if i % SHARD_COUNT == SHARD_INDEX]
-    for r in shard: r["source_url"]=source.get(r["id"],"")
+    for r in shard: r["source_url"]=source.get(r["id"]) or r.get("source_url","")
     return shard
 
 def walk_json(obj):
