@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, glob, json, sqlite3
+import csv, glob, gzip, json, sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -12,8 +12,9 @@ for p in glob.glob("final_inputs/**/*.csv",recursive=True):
             if pid and pid!="0": rows[pid]=r
 
 manifest={}
-for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv")):
-    with open(p,encoding="utf-8-sig",newline="") as f:
+for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv*")):
+    opener = gzip.open if str(p).endswith(".gz") else open
+    with opener(p, mode="rt", encoding="utf-8-sig", newline="") as f:
         for r in csv.DictReader(f): manifest[r["id"]]=r
 
 cols=["product_id","brand_name","product_name","existing_release_year","release_year_candidate","notes_candidate",
