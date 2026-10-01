@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# trigger retailer probe after workflow install
 import json, urllib.parse
 from bs4 import BeautifulSoup
 import requests
