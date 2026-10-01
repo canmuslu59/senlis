@@ -5,8 +5,14 @@ on:
     branches:
       - overnight/full-enrichment-20261001
     paths:
-      - ".github/workflows/commerce-pilot-100.yml"\n      - "tools/overnight_full_enrichment.py"\n      - "tools/commerce_pilot_100.py"
+      - ".github/workflows/commerce-pilot-100.yml"
+      - "tools/overnight_full_enrichment.py"
+      - "tools/commerce_pilot_100.py"
   workflow_dispatch:
+
+concurrency:
+  group: senlis-commerce-pilot-100
+  cancel-in-progress: true
 
 jobs:
   pilot:
