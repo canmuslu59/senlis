@@ -1,0 +1,24 @@
+name: SENLIS 501 Brand Coverage
+on:
+  push:
+    branches: [overnight/full-enrichment-20261001]
+    paths:
+      - "tools/brand_coverage_501.py"
+      - ".github/workflows/brand-coverage-501.yml"
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/brand_coverage_501.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-brand-coverage-501
+          path: brand_coverage_501/
+          retention-days: 5
