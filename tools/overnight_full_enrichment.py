@@ -116,6 +116,7 @@ def special_format(s):
     if re.search(r"\b(solid perfume|solid parfum|kati parfum|krem parfum|cream perfume|cream parfum)\b",t): return "solid"
     if re.search(r"\b(seyahat boy|travel size|travel|mini parfum|mini perfume)\b",t): return "travel"
     if re.search(r"\b(after shave|aftershave)\b",t): return "aftershave"
+    if re.search(r"\b(parfumlu erkek kolonyasi|erkek kolonyasi)\b",t): return "cologne_product"
     if re.search(r"\b(vucut peelingi|body scrub|peeling|scrub)\b",t): return "scrub"
     if re.search(r"\b(body lotion|vucut losyonu|lotion|losyon|nemlendirici|moisturizer)\b",t): return "lotion"
     if re.search(r"\b(shower gel|dus jeli|yikama jeli|body wash|hand wash|sabun|soap)\b",t): return "wash"
