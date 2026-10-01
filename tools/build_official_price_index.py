@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# trigger build 20261001
 import csv,glob,gzip,json,sys
 from pathlib import Path
 from datetime import datetime,timezone
