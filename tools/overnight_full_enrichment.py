@@ -43,7 +43,7 @@ def make_session():
 
 def load_rows():
     products=[]
-    for p in sorted(glob.glob("data/full_manifest/part_*.csv")):
+    for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv")):
         with open(p,encoding="utf-8-sig",newline="") as f:
             products.extend(csv.DictReader(f))
     source={}
