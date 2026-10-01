@@ -90,7 +90,9 @@ TR_RETAIL_ALIAS={
  "rabanne":"paco rabanne",
  "giorgio armani":"armani",
  "emporio armani":"armani",
- "salvatore ferragamo":"ferragamo"
+ "salvatore ferragamo":"ferragamo",
+ "mad parfumeur":"mad parfum",
+ "loris parfum":"loris"
 }
 
 def brand_in_tr_retail(brand):
