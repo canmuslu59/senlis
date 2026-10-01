@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import csv, glob, html, json, os, re, time, random, sqlite3, urllib.parse
+import csv, glob, gzip, html, json, os, re, time, random, sqlite3, urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
@@ -43,8 +43,9 @@ def make_session():
 
 def load_rows():
     products=[]
-    for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv")):
-        with open(p,encoding="utf-8-sig",newline="") as f:
+    for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv*")):
+        opener = gzip.open if str(p).endswith(".gz") else open
+        with opener(p, mode="rt", encoding="utf-8-sig", newline="") as f:
             products.extend(csv.DictReader(f))
     source={}
     for p in sorted(glob.glob("data/source_urls/part_*.csv")):
