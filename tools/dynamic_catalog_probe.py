@@ -83,4 +83,44 @@ with sync_playwright() as p:
     except Exception as e:
         print("ORIFLAME_ERROR",repr(e),flush=True)
 
+
+    # Avon Turkey dynamic women + men fragrance categories.
+    try:
+        avon_rows=[]; avon_seen=set()
+        for category_url in [
+            "https://kozmetik.avon.com.tr/301-307/parfum/kadin-parfum/",
+            "https://kozmetik.avon.com.tr/301-308/parfum/erkek-parfum/"
+        ]:
+            page.goto(category_url,wait_until="domcontentloaded",timeout=60000)
+            page.wait_for_timeout(5000)
+            # Prefer the site's "show all" control when available.
+            for label in ["Tümünü Görüntüle","Tümünü görüntüle"]:
+                try:
+                    btn=page.get_by_text(label,exact=False)
+                    for i in range(min(btn.count(),4)):
+                        if btn.nth(i).is_visible():
+                            btn.nth(i).click(timeout=4000)
+                            page.wait_for_timeout(3000)
+                            break
+                except: pass
+            for _ in range(8):
+                page.mouse.wheel(0,5000)
+                page.wait_for_timeout(800)
+            for a in page.locator('a[href*="/urun/"]').all():
+                try:
+                    href=a.get_attribute("href") or ""
+                    if not href or href in avon_seen: continue
+                    txt=compact(a.inner_text())
+                    card=closest_card_text(a)
+                    hay=(txt+" "+card).lower()
+                    if not any(k in hay for k in ["parfum","parfüm","edp","edt","eau de","cologne"]): continue
+                    avon_seen.add(href)
+                    avon_rows.append({"text":txt[:350],"href":href,"card":card[:1200]})
+                except: pass
+        print("AVON_DYNAMIC",json.dumps({
+            "products":len(avon_rows),"sample":avon_rows[:20]
+        },ensure_ascii=False),flush=True)
+    except Exception as e:
+        print("AVON_ERROR",repr(e),flush=True)
+
     browser.close()
