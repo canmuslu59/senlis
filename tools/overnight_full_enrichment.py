@@ -789,8 +789,365 @@ def extract_commerce(session,row):
     elif results: res["commerce_status"]="candidate_pages_no_match"
     return res
 
+
+# --- 2026-10-01 enrichment safety overrides ---
+import unicodedata
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+from image_sources import clean_source_url,first_image_url,fragrantica_image,generic_image,image_matches_product,page_image,parfumo_page_verified
+
+COMMERCE_RETAILERS=[x.strip() for x in os.environ.get("COMMERCE_RETAILERS","boyner,beymen,gratis").split(",") if x.strip()]
+SOURCE_PAGE_SCOPE=os.environ.get("SOURCE_PAGE_SCOPE","0")=="1"
+HOST_MIN_INTERVAL=float(os.environ.get("HOST_MIN_INTERVAL","0.5"))
+HOST_COOLDOWN=float(os.environ.get("HOST_COOLDOWN","20"))
+HOST_BLOCK_LIMIT=int(os.environ.get("HOST_BLOCK_LIMIT","8"))
+PRICE_MIN_TRY=float(os.environ.get("PRICE_MIN_TRY","20"))
+PRICE_MAX_TRY=float(os.environ.get("PRICE_MAX_TRY","250000"))
+HOST_DISABLED=set();_HOST_STATE={};_HOST_LOCK=threading.Lock();_TLS=threading.local()
+
+_old_variant_compatible=variant_compatible
+GENERIC_PRODUCT_TOKENS.discard("eau");GENERIC_PRODUCT_TOKENS.add("edc")
+BRAND_NAME_TOKENS={"giorgio armani":{"ga"}}
+
+def norm(s):
+    s=html.unescape(str(s or "")).lower()
+    s=s.replace("ı","i").replace("ş","s").replace("ğ","g").replace("ü","u").replace("ö","o").replace("ç","c")
+    s=unicodedata.normalize("NFKD",s)
+    s="".join(ch for ch in s if not unicodedata.combining(ch))
+    return re.sub(r"\s+"," ",re.sub(r"[^a-z0-9]+"," ",s)).strip()
+
+def match_norm(s):
+    t=norm(s)
+    t=re.sub(r"(\d)\s*ml\b",r"\1 ml",t)
+    repl=[
+      ("eau de parfum","edp"),("eau de perfume","edp"),("eau de toilette","edt"),("eau de cologne","edc"),
+      ("vucut ve sac parfum misti","body mist"),("sac ve vucut parfum misti","body mist"),("sac parfum misti","body mist"),
+      ("vucut parfum misti","body mist"),("parfum misti","body mist"),("vucut misti","body mist"),("body misti","body mist"),
+      ("vucut spreyi","body mist"),("body spray","body mist"),("fragrance mist","body mist"),("hair mist","body mist")
+    ]
+    for a,b in repl:t=t.replace(a,b)
+    t=re.sub(r"\beau\s+(?=(?:de|du)\s+[a-z])","",t)
+    return re.sub(r"\s+"," ",t).strip()
+
+def variant_compatible(brand,product,candidate):
+    cp=match_norm(candidate)
+    for tok in BRAND_NAME_TOKENS.get(norm(brand),set()):
+        cp=re.sub(rf"\b{re.escape(tok)}\b"," ",cp)
+    return _old_variant_compatible(brand,product,re.sub(r"\s+"," ",cp).strip())
+
+def make_session():
+    s=requests.Session()
+    retry=Retry(total=2,connect=2,read=2,status=2,backoff_factor=1.5,status_forcelist=(429,500,502,503,504),
+                allowed_methods=frozenset(["GET","HEAD"]),respect_retry_after_header=False,raise_on_status=False)
+    a=HTTPAdapter(max_retries=retry,pool_connections=16,pool_maxsize=16)
+    s.mount("http://",a);s.mount("https://",a)
+    s.headers.update({"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154 Safari/537.36",
+                      "Accept-Language":"tr-TR,tr;q=0.9,en;q=0.8"})
+    return s
+
+def thread_session():
+    s=getattr(_TLS,"session",None)
+    if s is None:s=make_session();_TLS.session=s
+    return s
+
+def fetch(session,url,**kw):
+    h=host(url)
+    if not h:return None
+    now=time.monotonic()
+    with _HOST_LOCK:
+        st=_HOST_STATE.setdefault(h,{"last":0.0,"until":0.0,"blocks":0})
+        if h in HOST_DISABLED:return None
+        if now<st["until"]:return None
+        wait=max(0.0,HOST_MIN_INTERVAL-(now-st["last"]))
+    if wait:time.sleep(wait)
+    try:r=session.get(url,**kw)
+    except Exception:return None
+    blocked=r.status_code in (403,429) or "attention required" in r.text[:5000].lower() or "cloudflare" in r.text[:5000].lower()
+    with _HOST_LOCK:
+        st=_HOST_STATE.setdefault(h,{"last":0.0,"until":0.0,"blocks":0});st["last"]=time.monotonic()
+        if blocked:
+            st["blocks"]+=1
+            st["until"]=time.monotonic()+min(600.0,HOST_COOLDOWN*(2**max(0,st["blocks"]-1)))
+            print("HOST_PAUSED",h,r.status_code,st["blocks"],flush=True)
+            if st["blocks"]>=HOST_BLOCK_LIMIT:
+                HOST_DISABLED.add(h);print("HOST_DISABLED",h,flush=True)
+        elif r.status_code<400:st["blocks"]=0
+    return None if blocked else r
+
+def source_is_shop_page(row):
+    u=str(row.get("source_url") or "");h=host(u)
+    if not h or h=="huggingface.co":return False
+    if any(h==d or h.endswith("."+d) for d in INFO_DOMAINS):return False
+    return True
+
+def commerce_in_scope(row):
+    return brand_in_tr_retail(row.get("brand_name","")) or (SOURCE_PAGE_SCOPE and source_is_shop_page(row))
+
+def commerce_eligible(row):
+    if COMMERCE_SCOPE=="all":return True
+    if COMMERCE_SCOPE=="off":return False
+    return commerce_in_scope(row)
+
+def load_rows():
+    products=[];source={}
+    for p in sorted(glob.glob("data/source_urls/part_*.csv")):
+        with open(p,encoding="utf-8-sig",newline="") as f:
+            for r in csv.DictReader(f):
+                if r.get("source_url"):source[str(r.get("id",""))]=r["source_url"]
+    for p in sorted(glob.glob("data/master_manifest_174259/part_*.csv*")):
+        opener=gzip.open if str(p).endswith(".gz") else open
+        with opener(p,mode="rt",encoding="utf-8-sig",newline="") as f:products.extend(csv.DictReader(f))
+    shard=[r for i,r in enumerate(products) if i%SHARD_COUNT==SHARD_INDEX]
+    for r in shard:r["source_url"]=clean_source_url(source.get(str(r.get("id",""))) or r.get("source_url",""),r.get("id",""))
+    return shard
+
+def extract_static(session,row):
+    url=row.get("source_url") or "";h=host(url)
+    res={"release_year_candidate":"","image_url_candidate":"","notes_candidate":"","static_status":"no_source","static_http":"","static_source":url}
+    if not url:return res
+    if h=="huggingface.co":
+        res["static_status"]="hf_archive";return res
+    if h=="fragrantica.com":
+        im=fragrantica_image(url)
+        if im:res["image_url_candidate"]=im
+    r=fetch(session,url,timeout=18,allow_redirects=True)
+    if r is None:
+        res["static_status"]="http_error" if not res["image_url_candidate"] else "ok";return res
+    res["static_http"]=str(r.status_code)
+    if r.status_code!=200 or "text/html" not in r.headers.get("content-type",""):
+        res["static_status"]="http_error" if not res["image_url_candidate"] else "ok";return res
+    soup=BeautifulSoup(r.text,"lxml")
+    if h=="parfumo.com" and not parfumo_page_verified(soup,row.get("brand_name",""),row.get("product_name","")):
+        res["static_status"]="parfumo_unverified";return res
+    if not res["image_url_candidate"]:
+        res["image_url_candidate"]=page_image(soup,r.url,row.get("brand_name",""),row.get("product_name",""))
+    objs=parse_jsonld(soup)
+    shop=source_is_shop_page(row)
+    if not row.get("release_year") and not shop:
+        for o in objs:
+            for k in ("releaseDate",):
+                if o.get(k):
+                    m=re.search(r"\b(17\d{2}|18\d{2}|19\d{2}|20[0-2]\d)\b",str(o[k]))
+                    if m:res["release_year_candidate"]=m.group(1);break
+            if res["release_year_candidate"]:break
+    text=soup.get_text(" ",strip=True)
+    if not row.get("release_year") and not res["release_year_candidate"] and not shop:
+        for pat in (r"(?:launched|released|introduced|created)\s+(?:in\s+)?(17\d{2}|18\d{2}|19\d{2}|20[0-2]\d)",
+                    r"(17\d{2}|18\d{2}|19\d{2}|20[0-2]\d)\s+(?:yılında|yilinda)"):
+            m=re.search(pat,text[:25000],re.I)
+            if m:res["release_year_candidate"]=m.group(1);break
+    flat=" ".join(text.split());sections=[]
+    for a,b in [("Top Notes","Middle Notes"),("Middle Notes","Base Notes"),("Base Notes","Perfume rating"),("Üst Notalar","Orta Notalar"),("Orta Notalar","Alt Notalar")]:
+        m=re.search(re.escape(a)+r"\s*[:\-]?\s*(.{3,500}?)\s*"+re.escape(b),flat,re.I)
+        if m:sections.append(f"{a}: {m.group(1).strip()}")
+    if sections:res["notes_candidate"]=" | ".join(sections)[:1600]
+    res["static_source"]=r.url
+    res["static_status"]="ok" if (res["image_url_candidate"] or res["release_year_candidate"] or res["notes_candidate"]) else "page_no_extract"
+    return res
+
+def slug_title(url):
+    try:s=urllib.parse.unquote(urllib.parse.urlparse(url).path.rsplit("/",1)[-1])
+    except Exception:s=""
+    s=re.sub(r"^(?:p_|p-)|[_-]\d{5,}$"," ",s)
+    return re.sub(r"\s+"," ",re.sub(r"[_-]+"," ",s)).strip()
+
+def link_title(a,url):
+    t=" ".join(a.get_text(" ",strip=True).split())
+    if t:return t
+    for k in ("title","aria-label"):
+        if a.get(k):return " ".join(str(a.get(k)).split())
+    im=a.find("img")
+    if im and im.get("alt"):return " ".join(str(im.get("alt")).split())
+    return slug_title(url)
+
+def retailer_search(session,brand,product,search_url,params,path_test,threshold=58):
+    r=fetch(session,search_url,params=params,timeout=20,allow_redirects=True)
+    if r is None or r.status_code!=200 or "text/html" not in r.headers.get("content-type",""):return []
+    soup=BeautifulSoup(r.text,"lxml");out=[];seen=set()
+    for a in soup.find_all("a",href=True):
+        href=a.get("href","")
+        if not path_test(href):continue
+        url=urllib.parse.urljoin(r.url,href)
+        if url in seen:continue
+        seen.add(url);title=link_title(a,url)
+        if not title:continue
+        st=slug_title(url)
+        if not brand_compatible(brand,title) and brand_compatible(brand,st):title=f"{brand} {title}"
+        score=product_match_score(brand,product,title)
+        if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD):score-=30
+        if score>=threshold and brand_compatible(brand,title) and variant_compatible(brand,product,title):out.append((score,title,url))
+    out.sort(reverse=True);return [(t,u) for _,t,u in out[:8]]
+
+def boyner_search(session,brand,product):
+    return retailer_search(session,brand,product,"https://www.boyner.com.tr/search",{"q":f"{brand} {product}"},lambda x:"-p-" in x or "/p_" in x)
+
+def beymen_search(session,brand,product):
+    return retailer_search(session,brand,product,"https://www.beymen.com/tr/search",{"q":f"{brand} {product}"},lambda x:"/tr/p_" in x)
+
+def gratis_search(session,brand,product):
+    return retailer_search(session,brand,product,"https://www.gratis.com/search",{"q":f"{brand} {product}"},lambda x:"-p-" in x)
+
+def n11_search(session,brand,product):
+    return retailer_search(session,brand,product,"https://www.n11.com/arama",{"q":f"{brand} {product}"},lambda x:"/urun/" in x,70)
+
+RETAILER_SEARCH={"boyner":boyner_search,"beymen":beymen_search,"gratis":gratis_search,"n11":n11_search}
+
+def parse_try_price(value):
+    if value is None:return None
+    s=str(value).strip().replace("\xa0"," ").replace("₺","").replace("TRY","").replace("TL","")
+    m=re.search(r"\d[\d .]*(?:,\d{1,2})?",s)
+    if not m:return None
+    raw=m.group(0).replace(" ","")
+    if "," in raw:raw=raw.replace(".","").replace(",",".")
+    elif raw.count(".")==1 and len(raw.rsplit(".",1)[1])==3:raw=raw.replace(".","")
+    elif raw.count(".")>1:raw=raw.replace(".","")
+    try:p=float(raw)
+    except Exception:return None
+    return p if PRICE_MIN_TRY<=p<=PRICE_MAX_TRY else None
+
+def visible_price(flat,anchor=""):
+    text=" ".join(str(flat or "").split());start=0
+    if anchor:
+        i=norm(text).find(norm(anchor))
+        if i>=0:start=i
+    scan=text[start:start+7000]
+    pat=re.compile(r"(?:₺\s*)?(\d{1,3}(?:[ .]\d{3})+|\d{2,6})(?:[,.](\d{1,2}))?\s*(?:TRY|TL|₺)",re.I)
+    for m in pat.finditer(scan):
+        ctx=scan[max(0,m.start()-45):min(len(scan),m.end()+55)].lower()
+        if re.search(r"\b\d+\s*x\s*",ctx) or any(x in ctx for x in ("üzeri","uzeri","alışveriş","alisveris","kupon","puan","kazan")):continue
+        raw=m.group(1)+((","+m.group(2)) if m.group(2) else "")
+        p=parse_try_price(raw)
+        if p:return p
+    return None
+
+def volume_ml(*texts):
+    for text in texts:
+        m=re.search(r"(?<!\d)(\d{1,4}(?:[.,]\d+)?)\s*ml\b",str(text or ""),re.I)
+        if m:
+            try:return float(m.group(1).replace(",","."))
+            except Exception:pass
+    return ""
+
+def tr_priced_host(h):
+    h=str(h or "").lower()
+    return h.endswith(".tr") or h.endswith(".com.tr") or any(h==x or h.endswith("."+x) for x in TR_SELLERS)
+
+def _offer_price(off):
+    v=off.get("price") or off.get("lowPrice")
+    ps=off.get("priceSpecification")
+    if v is None and isinstance(ps,dict):v=ps.get("price") or ps.get("lowPrice")
+    return parse_try_price(v)
+
+def _offer_stock(off):
+    a=str(off.get("availability") or "").lower()
+    if "instock" in a:return "in_stock"
+    if "outofstock" in a:return "out_of_stock"
+    return "unknown"
+
+def _meta_content(soup,*keys):
+    for key in keys:
+        m=soup.find("meta",attrs={"property":key}) or soup.find("meta",attrs={"name":key})
+        if m and m.get("content"):return m.get("content")
+    return ""
+
+STOCK_RANK={"in_stock":0,"unknown":1,"out_of_stock":2}
+
+def parse_offer_page(session,url,brand,product,trusted=False):
+    r=fetch(session,url,timeout=18,allow_redirects=True)
+    if r is None or r.status_code!=200 or "text/html" not in r.headers.get("content-type",""):return None
+    soup=BeautifulSoup(r.text,"lxml");objs=parse_jsonld(soup);title=soup.title.get_text(" ",strip=True) if soup.title else ""
+    products=[o for o in objs if o.get("@type")=="Product" or (isinstance(o.get("@type"),list) and "Product" in o.get("@type"))]
+    if trusted:
+        ogt=_meta_content(soup,"og:type").lower()
+        trusted=host(r.url)==host(url) and (bool(products) or ogt=="product")
+    best=None
+    for o in products:
+        name=o.get("name") or title
+        full=f"{name} {title} {slug_title(r.url)}"
+        if not brand_compatible(brand,full) or not variant_compatible(brand,product,name):continue
+        score=product_match_score(brand,product,name);offers=o.get("offers")
+        offers=offers if isinstance(offers,list) else [offers] if isinstance(offers,dict) else [{}]
+        im=first_image_url(o.get("image"))
+        for off in offers:
+            cur=str(off.get("priceCurrency") or "").upper()
+            price=_offer_price(off)
+            if price is not None and cur not in ("TRY","TL","₺") and not (not cur and tr_priced_host(host(r.url))):price=None
+            rec={"score":min(100,score),"price_try":price,"currency":"TRY","purchase_url":urllib.parse.urljoin(r.url,str(off.get("url"))) if off.get("url") else r.url,
+                 "seller_name":host(r.url),"stock_status":_offer_stock(off),"commerce_image":urllib.parse.urljoin(r.url,im) if im else page_image(soup,r.url,brand,product),
+                 "source_product_name":name}
+            if best is None or (STOCK_RANK.get(rec["stock_status"],1),rec["price_try"] or 1e18,-rec["score"])<(STOCK_RANK.get(best["stock_status"],1),best["price_try"] or 1e18,-best["score"]):best=rec
+    if best is None:
+        name=title;full=f"{title} {slug_title(r.url)}"
+        if brand_compatible(brand,full) and variant_compatible(brand,product,name):
+            score=product_match_score(brand,product,name)
+            cur=_meta_content(soup,"product:price:currency","og:price:currency").upper()
+            price=parse_try_price(_meta_content(soup,"product:price:amount","og:price:amount"))
+            if price is not None and cur not in ("TRY","TL","₺") and not (not cur and tr_priced_host(host(r.url))):price=None
+            if price is None and (trusted or tr_priced_host(host(r.url))):price=visible_price(soup.get_text(" ",strip=True),title)
+            if price is not None:
+                best={"score":min(100,score),"price_try":price,"currency":"TRY","purchase_url":r.url,"seller_name":host(r.url),
+                      "stock_status":"unknown","commerce_image":page_image(soup,r.url,brand,product),"source_product_name":name}
+    if best is None:return None
+    best["volume_ml"]=volume_ml(product,r.url,title)
+    return best
+
+def extract_commerce(session,row):
+    brand=row["brand_name"];product=row["product_name"]
+    if not commerce_eligible(row):
+        return {"commerce_status":"skipped_non_tr_brand","price_try":"","currency":"TRY","volume_ml":"","seller_name":"","purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":"","source_product_name":""}
+    res={"commerce_status":"not_found","price_try":"","currency":"TRY","volume_ml":"","seller_name":"","purchase_url":"","stock_status":"unknown","commerce_image":"","match_confidence":"","source_product_name":""}
+    indexed=OFFICIAL_PRICE_INDEX.get(str(row.get("id") or ""))
+    if indexed:
+        p=parse_try_price(indexed.get("price_try"))
+        return {"commerce_status":"verified","price_try":p or indexed.get("price_try") or "","currency":indexed.get("currency") or "TRY",
+                "volume_ml":volume_ml(indexed.get("volume_ml")) or indexed.get("volume_ml") or "","seller_name":indexed.get("seller_name") or "",
+                "purchase_url":indexed.get("purchase_url") or "","stock_status":"unknown","commerce_image":"","match_confidence":float(indexed.get("match_confidence") or 1.0),
+                "source_product_name":indexed.get("source_product_name") or product}
+    official=official_catalog_offer(session,brand,product)
+    if official:
+        res.update(official);res["match_confidence"]=round(official["score"]/100,3);res["commerce_status"]="verified";return res
+    if source_is_shop_page(row):
+        p=parse_offer_page(session,row.get("source_url",""),brand,product,trusted=True)
+        if p:
+            res.update(p);res["match_confidence"]=round(p["score"]/100,3)
+            res["commerce_status"]="verified" if p.get("price_try") and p.get("stock_status")!="out_of_stock" and p["score"]>=82 else "candidate"
+            if res["commerce_status"]=="verified":return res
+    results=[];seen=set()
+    for retailer in COMMERCE_RETAILERS:
+        fn=RETAILER_SEARCH.get(retailer)
+        if not fn:continue
+        for title,url in fn(session,brand,product):
+            if url not in seen:seen.add(url);results.append((title,url))
+    if SEARCH_ENGINE_FALLBACK:
+        for q in (f'"{brand}" "{product}" fiyat TRY',f'"{brand}" "{product}" Türkiye parfüm'):
+            for title,url in search_web(session,q):
+                if url not in seen:seen.add(url);results.append((title,url))
+            if len(results)>=12:break
+    candidates=[]
+    for title,url in results:
+        h=host(url)
+        if any(h==d or h.endswith("."+d) for d in INFO_DOMAINS):continue
+        sc=product_match_score(brand,product,title)
+        if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD):sc-=30
+        if sc>=58 and brand_compatible(brand,f"{title} {slug_title(url)}") and variant_compatible(brand,product,title):candidates.append((sc,title,url))
+    verified=[];best_candidate=None
+    for _,title,url in sorted(candidates,reverse=True)[:8]:
+        p=parse_offer_page(session,url,brand,product)
+        if not p:continue
+        if best_candidate is None or (STOCK_RANK.get(p.get("stock_status"),1),p.get("price_try") or 1e18,-p.get("score",0))<(STOCK_RANK.get(best_candidate.get("stock_status"),1),best_candidate.get("price_try") or 1e18,-best_candidate.get("score",0)):best_candidate=p
+        if p.get("price_try") and p.get("score",0)>=82:verified.append(p)
+    if verified:
+        p=min(verified,key=lambda x:(STOCK_RANK.get(x.get("stock_status"),1),float(x.get("price_try") or 1e18),-float(x.get("score") or 0)))
+        res.update(p);res["match_confidence"]=round(p["score"]/100,3);res["commerce_status"]="verified";return res
+    if best_candidate and best_candidate.get("score",0)>=78:
+        res.update(best_candidate);res["match_confidence"]=round(best_candidate["score"]/100,3);res["commerce_status"]="candidate";return res
+    if results and not candidates:res["commerce_status"]="search_results_no_candidate"
+    elif results:res["commerce_status"]="candidate_pages_no_match"
+    return res
+
+
 def process(row):
-    s=make_session()
+    s=thread_session()
     base={"product_id":row["id"],"brand_name":row["brand_name"],"product_name":row["product_name"],
           "existing_release_year":row.get("release_year",""),"checked_at":datetime.now(timezone.utc).isoformat()}
     static=extract_static(s,row)
