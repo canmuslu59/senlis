@@ -14,6 +14,32 @@ def norm(s):
     s="".join(ch for ch in s if not unicodedata.combining(ch))
     return re.sub(r"\s+"," ",re.sub(r"[^a-z0-9]+"," ",s)).strip()
 
+
+SAFE_TARGET_TO_MASTER={
+ "abdullah kigili":["kigili"],
+ "ac co altinyildiz classics":["altinyildiz classics"],
+ "aqua di polo 1987":["aqua di polo"],
+ "armani":["giorgio armani"],
+ "boss":["hugo boss"],
+ "christian dior":["dior"],
+ "demeter":["demeter fragrance","demeter fragrance library"],
+ "emporio armani":["giorgio armani"],
+ "ferragamo":["salvatore ferragamo"],
+ "hugo":["hugo boss"],
+ "hunca care":["hunca"],
+ "l occitane":["l occitane en provence"],
+ "mad parfum":["mad parfumeur"],
+ "mercedes benz parfums":["mercedes benz"],
+ "paco rabanne":["rabanne"],
+ "sephora collection":["sephora"],
+ "sevilla":["sevilla fragrances"],
+ "sospiro":["sospiro perfumes"],
+ "alfaparf":["alfaparf milano"],
+ "rosemary paris":["rosemary"],
+ "puccini":["puccini paris"],
+ "reef":["reef perfumes"]
+}
+
 ALIASES={
  "ac co altinyildiz classics":["altinyildiz classics","ac co"],
  "aqua di polo 1987":["aqua di polo"],
@@ -63,15 +89,20 @@ for t in targets:
     if direct:
         status="direct"; matched=nt
     else:
-        pool=set(rev.get(nt,set()))
-        # generic normalization aliases
-        pool |= {nt.replace(" and "," "), nt.replace("parfums","parfum"), nt.replace("perfumes","perfume")}
-        found=[x for x in pool if master_counts.get(x,0)>0]
-        if found:
-            found.sort(key=lambda x:(-master_counts[x],x))
-            matched=found[0]; status="alias"
+        safe=[x for x in SAFE_TARGET_TO_MASTER.get(nt,[]) if master_counts.get(x,0)>0]
+        if safe:
+            safe.sort(key=lambda x:(-master_counts[x],x))
+            matched=safe[0]; status="safe_alias"
         else:
-            matched=""; status="missing"
+            pool=set(rev.get(nt,set()))
+            # generic normalization aliases
+            pool |= {nt.replace(" and "," "), nt.replace("parfums","parfum"), nt.replace("perfumes","perfume")}
+            found=[x for x in pool if master_counts.get(x,0)>0]
+            if found:
+                found.sort(key=lambda x:(-master_counts[x],x))
+                matched=found[0]; status="alias"
+            else:
+                matched=""; status="missing"
     rows.append({
       "target_brand":t,"target_norm":nt,"status":status,
       "master_brand":master_examples.get(matched,"") if matched else "",
@@ -86,10 +117,11 @@ summary={
  "target_brands":len(rows),
  "direct":sum(r["status"]=="direct" for r in rows),
  "alias":sum(r["status"]=="alias" for r in rows),
+ "safe_alias":sum(r["status"]=="safe_alias" for r in rows),
  "covered_total":sum(r["status"]!="missing" for r in rows),
  "missing":sum(r["status"]=="missing" for r in rows),
  "missing_brands":[r["target_brand"] for r in rows if r["status"]=="missing"],
- "alias_matches":[{"target":r["target_brand"],"master":r["master_brand"]} for r in rows if r["status"]=="alias"]
+ "alias_matches":[{"target":r["target_brand"],"master":r["master_brand"],"status":r["status"]} for r in rows if r["status"] in ("alias","safe_alias")]
 }
 (OUT/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2),encoding="utf-8")
 print("COVERAGE_SUMMARY",json.dumps(summary,ensure_ascii=False),flush=True)
