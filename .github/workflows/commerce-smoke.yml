@@ -6,6 +6,7 @@ on:
       - overnight/full-enrichment-20261001
     paths:
       - ".github/workflows/commerce-smoke.yml"
+      - "tools/commerce_smoke_test.py"
   workflow_dispatch:
 
 jobs:
