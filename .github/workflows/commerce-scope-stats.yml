@@ -7,6 +7,7 @@ on:
     paths:
       - "tools/commerce_scope_stats.py"
       - ".github/workflows/commerce-scope-stats.yml"
+      - "data/master_manifest_174259/**"
   workflow_dispatch:
 
 jobs:
