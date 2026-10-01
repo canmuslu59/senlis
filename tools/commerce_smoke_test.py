@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import overnight_full_enrichment as core
 
-TEST_IDS={"36578","36581","47794","66459","159972","163927","33963","171509","172855","172858"}
+TEST_IDS={"36578","36581","47794","66459","159972","163927","33963","34064","34071","34080","34086","171509","172855","172858"}
 
 def load_test_rows():
     found={}
