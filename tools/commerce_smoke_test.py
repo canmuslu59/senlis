@@ -19,7 +19,7 @@ def load_test_rows():
                     found[r["id"]]=r
     return [found[i] for i in sorted(TEST_IDS,key=int) if i in found]
 
-# smoke rerun: strict variant matching enabled
+# smoke rerun: Boyner+Beymen exact pricing
 def main():
     out=Path("commerce_smoke"); out.mkdir(exist_ok=True)
     rows=load_test_rows()
