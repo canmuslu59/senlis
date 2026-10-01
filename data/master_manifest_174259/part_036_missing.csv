@@ -1,34 +1,34 @@
 id,brand_name,product_name,release_year,source_url
-42001,Crimean rose – Крымская роза,Долина Роз (Rose Valley),1956,
-43001,D&P Perfumum,Kindly Posy,,
-44001,Dame Perfumery,Herb Man,2014,
-46001,Demeter Fragrance,Cherry Cream,2019,
-47001,Diane von Furstenberg,Volcan d'Amour,1981,
-48001,Discothèque,Next To Me Or Nothing,2026,
-49001,Donna Karan,DKNY Be Delicious City Blossom Avenue Iris,2014,
-51001,Dzintars,Floral Trail,2011,
-52001,Editions de Parfums Frédéric Malle,Dawn,2018,
-53001,Elizabeth Arden,White Tea Wild Rose,2019,
-54001,English Blazer,Sailor,2014,
-56001,ESSNCE,Milky Flower,2024,
-57001,Eudora,Prelude S.,,
-58001,Eze,Elation,2026,
-59001,Feel Oud,Lotus Oud,2019,
-61001,Forage,Old Books,2019,
-62001,Fragrance World,Maison Barakkat Satin Oud,,
-63001,Fraz Kader Parfums,Crown & Smoke,,
-64001,Fueguia 1833,Muskara Apis Fueguia 1833 2017 Pura Esencia,2017,
-66001,Ghandour,Scent of Africa for Man,2016,
-67001,Giovanna Baby,GB Men Power,2019,
-68001,Golan,Venus,2015,
-69001,Gucci,A Winter Melody Floral Water,,
-71001,Hamidi Oud & Perfumes,Al Shashaniya,,
-72001,HEMA,Happy Me,2026,
-73001,Hidramais,Ameixa Negra,2025,
-74001,Hoss Intropia,Rain & Flowers,2025,
-76001,Ikiryō,Continuum,2016,
-77001,Indira San Francisco,Vanilla Muse,,
-78001,Itzy,Glow,,
-79001,Jagaia,Less,2016,
-81001,Jequiti,Caminho das Águas Frésia Brisa Refrescante,2017,
-82001,Jimmy Choo,Seduction Collection - Radiant Tuberose,2020,
+42001,Crimean rose – Крымская роза,Долина Роз (Rose Valley),1956,https://www.fragrantica.com/perfume/Crimean-rose-Krymskaa-roza/Dolina-Roz-Rose-Valley-83308.html
+43001,D&P Perfumum,Kindly Posy,,https://dpperfumum.com/kadin/
+44001,Dame Perfumery,Herb Man,2014,https://www.fragrantica.com/perfume/Dame-Perfumery/Herb-Man-27421.html
+46001,Demeter Fragrance,Cherry Cream,2019,https://www.fragrantica.com/perfume/Demeter-Fragrance/Cherry-Cream-70175.html
+47001,Diane von Furstenberg,Volcan d'Amour,1981,https://www.fragrantica.com/perfume/Diane-von-Furstenberg/Volcan-d-Amour-12469.html
+48001,Discothèque,Next To Me Or Nothing,2026,https://www.fragrantica.com/perfume/Discotheque/Next-To-Me-Or-Nothing-135201.html
+49001,Donna Karan,DKNY Be Delicious City Blossom Avenue Iris,2014,https://www.fragrantica.com/perfume/Donna-Karan/DKNY-Be-Delicious-City-Blossom-Avenue-Iris-28624.html
+51001,Dzintars,Floral Trail,2011,https://www.fragrantica.com/perfume/Dzintars/Floral-Trail-20304.html
+52001,Editions de Parfums Frédéric Malle,Dawn,2018,https://www.parfumo.com/Perfumes/Editions_de_Parfum_Frederic_Malle/Dawn
+53001,Elizabeth Arden,White Tea Wild Rose,2019,https://www.fragrantica.com/perfume/Elizabeth-Arden/White-Tea-Wild-Rose-53953.html
+54001,English Blazer,Sailor,2014,https://www.fragrantica.com/perfume/English-Blazer/Sailor-109785.html
+56001,ESSNCE,Milky Flower,2024,https://www.fragrantica.com/perfume/ESSNCE/Milky-Flower-101372.html
+57001,Eudora,Prelude S.,,https://www.fragrantica.com/perfume/Eudora/Prelude-S-24937.html
+58001,Eze,Elation,2026,https://www.fragrantica.com/perfume/Eze/Elation-125483.html
+59001,Feel Oud,Lotus Oud,2019,https://www.fragrantica.com/perfume/Feel-Oud/Lotus-Oud-55831.html
+61001,Forage,Old Books,2019,https://www.fragrantica.com/perfume/Forage/Old-Books-120391.html
+62001,Fragrance World,Maison Barakkat Satin Oud,,https://www.perfume.com/fragrance-world/maison-barakkat-satin-oud/men-cologne
+63001,Fraz Kader Parfums,Crown & Smoke,,https://www.fragrantica.com/perfume/Fraz-Kader-Parfums/Crown-Smoke-131154.html
+64001,Fueguia 1833,Muskara Apis Fueguia 1833 2017 Pura Esencia,2017,https://www.parfumo.com/Perfumes/Fueguia_1833/muskara-apis-pura-esencia
+66001,Ghandour,Scent of Africa for Man,2016,https://www.fragrantica.com/perfume/Ghandour/Scent-of-Africa-for-Man-42020.html
+67001,Giovanna Baby,GB Men Power,2019,https://www.fragrantica.com/perfume/Giovanna-Baby/GB-Men-Power-84833.html
+68001,Golan,Venus,2015,https://www.fragrantica.com/perfume/Golan/Venus-44808.html
+69001,Gucci,A Winter Melody Floral Water,,https://huggingface.co/datasets/doevent/perfume
+71001,Hamidi Oud & Perfumes,Al Shashaniya,,https://www.fragrantica.com/perfume/Hamidi-Oud-Perfumes/Al-Shashaniya-27816.html
+72001,HEMA,Happy Me,2026,https://www.fragrantica.com/perfume/HEMA/Happy-Me-127489.html
+73001,Hidramais,Ameixa Negra,2025,https://www.fragrantica.com/perfume/Hidramais/Ameixa-Negra-128926.html
+74001,Hoss Intropia,Rain & Flowers,2025,https://www.fragrantica.com/perfume/Hoss-Intropia/Rain-Flowers-121845.html
+76001,Ikiryō,Continuum,2016,https://www.fragrantica.com/perfume/Ikiryo/Continuum-40167.html
+77001,Indira San Francisco,Vanilla Muse,,https://www.fragrantica.com/perfume/Indira-San-Francisco/Vanilla-Muse-123286.html
+78001,Itzy,Glow,,https://www.fragrantica.com/perfume/Itzy/Glow-134600.html
+79001,Jagaia,Less,2016,https://www.fragrantica.com/perfume/Jagaia/Less-80030.html
+81001,Jequiti,Caminho das Águas Frésia Brisa Refrescante,2017,https://www.fragrantica.com/perfume/Jequiti/Caminho-das-Aguas-Fresia-Brisa-Refrescante-75373.html
+82001,Jimmy Choo,Seduction Collection - Radiant Tuberose,2020,https://www.parfumo.com/Perfumes/Jimmy_Choo/seduction-collection-radiant-tuberose
