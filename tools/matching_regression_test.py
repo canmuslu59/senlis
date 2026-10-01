@@ -23,6 +23,16 @@ CASES=[
  ("accept","Tom Ford","Oud Wood","Tom Ford Oud Wood EDP 50 ml Parfüm"),
  ("accept","Versace","Eros (Eau de Parfum)","Versace Eros EDP 50 ml Erkek Parfüm"),
  ("reject","Versace","Eros (Eau de Parfum)","Versace Eros Pour Femme EDP 100 ml Kadın Parfüm"),
+ ("reject","Victoria's Secret","Bombshell Isle Victoria's Secret Fragrance Mist (Body Mist)","Victoria's Secret Bombshell Mini Vücut Spreyi"),
+ ("reject","Victoria's Secret","Coco Mist Victoria's Secret Fragrance Mist (Body Mist)","Victoria's Secret Bombshell Mini Vücut Spreyi"),
+ ("reject","Victoria's Secret","Eau So Sexy Victoria's Secret Fragrance Mist","Victoria's Secret Very Sexy Vücut Spreyi"),
+ ("reject","Victoria's Secret","Pure Seduction Victoria's Secret Fragrance Mist","Victoria's Secret Bombshell Seduction Seyahat Boy Vücut Spreyi"),
+ ("reject","Victoria's Secret","Vanilla Lace Victoria's Secret Fragrance Mist","Victoria's Secret Bare Sueded Vanilla Vücut Spreyi"),
+ ("reject","Victoria's Secret","XO, Victoria Victoria's Secret Fragrance Mist (Body Mist)","Victoria's Secret Bombshell Mini Vücut Spreyi"),
+ ("reject","Victoria's Secret","Bombshell Intense Victoria's Secret Fragrance Mist","Victoria's Secret Bombshell Intense Seyahat Boyu Vücut Spreyi"),
+ ("reject","Oriflame","Giordani Gold Essenza Oriflame Body Spray","Oriflame Giordani Gold Essenza Supreme Vücut ve Saç Parfüm Misti"),
+ ("accept","Bath & Body Works","Bourbon Bath & Body Works Body Spray (Body Mist)","Bath & Body Works Bourbon / Vücut Spreyi"),
+ ("accept","Bath & Body Works","Force Flow Body Spray (Body Mist)","Bath & Body Works Force Flow / Vücut Spreyi"),
 ]
 
 bad=[]
