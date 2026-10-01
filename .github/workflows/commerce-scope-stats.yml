@@ -8,6 +8,8 @@ on:
       - "tools/commerce_scope_stats.py"
       - ".github/workflows/commerce-scope-stats.yml"
       - "data/master_manifest_174259/**"
+      - "data/turkiye_retail_brands_501.txt"
+      - "tools/overnight_full_enrichment.py"
   workflow_dispatch:
 
 jobs:
@@ -16,4 +18,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests beautifulsoup4 lxml rapidfuzz
       - run: python tools/commerce_scope_stats.py
