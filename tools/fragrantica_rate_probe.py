@@ -36,5 +36,5 @@ for row in load_rows():
     counts[code]=counts.get(code,0)+1
     if image: images+=1
     print("RESULT",json.dumps({"id":row["id"],"status":code,"image":bool(image)},ensure_ascii=False),flush=True)
-    time.sleep(0.75)
+    time.sleep(0.25)
 print("SUMMARY",json.dumps({"tested":sum(counts.values()),"codes":counts,"images":images},ensure_ascii=False),flush=True)
