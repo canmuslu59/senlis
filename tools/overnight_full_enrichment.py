@@ -86,13 +86,23 @@ TR_RETAIL_ALIAS={
  "al haramain perfumes":"al haramain",
  "lattafa perfumes":"lattafa",
  "demeter fragrance":"demeter",
+ "demeter fragrance library":"demeter",
  "dior":"christian dior",
  "rabanne":"paco rabanne",
  "giorgio armani":"armani",
  "emporio armani":"armani",
  "salvatore ferragamo":"ferragamo",
  "mad parfumeur":"mad parfum",
- "loris parfum":"loris"
+ "loris parfum":"loris",
+ "aqua di polo":"aqua di polo 1987",
+ "hunca":"hunca care",
+ "mercedes benz":"mercedes benz parfums",
+ "sevilla fragrances":"sevilla",
+ "sospiro perfumes":"sospiro",
+ "alfaparf milano":"alfaparf",
+ "rosemary":"rosemary paris",
+ "puccini paris":"puccini",
+ "reef perfumes":"reef"
 }
 
 def brand_in_tr_retail(brand):
