@@ -1,0 +1,77 @@
+name: SENLIS Full Image Enrichment
+
+on:
+  push:
+    branches:
+      - overnight/full-enrichment-20261001
+    paths:
+      - ".github/workflows/image-enrichment-full.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: senlis-full-image-enrichment
+  cancel-in-progress: false
+
+jobs:
+  images:
+    name: "Images / chunk ${{ matrix.chunk }}"
+    runs-on: self-hosted
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - { chunk: "001", start: 1, end: 20000 }
+          - { chunk: "002", start: 20001, end: 40000 }
+          - { chunk: "003", start: 40001, end: 60000 }
+          - { chunk: "004", start: 60001, end: 80000 }
+          - { chunk: "005", start: 80001, end: 100000 }
+          - { chunk: "006", start: 100001, end: 120000 }
+          - { chunk: "007", start: 120001, end: 140000 }
+          - { chunk: "008", start: 140001, end: 160000 }
+          - { chunk: "009", start: 160001, end: 174259 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install image dependencies
+        run: pip install requests beautifulsoup4 lxml
+      - name: Extract product images
+        env:
+          START_ID: "${{ matrix.start }}"
+          END_ID: "${{ matrix.end }}"
+          FAST_WORKERS: "6"
+          FRAG_WORKERS: "3"
+          FRAG_DELAY: "0.25"
+        run: python tools/image_enrichment.py
+      - name: Upload image checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-chunk-${{ matrix.chunk }}
+          path: image_out/
+          if-no-files-found: warn
+          retention-days: 5
+
+  finalize:
+    name: Merge image checkpoints
+    needs: images
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: image-chunk-*
+          path: image_inputs/
+          merge-multiple: false
+      - run: python tools/merge_image_chunks.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SENLIS-images-full
+          path: image_final/
+          if-no-files-found: error
+          retention-days: 14
