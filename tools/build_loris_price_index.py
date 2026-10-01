@@ -70,9 +70,21 @@ for m in master:
     candidates=[]
     if code:
         for x in by_code.get(code,[]):
-            enriched=f"Loris {x['title']}"
-            if core.variant_compatible("Loris",product,enriched):
-                candidates.append((100.0,x))
+            title_norm=core.norm(x["title"])
+            # Exact E/K/U code is the product identity. Reject bundles, minis and refills
+            # when the master row is the standard fragrance.
+            if re.search(r"\b(?:set|paket|ikili|uclu|\d+\s*adet|mini|refill|refili)\b",title_norm):
+                continue
+            ml=re.search(r"\b(\d{1,3})\s*ml\b",title_norm)
+            if ml and int(ml.group(1)) < 30:
+                continue
+            if not core.form_compatible(product,x["title"]):
+                continue
+            mt=core.fragrance_type(product); ct=core.fragrance_type(x["title"])
+            if mt and ct and mt!=ct:
+                continue
+            score=105.0 if ml and int(ml.group(1))==50 else 100.0
+            candidates.append((score,x))
     else:
         for x in official:
             enriched=f"Loris {x['title']}"
