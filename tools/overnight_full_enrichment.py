@@ -67,6 +67,32 @@ def variant_compatible(brand,product,candidate):
     if cm-tm: return False
     return True
 
+BRAND_ALIASES={
+ "yves saint laurent":["ysl"],
+ "giorgio armani":["armani"],
+ "calvin klein":["ck"],
+ "dolce gabbana":["d g","dg"],
+ "victoria s secret":["victorias secret","vs"]
+}
+
+def brand_compatible(brand,candidate):
+    b=norm(brand); c=norm(candidate)
+    if b and b in c: return True
+    for alias in BRAND_ALIASES.get(b,[]):
+        if alias in c: return True
+    bt=[x for x in b.split() if len(x)>=4]
+    return any(x in c.split() for x in bt)
+
+def product_match_score(brand,product,candidate):
+    p=norm(product); c=norm(candidate); b=norm(brand)
+    ps=fuzz.token_set_ratio(p,c)
+    pr=fuzz.ratio(p,c)
+    bs=fuzz.token_set_ratio(b,c) if b else 0
+    score=.72*ps+.13*pr+.15*bs
+    if brand_compatible(brand,candidate): score+=8
+    return min(100,score)
+
+
 def host(url):
     try:
         h=urllib.parse.urlparse(url).netloc.lower().split(":")[0]
@@ -234,8 +260,7 @@ def boyner_search(session,brand,product):
             url=urllib.parse.urljoin(r.url,href)
             if url in seen: continue
             seen.add(url)
-            score=fuzz.token_set_ratio(target,norm(title))
-            if norm(brand) in norm(title): score+=8
+            score=product_match_score(brand,product,title)
             if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): score-=30
             if score>=58 and variant_compatible(brand,product,title): out.append((score,title,url))
         out.sort(reverse=True)
@@ -257,8 +282,7 @@ def beymen_search(session,brand,product):
             url=urllib.parse.urljoin(r.url,href)
             if url in seen: continue
             seen.add(url)
-            score=fuzz.token_set_ratio(target,norm(title))
-            if norm(brand) in norm(title): score+=8
+            score=product_match_score(brand,product,title)
             if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): score-=30
             if score>=58 and variant_compatible(brand,product,title):
                 out.append((score,title,url))
@@ -279,8 +303,7 @@ def parse_offer_page(session,url,brand,product):
             if not (typ=="Product" or (isinstance(typ,list) and "Product" in typ)): continue
             name=o.get("name") or title
             if not variant_compatible(brand,product,name): continue
-            score=.65*fuzz.token_set_ratio(target,norm(name))+.35*fuzz.ratio(target,norm(name))
-            if norm(brand) in norm(name): score+=8
+            score=product_match_score(brand,product,name)
             offers=o.get("offers"); offers=offers if isinstance(offers,list) else [offers] if isinstance(offers,dict) else []
             im=o.get("image")
             if isinstance(im,list): im=im[0] if im else ""
@@ -306,8 +329,7 @@ def parse_offer_page(session,url,brand,product):
         if best is None:
             name=title
             if not variant_compatible(brand,product,name): return None
-            score=.65*fuzz.token_set_ratio(target,norm(name))+.35*fuzz.ratio(target,norm(name))
-            if norm(brand) in norm(name): score+=8
+            score=product_match_score(brand,product,name)
             amount=None; cur=""
             for key in ("product:price:amount","og:price:amount"):
                 m=soup.find("meta",attrs={"property":key}) or soup.find("meta",attrs={"name":key})
@@ -328,8 +350,7 @@ def parse_offer_page(session,url,brand,product):
         # Visible Turkish price fallback for official/local product pages.
         if best is None:
             flat=" ".join(soup.get_text(" ",strip=True).split())
-            score=.65*fuzz.token_set_ratio(target,norm(title))+.35*fuzz.ratio(target,norm(title))
-            if norm(brand) in norm(title): score+=8
+            score=product_match_score(brand,product,title)
             hm=host(r.url)
             localish=hm.endswith(".com.tr") or hm.endswith(".tr") or "/tr/" in r.url.lower()
             if score>=82 and localish and variant_compatible(brand,product,title):
@@ -377,8 +398,7 @@ def extract_commerce(session,row):
     for title,url in results:
         h=host(url)
         if any(h==d or h.endswith("."+d) for d in INFO_DOMAINS): continue
-        sc=fuzz.token_set_ratio(norm(f"{brand} {product}"),norm(title))
-        if norm(brand) in norm(title): sc+=8
+        sc=product_match_score(brand,product,title)
         if any(b in norm(title) for b in BAD) and not any(b in norm(product) for b in BAD): sc-=30
         trusted=any(h==d or h.endswith("."+d) for d in TR_SELLERS)
         localish=h.endswith(".com.tr") or h.endswith(".tr") or "/tr/" in url.lower()
