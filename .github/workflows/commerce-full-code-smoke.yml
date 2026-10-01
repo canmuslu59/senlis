@@ -15,6 +15,9 @@ jobs:
       COMMERCE_WORKERS: "1"
       COMMERCE_SCOPE: "tr_retail"
       SEARCH_ENGINE_FALLBACK: "0"
+      COMMERCE_RETAILERS: "beymen,gratis"
+      HOST_MIN_INTERVAL: "1.0"
+      HOST_COOLDOWN: "20"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
