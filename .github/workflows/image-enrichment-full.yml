@@ -1,4 +1,5 @@
 name: SENLIS Full Image Enrichment
+# validated-clean-image-engine: 2026-10-02
 
 on:
   push:
