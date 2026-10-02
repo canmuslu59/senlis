@@ -18,7 +18,10 @@ TRUSTED=[
 MARKETS=['trendyol.com','hepsiburada.com','amazon.com.tr','n11.com','pttavm.com']
 DIRECT=[x for x in TRUSTED if x not in MARKETS]
 NOISE={'kadin','erkek','unisex','parfum','perfume','eau','de','edp','edt','edc','spray','sprey','ml','body','mist','fragrance','hair','vucut','sac','orijinal','original','ithal','yeni','urun','fiyat','online','kozmetik'}
-CONFLICT=set(getattr(core,'VARIANT_MARKERS',set()))|{'intense','elixir','absolu','absolute','noir','rouge','night','sport','flame','energy','limited','collector','edition','extreme','extrait'}
+SAFE_EXTRA={'fiyatlari','ozellikleri','diger','fresh','ciceksi','meyveli','odunsu','oryantal','aromatik','baharat','misk','kahve','floral','amber','kalici','ozel','seri','natural','bayan','notalar','nota','onu','pesinden','kosturacak','imza','koku','square','kare'}
+CONFLICT=set(getattr(core,'VARIANT_MARKERS',set()))|{'intense','elixir','absolu','absolute','noir','rouge','night','sport','flame','energy','limited','collector','edition','extreme','extrait','profondo','prive','sunshine','shimmer','viola','motion','stellar','neon','sueded','exquise','floral'}
+NONFRAG={'rollerball','roll on','roll-on','balm','hand cream','el kremi','bakim kremi','lotion','losyon','sunscreen','gunes kremi','sampuan','shampoo','dus jeli','shower gel','tiras','after shave','aftershave','deodorant','sutyen','corap','lastik','boya','etiketi','kitap','canta','ceket','anahtarlik','kalem','yem','sabun','soap','mum','candle'}
+SCENT_MARKERS={'parfum','perfume','edp','edt','edc','eau de','cologne','kolonya','body mist','fragrance mist','vucut spreyi','sac ve vucut','parfumlu'}
 HINTS={'trendyol.com':['-p-'],'hepsiburada.com':['-p-','/p-'],'amazon.com.tr':['/dp/','/gp/product/'],'n11.com':['/urun/'],'pttavm.com':['-p-','/urun/'],'boyner.com.tr':['-p-','/p_'],'beymen.com':['/p_','/tr/p_'],'gratis.com':['-p-'],'sephora.com.tr':['/p/']}
 COLS=['product_id','brand_name','product_name','release_year','link_status','price_status','price_try','currency','volume_ml','seller_name','purchase_url','stock_status','match_confidence','source_product_name','discovery_source','page_verified','checked_at','error']
 
@@ -37,8 +40,18 @@ def product_url(u):
  return not any(x in low for x in ['/search','/arama','/kategori','/category','?q='])
 def tokens(brand,text):
  b=set(norm(brand).split());g=set(getattr(core,'GENERIC_PRODUCT_TOKENS',set()))
- return [x for x in core.match_norm(clean(text)).split() if x not in b and x not in NOISE and x not in g and not x.isdigit() and len(x)>1]
+ raw=[x for x in core.match_norm(clean(text)).split() if x not in b and x not in NOISE and x not in g]
+ lexical=[x for x in raw if not x.isdigit() and len(x)>1]
+ out=[]
+ for x in raw:
+  if x.isdigit() and len(x)==4 and lexical:continue
+  if len(x)>1 or x.isdigit():out.append(x)
+ return out
+
 def compatible(brand,product,candidate):
+ pn=norm(product);cn=norm(candidate)
+ for bad in NONFRAG:
+  if bad in cn and bad not in pn:return False
  if not core.form_compatible(product,candidate):return False
  a,b=core.fragrance_type(product),core.fragrance_type(candidate)
  if a and b and a!=b:return False
@@ -46,10 +59,24 @@ def compatible(brand,product,candidate):
  if (a or b) and a!=b:return False
  if core.is_travel_format(product)!=core.is_travel_format(candidate):return False
  tt=tokens(brand,product);ct=set(tokens(brand,candidate))
- if tt and any(x not in ct for x in tt):return False
+ if not tt:return False
+ if any(x not in ct for x in tt):return False
+ extras={x for x in ct-set(tt) if x not in SAFE_EXTRA and not x.isdigit() and not any(ch.isdigit() for ch in x)}
+ if extras:return False
  if (ct&CONFLICT)-(set(tt)&CONFLICT):return False
  score=core.product_match_score(brand,product,clean(candidate))
- return score>=(82 if len(tt)<=2 else 70)
+ return score>=(86 if len(tt)<=2 else 76)
+
+def marketplace_guard(brand,product,title,url):
+ h=host(url)
+ if not any(h==d or h.endswith('.'+d) for d in MARKETS):return True
+ t=norm(title)
+ if not any(x in t for x in SCENT_MARKERS):return False
+ bw=[x for x in norm(brand).split() if x not in {'parfum','perfumes','fragrance','fragrances','cosmetics','kozmetik'} and len(x)>1]
+ if bw:
+  hits=sum(x in t.split() for x in bw)
+  if hits<min(2,len(bw)):return False
+ return compatible(brand,product,title)
 core.variant_compatible=compatible
 
 def score(brand,product,title,url):
@@ -116,7 +143,7 @@ def discover(row):
   if key not in ded or sc>ded[key][0]:ded[key]=(sc,title,src)
  ranked=sorted([(v[0],v[1],u,v[2]) for u,v in ded.items()],reverse=True);best_offer=None;best_link=None
  for sc,title,url,src in ranked[:10]:
-  if sc<68 or not core.brand_compatible(brand,f'{title} {core.slug_title(url)}') or not compatible(brand,product,title):continue
+  if sc<72 or not core.brand_compatible(brand,f'{title} {core.slug_title(url)}') or not marketplace_guard(brand,product,title,url):continue
   p=parse_offer(s,url,brand,product)
   if p and p.get('purchase_url') and float(p.get('score') or sc)>=78:
    cand=(float(p.get('score') or sc),title,p,src)
@@ -129,8 +156,9 @@ def discover(row):
   sc,title,p,src=best_offer;base.update(link_status='verified_link',price_status='verified_price' if p.get('price_try') else 'link_only',price_try=p.get('price_try') or '',currency=p.get('currency') or 'TRY',volume_ml=p.get('volume_ml') or '',seller_name=p.get('seller_name') or host(p.get('purchase_url','')),purchase_url=p.get('purchase_url') or '',stock_status=p.get('stock_status') or 'unknown',match_confidence=round(sc/100,3),source_product_name=p.get('source_product_name') or title,discovery_source=src,page_verified='1');return base
  if best_link:
   sc,title,url,src=best_link;base.update(link_status='verified_link',price_status='link_only',seller_name=host(url),purchase_url=url,match_confidence=round(sc/100,3),source_product_name=title,discovery_source=src,page_verified='1');return base
- if ranked and ranked[0][0]>=72:
-  sc,title,url,src=ranked[0];base.update(link_status='candidate',seller_name=host(url),purchase_url=url,match_confidence=round(sc/100,3),source_product_name=title,discovery_source=src)
+ if ranked and ranked[0][0]>=78:
+  sc,title,url,src=ranked[0]
+  if marketplace_guard(brand,product,title,url):base.update(link_status='candidate',seller_name=host(url),purchase_url=url,match_confidence=round(sc/100,3),source_product_name=title,discovery_source=src)
  return base
 
 def load_rows():
