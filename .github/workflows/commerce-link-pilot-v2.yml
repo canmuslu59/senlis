@@ -53,7 +53,7 @@ jobs:
     env:
       PILOT_SHARD_INDEX: "${{ matrix.shard }}"
       PILOT_SHARD_COUNT: "4"
-      PILOT_SIZE: "1000"
+      PILOT_SIZE: "200"
       PILOT_WORKERS: "4"
       PILOT_MAX_RESULTS: "18"
       SEARCH_ENGINE_FALLBACK: "1"
@@ -90,6 +90,7 @@ jobs:
         with:
           pattern: commerce-link-pilot-v2-shard-*
           path: commerce_link_v2_inputs/
+      - run: pip install requests beautifulsoup4 lxml rapidfuzz
       - run: python tools/commerce_link_v2.py
       - uses: actions/upload-artifact@v4
         with:
