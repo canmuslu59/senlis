@@ -63,9 +63,16 @@ def compatible(brand,product,candidate):
  if any(x not in ct for x in tt):return False
  extras={x for x in ct-set(tt) if x not in SAFE_EXTRA and not x.isdigit() and not any(ch.isdigit() for ch in x)}
  if extras:return False
+ # Very short fragrance names are collision-prone (e.g. "By" vs "K By").
+ # Keep one-letter candidate tokens for this guard even though normal scoring drops them.
+ if len(tt)==1 and len(tt[0])<=3:
+  bset=set(norm(brand).split());g=set(getattr(core,'GENERIC_PRODUCT_TOKENS',set()))|NOISE
+  raw=[x for x in core.match_norm(clean(candidate)).split() if x not in bset and x not in g and not x.isdigit()]
+  short_extras=[x for x in raw if x not in set(tt) and x not in SAFE_EXTRA]
+  if short_extras:return False
  if (ct&CONFLICT)-(set(tt)&CONFLICT):return False
  score=core.product_match_score(brand,product,clean(candidate))
- return score>=(86 if len(tt)<=2 else 76)
+ return score>=(90 if len(tt)==1 and len(tt[0])<=3 else (86 if len(tt)<=2 else 76))
 
 def marketplace_guard(brand,product,title,url):
  h=host(url)
