@@ -56,4 +56,4 @@
 
 - [x] Validate generated workflow graph for all 192 shard IDs, correct dependencies, timeouts and upload-on-failure behavior.
 - [x] Run all tests; obtain the required fresh whole-change review and fix material issues with regression tests.
-- [ ] Push the authorized feature branch, verify preflight/canary and the first full wave actually start, and report the measured/estimated runtime with limits.
+- [x] Push the authorized feature branch, verify preflight/canary and the first full wave actually start, and report the measured/estimated runtime with limits.
