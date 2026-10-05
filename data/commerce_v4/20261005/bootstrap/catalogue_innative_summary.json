@@ -1,0 +1,47 @@
+{
+  "source_id": "innative",
+  "root_url": "https://innativekozmetik.com/sitemap.xml",
+  "brand": "INNATIVE",
+  "root_ok": true,
+  "expected_maps": 1,
+  "ok_maps": 1,
+  "entry_count": 51,
+  "errors": [],
+  "map_evidence": [
+    {
+      "requested_url": "https://innativekozmetik.com/sitemap.xml",
+      "final_url": "https://innativekozmetik.com/sitemap.xml",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:13:48.056948+00:00",
+      "observed_at": "2026-10-05T22:13:48.467774+00:00",
+      "seconds": 5.525,
+      "decoded_utf8_bytes": 527,
+      "decoded_sha256": "47464ee50dd89e25f603f3f92617e14066212828bfc842b13730e9d28040efcc",
+      "snapshot": "responses/47464ee50dd89e25f603f3f92617e14066212828bfc842b13730e9d28040efcc.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    {
+      "requested_url": "https://innativekozmetik.com/products.xml",
+      "final_url": "https://innativekozmetik.com/products.xml",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:13:54.379306+00:00",
+      "observed_at": "2026-10-05T22:13:54.543180+00:00",
+      "seconds": 6.075,
+      "decoded_utf8_bytes": 17082,
+      "decoded_sha256": "84f17485af0570ce4e2c089c839776ad43d6a58238ea847bf80c2b00cb095805",
+      "snapshot": "responses/84f17485af0570ce4e2c089c839776ad43d6a58238ea847bf80c2b00cb095805.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    }
+  ],
+  "title_pages_expected": 51,
+  "title_pages_ok": 51,
+  "catalogue_sha256": "b2e1f07b897bcaa1635298c6a4e155610e90ffd40b66003871e59692a1f75f26",
+  "catalogue_file": "catalogues/innative.jsonl.gz",
+  "complete": true
+}

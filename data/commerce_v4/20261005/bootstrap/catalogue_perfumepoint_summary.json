@@ -1,0 +1,47 @@
+{
+  "source_id": "perfumepoint",
+  "root_url": "https://www.perfumepoint.com.tr/xml/sitemap/sitemap.xml",
+  "brand": "",
+  "root_ok": true,
+  "expected_maps": 1,
+  "ok_maps": 1,
+  "entry_count": 5991,
+  "errors": [],
+  "map_evidence": [
+    {
+      "requested_url": "https://www.perfumepoint.com.tr/xml/sitemap/sitemap.xml",
+      "final_url": "https://www.perfumepoint.com.tr/xml/sitemap/sitemap.xml",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:12:48.080122+00:00",
+      "observed_at": "2026-10-05T22:12:49.399338+00:00",
+      "seconds": 4.054,
+      "decoded_utf8_bytes": 1745,
+      "decoded_sha256": "87fef420d5ababdad6b592a9745798af5d9b02d8e51fea4da5de84e635819f25",
+      "snapshot": "responses/87fef420d5ababdad6b592a9745798af5d9b02d8e51fea4da5de84e635819f25.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    {
+      "requested_url": "https://www.perfumepoint.com.tr/xml/sitemap/product.xml",
+      "final_url": "https://www.perfumepoint.com.tr/xml/sitemap/product.xml",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:12:54.175693+00:00",
+      "observed_at": "2026-10-05T22:12:54.787834+00:00",
+      "seconds": 5.388,
+      "decoded_utf8_bytes": 2886721,
+      "decoded_sha256": "e1c2385c42fde48aed175f10989ea5d42cbc9386be41012da1efdf800182d288",
+      "snapshot": "responses/e1c2385c42fde48aed175f10989ea5d42cbc9386be41012da1efdf800182d288.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    }
+  ],
+  "title_pages_expected": 0,
+  "title_pages_ok": 0,
+  "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+  "catalogue_file": "catalogues/perfumepoint.jsonl.gz",
+  "complete": true
+}

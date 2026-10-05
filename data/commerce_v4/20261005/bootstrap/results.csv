@@ -1,0 +1,11 @@
+﻿product_id,brand_name,product_name,status,search_proven,price_try,volume_ml,stock_status,purchase_url
+3045,Acqua di Parma,Acqua di Parma Blu Mediterraneo Arancia di Capri,no_catalog_match,True,,,,
+3431,Adidas,Action Adidas 1997 After Shave,no_catalog_match,True,,,,
+36013,Caudalie,Ange des Vignes,verified_offer,True,1650.0,50.0,in_stock,https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html
+50275,DSQUARED²,2 Wood,no_catalog_match,True,,,,
+77267,INNATIVE,BERRY AURA (Eau de Parfum),verified_offer,True,450.0,50.0,in_stock,https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1
+77787,Issey Miyake,A Drop d'Issey (Eau de Parfum),verified_offer,True,10900.0,50.0,unknown,https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum
+90677,Lalique,Amethyst,verified_offer,True,3450.0,100.0,unknown,https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum
+97100,Loris,Almamlaka,no_catalog_match,True,,,,
+100781,Mad Parfumeur,1923,verified_offer,True,1999.99,100.0,in_stock,https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/
+113828,Narciso Rodriguez,All Of Me,verified_offer,True,3857.5,50.0,in_stock,https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml

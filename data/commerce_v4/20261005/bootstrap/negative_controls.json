@@ -1,0 +1,44 @@
+[
+  {
+    "id": "negative_decant",
+    "expected": "decant",
+    "verdict": "decant",
+    "passed": true,
+    "evidence": {
+      "requested_url": "https://www.dekantparfum.com.tr/urun/abercrombie-fitch-fierce-reserve-edc",
+      "final_url": "https://www.dekantparfum.com.tr/urun/abercrombie-fitch-fierce-reserve-edc",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:21:42.080875+00:00",
+      "observed_at": "2026-10-05T22:21:44.325095+00:00",
+      "seconds": 7.354,
+      "decoded_utf8_bytes": 267290,
+      "decoded_sha256": "254f50ea65e7b9c068ce3df5466ed33d2494e6424ff705eabf1725eec32aeda9",
+      "snapshot": "responses/254f50ea65e7b9c068ce3df5466ed33d2494e6424ff705eabf1725eec32aeda9.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    }
+  },
+  {
+    "id": "negative_dupe",
+    "expected": "dupe",
+    "verdict": "dupe",
+    "passed": true,
+    "evidence": {
+      "requested_url": "https://www.parfumevi.com.tr/burberry-sport-ice-for-men",
+      "final_url": "https://www.parfumevi.com.tr/burberry-sport-ice-for-men",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:21:48.066188+00:00",
+      "observed_at": "2026-10-05T22:21:49.616056+00:00",
+      "seconds": 5.27,
+      "decoded_utf8_bytes": 129633,
+      "decoded_sha256": "ade12926e1d0d81d0e1cd087a9a490c3e74e51222d37861babbd81f06fa3ff73",
+      "snapshot": "responses/ade12926e1d0d81d0e1cd087a9a490c3e74e51222d37861babbd81f06fa3ff73.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    }
+  }
+]

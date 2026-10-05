@@ -1,0 +1,32 @@
+{
+  "source_id": "caudalie",
+  "root_url": "https://tr.caudalie.com/sitemap.xml",
+  "brand": "Caudalie",
+  "root_ok": true,
+  "expected_maps": 1,
+  "ok_maps": 1,
+  "entry_count": 103,
+  "errors": [],
+  "map_evidence": [
+    {
+      "requested_url": "https://tr.caudalie.com/sitemap.xml",
+      "final_url": "https://tr.caudalie.com/sitemap.xml",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:13:30.378133+00:00",
+      "observed_at": "2026-10-05T22:13:31.018627+00:00",
+      "seconds": 5.409,
+      "decoded_utf8_bytes": 74209,
+      "decoded_sha256": "6615a7a3d3f00204fd656c35ccfe801428c98aa60d5b485a251206776663e954",
+      "snapshot": "responses/6615a7a3d3f00204fd656c35ccfe801428c98aa60d5b485a251206776663e954.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    }
+  ],
+  "title_pages_expected": 0,
+  "title_pages_ok": 0,
+  "catalogue_sha256": "0d52dbec014eec28cb1fa5027c332671aab869ecbe64ec6acd9870792296ca02",
+  "catalogue_file": "catalogues/caudalie.jsonl.gz",
+  "complete": true
+}

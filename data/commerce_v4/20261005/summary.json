@@ -1,0 +1,16 @@
+{
+  "method_version": "v4.1-catalogue-evidence",
+  "updated_at": "2026-10-05T22:22:05.677214+00:00",
+  "scope_total": 174259,
+  "proven_searches": 174259,
+  "candidate_products": 4697,
+  "total_pages": 6867,
+  "completed_pages": 0,
+  "pending_pages": 6867,
+  "page_progress_pct": 0.0,
+  "unresolved_pages": 0,
+  "verified_price_products": 0,
+  "finished": false,
+  "complete": false,
+  "global_absence_proven": false
+}

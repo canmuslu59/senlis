@@ -1,0 +1,1414 @@
+[
+  {
+    "product_id": "3045",
+    "brand_name": "Acqua di Parma",
+    "product_name": "Acqua di Parma Blu Mediterraneo Arancia di Capri",
+    "status": "no_catalog_match",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Acqua di Parma",
+        "query_name": "Acqua di Parma Blu Mediterraneo Arancia di Capri",
+        "query_tokens": [
+          "arancia",
+          "blu",
+          "capri",
+          "di",
+          "mediterraneo"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Acqua di Parma",
+        "query_name": "Acqua di Parma Blu Mediterraneo Arancia di Capri",
+        "query_tokens": [
+          "arancia",
+          "blu",
+          "capri",
+          "di",
+          "mediterraneo"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      }
+    ],
+    "candidate_checks": [],
+    "offers": [],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:19:38.269441+00:00"
+  },
+  {
+    "product_id": "3431",
+    "brand_name": "Adidas",
+    "product_name": "Action Adidas 1997 After Shave",
+    "status": "no_catalog_match",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Adidas",
+        "query_name": "Action Adidas 1997 After Shave",
+        "query_tokens": [
+          "action"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Adidas",
+        "query_name": "Action Adidas 1997 After Shave",
+        "query_tokens": [
+          "action"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      }
+    ],
+    "candidate_checks": [],
+    "offers": [],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:19:38.476818+00:00"
+  },
+  {
+    "product_id": "36013",
+    "brand_name": "Caudalie",
+    "product_name": "Ange des Vignes",
+    "status": "verified_offer",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Caudalie",
+        "query_name": "Ange des Vignes",
+        "query_tokens": [
+          "ange",
+          "des",
+          "vignes"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Caudalie",
+        "query_name": "Ange des Vignes",
+        "query_tokens": [
+          "ange",
+          "des",
+          "vignes"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "caudalie",
+        "complete": true,
+        "searched_entries": 103,
+        "catalogue_sha256": "0d52dbec014eec28cb1fa5027c332671aab869ecbe64ec6acd9870792296ca02",
+        "query_brand": "Caudalie",
+        "query_name": "Ange des Vignes",
+        "query_tokens": [
+          "ange",
+          "des",
+          "vignes"
+        ],
+        "matched_urls": [
+          "https://tr.caudalie.com/p/441/ange-des-vignes-shower-gel-441.html",
+          "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html"
+        ],
+        "match_count": 2
+      }
+    ],
+    "candidate_checks": [
+      {
+        "source_id": "caudalie",
+        "discovered_url": "https://tr.caudalie.com/p/441/ange-des-vignes-shower-gel-441.html",
+        "catalogue_titles": [],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://tr.caudalie.com/p/441/ange-des-vignes-shower-gel-441.html",
+          "final_url": "https://tr.caudalie.com/p/441/ange-des-vignes-shower-gel-441.html",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:19:42.288199+00:00",
+          "observed_at": "2026-10-05T22:19:43.474616+00:00",
+          "seconds": 4.786,
+          "decoded_utf8_bytes": 412611,
+          "decoded_sha256": "74b625f64e9c70d6f3c428e04018ba4a0efcd0d8baf69c5ec8508d2d527ce60f",
+          "snapshot": "responses/74b625f64e9c70d6f3c428e04018ba4a0efcd0d8baf69c5ec8508d2d527ce60f.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "caudalie",
+        "discovered_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+        "catalogue_titles": [],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+          "final_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:19:48.447107+00:00",
+          "observed_at": "2026-10-05T22:19:49.641650+00:00",
+          "seconds": 6.121,
+          "decoded_utf8_bytes": 492280,
+          "decoded_sha256": "1a45794ab4dfb1706e6fe9ee89fdc6beb3f0ed87251147c9f38497e29bfb1f59",
+          "snapshot": "responses/1a45794ab4dfb1706e6fe9ee89fdc6beb3f0ed87251147c9f38497e29bfb1f59.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 1650.0,
+          "currency": "TRY",
+          "purchase_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+          "seller_name": "tr.caudalie.com",
+          "source_product_name": "Caudalie Ange des Vignes Parfüm",
+          "stock_status": "in_stock",
+          "volume_ml": 50.0,
+          "price_source": "product_jsonld",
+          "match_confidence": 0.98,
+          "checked_at": "2026-10-05T22:19:48.447107+00:00",
+          "evidence_sha256": "1a45794ab4dfb1706e6fe9ee89fdc6beb3f0ed87251147c9f38497e29bfb1f59",
+          "source_id": "caudalie",
+          "checkout_verified": false
+        }
+      }
+    ],
+    "offers": [
+      {
+        "price_try": 1650.0,
+        "currency": "TRY",
+        "purchase_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+        "seller_name": "tr.caudalie.com",
+        "source_product_name": "Caudalie Ange des Vignes Parfüm",
+        "stock_status": "in_stock",
+        "volume_ml": 50.0,
+        "price_source": "product_jsonld",
+        "match_confidence": 0.98,
+        "checked_at": "2026-10-05T22:19:48.447107+00:00",
+        "evidence_sha256": "1a45794ab4dfb1706e6fe9ee89fdc6beb3f0ed87251147c9f38497e29bfb1f59",
+        "source_id": "caudalie",
+        "checkout_verified": false
+      }
+    ],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:19:49.708617+00:00",
+    "best_offer": {
+      "price_try": 1650.0,
+      "currency": "TRY",
+      "purchase_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+      "seller_name": "tr.caudalie.com",
+      "source_product_name": "Caudalie Ange des Vignes Parfüm",
+      "stock_status": "in_stock",
+      "volume_ml": 50.0,
+      "price_source": "product_jsonld",
+      "match_confidence": 0.98,
+      "checked_at": "2026-10-05T22:19:48.447107+00:00",
+      "evidence_sha256": "1a45794ab4dfb1706e6fe9ee89fdc6beb3f0ed87251147c9f38497e29bfb1f59",
+      "source_id": "caudalie",
+      "checkout_verified": false
+    }
+  },
+  {
+    "product_id": "50275",
+    "brand_name": "DSQUARED²",
+    "product_name": "2 Wood",
+    "status": "no_catalog_match",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "DSQUARED²",
+        "query_name": "2 Wood",
+        "query_tokens": [
+          "2",
+          "wood"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "DSQUARED²",
+        "query_name": "2 Wood",
+        "query_tokens": [
+          "2",
+          "wood"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      }
+    ],
+    "candidate_checks": [],
+    "offers": [],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:19:49.933856+00:00"
+  },
+  {
+    "product_id": "77267",
+    "brand_name": "INNATIVE",
+    "product_name": "BERRY AURA (Eau de Parfum)",
+    "status": "verified_offer",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "INNATIVE",
+        "query_name": "BERRY AURA (Eau de Parfum)",
+        "query_tokens": [
+          "aura",
+          "berry"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "INNATIVE",
+        "query_name": "BERRY AURA (Eau de Parfum)",
+        "query_tokens": [
+          "aura",
+          "berry"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "innative",
+        "complete": true,
+        "searched_entries": 51,
+        "catalogue_sha256": "b2e1f07b897bcaa1635298c6a4e155610e90ffd40b66003871e59692a1f75f26",
+        "query_brand": "INNATIVE",
+        "query_name": "BERRY AURA (Eau de Parfum)",
+        "query_tokens": [
+          "aura",
+          "berry"
+        ],
+        "matched_urls": [
+          "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1"
+        ],
+        "match_count": 1
+      }
+    ],
+    "candidate_checks": [
+      {
+        "source_id": "innative",
+        "discovered_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+        "catalogue_titles": [
+          "INNATIVE E2002 Eny BERRY AURA Edp 50 ml Sulu Armut Ve Taze Çiçekler Kadın Parfümü"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+          "final_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:16:36.558425+00:00",
+          "observed_at": "2026-10-05T22:19:50.150387+00:00",
+          "seconds": 0.002,
+          "decoded_utf8_bytes": 929517,
+          "decoded_sha256": "db1737df2fb271500dd84fa8846568f8c120463d38c20801c9dde93a7c4f17c3",
+          "snapshot": "responses/db1737df2fb271500dd84fa8846568f8c120463d38c20801c9dde93a7c4f17c3.txt.gz",
+          "retry_at": 0,
+          "from_cache": true,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 450.0,
+          "currency": "TRY",
+          "purchase_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+          "seller_name": "innativekozmetik.com",
+          "source_product_name": "INNATIVE E2002 Eny BERRY AURA Edp 50 ml Sulu Armut Ve Taze Çiçekler Kadın Parfümü",
+          "stock_status": "in_stock",
+          "volume_ml": 50.0,
+          "price_source": "product_jsonld",
+          "match_confidence": 0.98,
+          "checked_at": "2026-10-05T22:16:36.558425+00:00",
+          "evidence_sha256": "db1737df2fb271500dd84fa8846568f8c120463d38c20801c9dde93a7c4f17c3",
+          "source_id": "innative",
+          "checkout_verified": false
+        }
+      }
+    ],
+    "offers": [
+      {
+        "price_try": 450.0,
+        "currency": "TRY",
+        "purchase_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+        "seller_name": "innativekozmetik.com",
+        "source_product_name": "INNATIVE E2002 Eny BERRY AURA Edp 50 ml Sulu Armut Ve Taze Çiçekler Kadın Parfümü",
+        "stock_status": "in_stock",
+        "volume_ml": 50.0,
+        "price_source": "product_jsonld",
+        "match_confidence": 0.98,
+        "checked_at": "2026-10-05T22:16:36.558425+00:00",
+        "evidence_sha256": "db1737df2fb271500dd84fa8846568f8c120463d38c20801c9dde93a7c4f17c3",
+        "source_id": "innative",
+        "checkout_verified": false
+      }
+    ],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:19:50.196502+00:00",
+    "best_offer": {
+      "price_try": 450.0,
+      "currency": "TRY",
+      "purchase_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+      "seller_name": "innativekozmetik.com",
+      "source_product_name": "INNATIVE E2002 Eny BERRY AURA Edp 50 ml Sulu Armut Ve Taze Çiçekler Kadın Parfümü",
+      "stock_status": "in_stock",
+      "volume_ml": 50.0,
+      "price_source": "product_jsonld",
+      "match_confidence": 0.98,
+      "checked_at": "2026-10-05T22:16:36.558425+00:00",
+      "evidence_sha256": "db1737df2fb271500dd84fa8846568f8c120463d38c20801c9dde93a7c4f17c3",
+      "source_id": "innative",
+      "checkout_verified": false
+    }
+  },
+  {
+    "product_id": "77787",
+    "brand_name": "Issey Miyake",
+    "product_name": "A Drop d'Issey (Eau de Parfum)",
+    "status": "verified_offer",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Issey Miyake",
+        "query_name": "A Drop d'Issey (Eau de Parfum)",
+        "query_tokens": [
+          "a",
+          "d",
+          "drop",
+          "issey"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Issey Miyake",
+        "query_name": "A Drop d'Issey (Eau de Parfum)",
+        "query_tokens": [
+          "a",
+          "d",
+          "drop",
+          "issey"
+        ],
+        "matched_urls": [
+          "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum",
+          "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-90-ml-kadin-parfum"
+        ],
+        "match_count": 2
+      }
+    ],
+    "candidate_checks": [
+      {
+        "source_id": "yesparfumeri",
+        "discovered_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum",
+        "catalogue_titles": [
+          "Issey Miyake A Drop D'Issey EDP 50 ml Kadın Parfüm",
+          "Issey Miyake A Drop D'Issey EDP 50 ml Kadın Parfüm - Yes Parfümeri"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum",
+          "final_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:19:54.134008+00:00",
+          "observed_at": "2026-10-05T22:19:54.702100+00:00",
+          "seconds": 4.278,
+          "decoded_utf8_bytes": 421913,
+          "decoded_sha256": "7b749a993d584e52004d481a862988a319dfeb9c497ba168a57232e42ed84cd4",
+          "snapshot": "responses/7b749a993d584e52004d481a862988a319dfeb9c497ba168a57232e42ed84cd4.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 10900.0,
+          "currency": "TRY",
+          "purchase_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum",
+          "seller_name": "yesparfumeri.com",
+          "source_product_name": "Issey Miyake A Drop D'Issey EDP 50 ml Kadın Parfüm",
+          "stock_status": "unknown",
+          "volume_ml": 50.0,
+          "price_source": "main_product_meta",
+          "match_confidence": 0.95,
+          "checked_at": "2026-10-05T22:19:54.134008+00:00",
+          "evidence_sha256": "7b749a993d584e52004d481a862988a319dfeb9c497ba168a57232e42ed84cd4",
+          "source_id": "yesparfumeri",
+          "checkout_verified": false
+        }
+      },
+      {
+        "source_id": "yesparfumeri",
+        "discovered_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-90-ml-kadin-parfum",
+        "catalogue_titles": [
+          "Issey Miyake A Drop D'Issey EDP 90 ml Kadın Parfüm",
+          "Issey Miyake A Drop D'Issey EDP 90 ml Kadın Parfüm - Yes Parfümeri"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-90-ml-kadin-parfum",
+          "final_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-90-ml-kadin-parfum",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:00.346509+00:00",
+          "observed_at": "2026-10-05T22:20:00.722689+00:00",
+          "seconds": 5.936,
+          "decoded_utf8_bytes": 421913,
+          "decoded_sha256": "cb97f7f71bf2ad6dd08f6550cfa1e5e6c223c367f9bfd9297436c5ba73eee8e1",
+          "snapshot": "responses/cb97f7f71bf2ad6dd08f6550cfa1e5e6c223c367f9bfd9297436c5ba73eee8e1.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 11500.0,
+          "currency": "TRY",
+          "purchase_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-90-ml-kadin-parfum",
+          "seller_name": "yesparfumeri.com",
+          "source_product_name": "Issey Miyake A Drop D'Issey EDP 90 ml Kadın Parfüm",
+          "stock_status": "unknown",
+          "volume_ml": 90.0,
+          "price_source": "main_product_meta",
+          "match_confidence": 0.95,
+          "checked_at": "2026-10-05T22:20:00.346509+00:00",
+          "evidence_sha256": "cb97f7f71bf2ad6dd08f6550cfa1e5e6c223c367f9bfd9297436c5ba73eee8e1",
+          "source_id": "yesparfumeri",
+          "checkout_verified": false
+        }
+      }
+    ],
+    "offers": [
+      {
+        "price_try": 10900.0,
+        "currency": "TRY",
+        "purchase_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum",
+        "seller_name": "yesparfumeri.com",
+        "source_product_name": "Issey Miyake A Drop D'Issey EDP 50 ml Kadın Parfüm",
+        "stock_status": "unknown",
+        "volume_ml": 50.0,
+        "price_source": "main_product_meta",
+        "match_confidence": 0.95,
+        "checked_at": "2026-10-05T22:19:54.134008+00:00",
+        "evidence_sha256": "7b749a993d584e52004d481a862988a319dfeb9c497ba168a57232e42ed84cd4",
+        "source_id": "yesparfumeri",
+        "checkout_verified": false
+      },
+      {
+        "price_try": 11500.0,
+        "currency": "TRY",
+        "purchase_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-90-ml-kadin-parfum",
+        "seller_name": "yesparfumeri.com",
+        "source_product_name": "Issey Miyake A Drop D'Issey EDP 90 ml Kadın Parfüm",
+        "stock_status": "unknown",
+        "volume_ml": 90.0,
+        "price_source": "main_product_meta",
+        "match_confidence": 0.95,
+        "checked_at": "2026-10-05T22:20:00.346509+00:00",
+        "evidence_sha256": "cb97f7f71bf2ad6dd08f6550cfa1e5e6c223c367f9bfd9297436c5ba73eee8e1",
+        "source_id": "yesparfumeri",
+        "checkout_verified": false
+      }
+    ],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:20:00.857704+00:00",
+    "best_offer": {
+      "price_try": 10900.0,
+      "currency": "TRY",
+      "purchase_url": "https://yesparfumeri.com/products/issey-miyake-a-drop-d-issey-edp-50-ml-kadin-parfum",
+      "seller_name": "yesparfumeri.com",
+      "source_product_name": "Issey Miyake A Drop D'Issey EDP 50 ml Kadın Parfüm",
+      "stock_status": "unknown",
+      "volume_ml": 50.0,
+      "price_source": "main_product_meta",
+      "match_confidence": 0.95,
+      "checked_at": "2026-10-05T22:19:54.134008+00:00",
+      "evidence_sha256": "7b749a993d584e52004d481a862988a319dfeb9c497ba168a57232e42ed84cd4",
+      "source_id": "yesparfumeri",
+      "checkout_verified": false
+    }
+  },
+  {
+    "product_id": "90677",
+    "brand_name": "Lalique",
+    "product_name": "Amethyst",
+    "status": "verified_offer",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Lalique",
+        "query_name": "Amethyst",
+        "query_tokens": [
+          "amethyst"
+        ],
+        "matched_urls": [
+          "https://www.perfumepoint.com.tr/lalique-amethyst-eclat-edp-100-ml",
+          "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml",
+          "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml-body-lotion-150-ml"
+        ],
+        "match_count": 3
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Lalique",
+        "query_name": "Amethyst",
+        "query_tokens": [
+          "amethyst"
+        ],
+        "matched_urls": [
+          "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum"
+        ],
+        "match_count": 1
+      }
+    ],
+    "candidate_checks": [
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/lalique-amethyst-eclat-edp-100-ml",
+        "catalogue_titles": [
+          "Lalique Amethyst Eclat Edp 100 Ml Kadın Parfüm"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/lalique-amethyst-eclat-edp-100-ml",
+          "final_url": "https://www.perfumepoint.com.tr/lalique-amethyst-eclat-edp-100-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:06.166129+00:00",
+          "observed_at": "2026-10-05T22:20:07.113607+00:00",
+          "seconds": 6.012,
+          "decoded_utf8_bytes": 160372,
+          "decoded_sha256": "e633314c1c34f9cf390317ef336d6a59be160fa911b6c8c15deee9867d9bc0b0",
+          "snapshot": "responses/e633314c1c34f9cf390317ef336d6a59be160fa911b6c8c15deee9867d9bc0b0.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml",
+        "catalogue_titles": [
+          "Lalique Amethyst Edp 100 Ml Kadın Parfüm"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml",
+          "final_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:12.452543+00:00",
+          "observed_at": "2026-10-05T22:20:12.797472+00:00",
+          "seconds": 5.634,
+          "decoded_utf8_bytes": 159959,
+          "decoded_sha256": "f94a29e6ce617350e6f2f1d40f16d41a7f07ad4b862bbc49490d225d6ec81ba8",
+          "snapshot": "responses/f94a29e6ce617350e6f2f1d40f16d41a7f07ad4b862bbc49490d225d6ec81ba8.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 3162.5,
+          "currency": "TRY",
+          "purchase_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml",
+          "seller_name": "perfumepoint.com.tr",
+          "source_product_name": "Lalique Amethyst Edp 100 Ml Kadın Parfüm",
+          "stock_status": "out_of_stock",
+          "volume_ml": 100.0,
+          "price_source": "product_jsonld",
+          "match_confidence": 0.98,
+          "checked_at": "2026-10-05T22:20:12.452543+00:00",
+          "evidence_sha256": "f94a29e6ce617350e6f2f1d40f16d41a7f07ad4b862bbc49490d225d6ec81ba8",
+          "source_id": "perfumepoint",
+          "checkout_verified": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml-body-lotion-150-ml",
+        "catalogue_titles": [
+          "Lalique Amethyst Edp 100 Ml + Body Lotion 150 Ml"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml-body-lotion-150-ml",
+          "final_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml-body-lotion-150-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:18.583320+00:00",
+          "observed_at": "2026-10-05T22:20:18.916975+00:00",
+          "seconds": 6.055,
+          "decoded_utf8_bytes": 156435,
+          "decoded_sha256": "a501b6434bb54a4ae4c60a4042ab3845c09d726b32a100646caf9976dfee7c3b",
+          "snapshot": "responses/a501b6434bb54a4ae4c60a4042ab3845c09d726b32a100646caf9976dfee7c3b.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "yesparfumeri",
+        "discovered_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+        "catalogue_titles": [
+          "Lalique Amethyst EDP 100 ml Kadın Parfüm",
+          "Lalique Amethyst EDP 100 ml Kadın Parfüm - Yes Parfümeri"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+          "final_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:24.041074+00:00",
+          "observed_at": "2026-10-05T22:20:24.639349+00:00",
+          "seconds": 5.674,
+          "decoded_utf8_bytes": 440624,
+          "decoded_sha256": "e152a09688e8d446d857e992fe0295e4cc527c41a4ed4ba0a3d0b43e0c483d97",
+          "snapshot": "responses/e152a09688e8d446d857e992fe0295e4cc527c41a4ed4ba0a3d0b43e0c483d97.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 3450.0,
+          "currency": "TRY",
+          "purchase_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+          "seller_name": "yesparfumeri.com",
+          "source_product_name": "Lalique Amethyst EDP 100 ml Kadın Parfüm",
+          "stock_status": "unknown",
+          "volume_ml": 100.0,
+          "price_source": "main_product_meta",
+          "match_confidence": 0.95,
+          "checked_at": "2026-10-05T22:20:24.041074+00:00",
+          "evidence_sha256": "e152a09688e8d446d857e992fe0295e4cc527c41a4ed4ba0a3d0b43e0c483d97",
+          "source_id": "yesparfumeri",
+          "checkout_verified": false
+        }
+      }
+    ],
+    "offers": [
+      {
+        "price_try": 3162.5,
+        "currency": "TRY",
+        "purchase_url": "https://www.perfumepoint.com.tr/lalique-amethyst-edp-100-ml",
+        "seller_name": "perfumepoint.com.tr",
+        "source_product_name": "Lalique Amethyst Edp 100 Ml Kadın Parfüm",
+        "stock_status": "out_of_stock",
+        "volume_ml": 100.0,
+        "price_source": "product_jsonld",
+        "match_confidence": 0.98,
+        "checked_at": "2026-10-05T22:20:12.452543+00:00",
+        "evidence_sha256": "f94a29e6ce617350e6f2f1d40f16d41a7f07ad4b862bbc49490d225d6ec81ba8",
+        "source_id": "perfumepoint",
+        "checkout_verified": false
+      },
+      {
+        "price_try": 3450.0,
+        "currency": "TRY",
+        "purchase_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+        "seller_name": "yesparfumeri.com",
+        "source_product_name": "Lalique Amethyst EDP 100 ml Kadın Parfüm",
+        "stock_status": "unknown",
+        "volume_ml": 100.0,
+        "price_source": "main_product_meta",
+        "match_confidence": 0.95,
+        "checked_at": "2026-10-05T22:20:24.041074+00:00",
+        "evidence_sha256": "e152a09688e8d446d857e992fe0295e4cc527c41a4ed4ba0a3d0b43e0c483d97",
+        "source_id": "yesparfumeri",
+        "checkout_verified": false
+      }
+    ],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:20:24.767649+00:00",
+    "best_offer": {
+      "price_try": 3450.0,
+      "currency": "TRY",
+      "purchase_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+      "seller_name": "yesparfumeri.com",
+      "source_product_name": "Lalique Amethyst EDP 100 ml Kadın Parfüm",
+      "stock_status": "unknown",
+      "volume_ml": 100.0,
+      "price_source": "main_product_meta",
+      "match_confidence": 0.95,
+      "checked_at": "2026-10-05T22:20:24.041074+00:00",
+      "evidence_sha256": "e152a09688e8d446d857e992fe0295e4cc527c41a4ed4ba0a3d0b43e0c483d97",
+      "source_id": "yesparfumeri",
+      "checkout_verified": false
+    }
+  },
+  {
+    "product_id": "97100",
+    "brand_name": "Loris",
+    "product_name": "Almamlaka",
+    "status": "no_catalog_match",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Loris",
+        "query_name": "Almamlaka",
+        "query_tokens": [
+          "almamlaka"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Loris",
+        "query_name": "Almamlaka",
+        "query_tokens": [
+          "almamlaka"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      }
+    ],
+    "candidate_checks": [],
+    "offers": [],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:20:24.970205+00:00"
+  },
+  {
+    "product_id": "100781",
+    "brand_name": "Mad Parfumeur",
+    "product_name": "1923",
+    "status": "verified_offer",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Mad Parfumeur",
+        "query_name": "1923",
+        "query_tokens": [
+          "1923"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Mad Parfumeur",
+        "query_name": "1923",
+        "query_tokens": [
+          "1923"
+        ],
+        "matched_urls": [],
+        "match_count": 0
+      },
+      {
+        "source_id": "mad",
+        "complete": true,
+        "searched_entries": 749,
+        "catalogue_sha256": "5a25dc01b23f6cba73afba66228984dd05cac7b5ad78aa2b81e22e321b195937",
+        "query_brand": "Mad Parfumeur",
+        "query_name": "1923",
+        "query_tokens": [
+          "1923"
+        ],
+        "matched_urls": [
+          "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+          "https://www.madparfum.com/urun/mad-1923-kadin-100-ml-parfum-mad-tff-1923-for-women/"
+        ],
+        "match_count": 2
+      }
+    ],
+    "candidate_checks": [
+      {
+        "source_id": "mad",
+        "discovered_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+        "catalogue_titles": [],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+          "final_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:30.025609+00:00",
+          "observed_at": "2026-10-05T22:20:31.170849+00:00",
+          "seconds": 5.959,
+          "decoded_utf8_bytes": 293799,
+          "decoded_sha256": "6d960bd698d283f482c10f14ecfee5dbcc4c0865173d9731558e6fe2b00e618e",
+          "snapshot": "responses/6d960bd698d283f482c10f14ecfee5dbcc4c0865173d9731558e6fe2b00e618e.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 1999.99,
+          "currency": "TRY",
+          "purchase_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+          "seller_name": "madparfum.com",
+          "source_product_name": "Mad 1923 Erkek 100 ml Parfüm",
+          "stock_status": "in_stock",
+          "volume_ml": 100.0,
+          "price_source": "product_jsonld",
+          "match_confidence": 0.98,
+          "checked_at": "2026-10-05T22:20:30.025609+00:00",
+          "evidence_sha256": "6d960bd698d283f482c10f14ecfee5dbcc4c0865173d9731558e6fe2b00e618e",
+          "source_id": "mad",
+          "checkout_verified": false
+        }
+      },
+      {
+        "source_id": "mad",
+        "discovered_url": "https://www.madparfum.com/urun/mad-1923-kadin-100-ml-parfum-mad-tff-1923-for-women/",
+        "catalogue_titles": [],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.madparfum.com/urun/mad-1923-kadin-100-ml-parfum-mad-tff-1923-for-women/",
+          "final_url": "https://www.madparfum.com/urun/mad-1923-kadin-100-ml-parfum-mad-tff-1923-for-women/",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:36.037002+00:00",
+          "observed_at": "2026-10-05T22:20:36.514096+00:00",
+          "seconds": 5.306,
+          "decoded_utf8_bytes": 292969,
+          "decoded_sha256": "c50c50e40c4b5b78111f19003737517049b11db35e538337c781fc0b850744c0",
+          "snapshot": "responses/c50c50e40c4b5b78111f19003737517049b11db35e538337c781fc0b850744c0.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      }
+    ],
+    "offers": [
+      {
+        "price_try": 1999.99,
+        "currency": "TRY",
+        "purchase_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+        "seller_name": "madparfum.com",
+        "source_product_name": "Mad 1923 Erkek 100 ml Parfüm",
+        "stock_status": "in_stock",
+        "volume_ml": 100.0,
+        "price_source": "product_jsonld",
+        "match_confidence": 0.98,
+        "checked_at": "2026-10-05T22:20:30.025609+00:00",
+        "evidence_sha256": "6d960bd698d283f482c10f14ecfee5dbcc4c0865173d9731558e6fe2b00e618e",
+        "source_id": "mad",
+        "checkout_verified": false
+      }
+    ],
+    "candidate_checks_limited": false,
+    "checked_at": "2026-10-05T22:20:36.538131+00:00",
+    "best_offer": {
+      "price_try": 1999.99,
+      "currency": "TRY",
+      "purchase_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+      "seller_name": "madparfum.com",
+      "source_product_name": "Mad 1923 Erkek 100 ml Parfüm",
+      "stock_status": "in_stock",
+      "volume_ml": 100.0,
+      "price_source": "product_jsonld",
+      "match_confidence": 0.98,
+      "checked_at": "2026-10-05T22:20:30.025609+00:00",
+      "evidence_sha256": "6d960bd698d283f482c10f14ecfee5dbcc4c0865173d9731558e6fe2b00e618e",
+      "source_id": "mad",
+      "checkout_verified": false
+    }
+  },
+  {
+    "product_id": "113828",
+    "brand_name": "Narciso Rodriguez",
+    "product_name": "All Of Me",
+    "status": "verified_offer",
+    "search_proven": true,
+    "scope": "named_source_product_catalogues_only",
+    "search_audits": [
+      {
+        "source_id": "perfumepoint",
+        "complete": true,
+        "searched_entries": 5991,
+        "catalogue_sha256": "285f68b35a20be8dbf25b14884972092a303b40ce528da28e258ad77863d1e6e",
+        "query_brand": "Narciso Rodriguez",
+        "query_name": "All Of Me",
+        "query_tokens": [
+          "all",
+          "me",
+          "of"
+        ],
+        "matched_urls": [
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml-edp-10-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-bl-50-ml-edp-10-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml-23000",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-50-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-90-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-intense-edp-50-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-intense-edp-90-ml",
+          "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-shower-gel-200-ml"
+        ],
+        "match_count": 11
+      },
+      {
+        "source_id": "yesparfumeri",
+        "complete": true,
+        "searched_entries": 3918,
+        "catalogue_sha256": "401a28844e55f7b957ce2cbc426c4733476f4ba8b44857f1b32a431cc726ea0b",
+        "query_brand": "Narciso Rodriguez",
+        "query_name": "All Of Me",
+        "query_tokens": [
+          "all",
+          "me",
+          "of"
+        ],
+        "matched_urls": [
+          "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-50-ml-kadin-parfum",
+          "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-90-ml-kadin-parfum"
+        ],
+        "match_count": 2
+      }
+    ],
+    "candidate_checks": [
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Edp 50 Ml Kadın Parfüm"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:42.003219+00:00",
+          "observed_at": "2026-10-05T22:20:42.588809+00:00",
+          "seconds": 5.811,
+          "decoded_utf8_bytes": 159270,
+          "decoded_sha256": "a073f433c7cec776f8858e9b071b8e8128d8a95897fb2c6dc31fcc2905fb58c8",
+          "snapshot": "responses/a073f433c7cec776f8858e9b071b8e8128d8a95897fb2c6dc31fcc2905fb58c8.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 3857.5,
+          "currency": "TRY",
+          "purchase_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+          "seller_name": "perfumepoint.com.tr",
+          "source_product_name": "Narciso Rodriguez All Of Me Edp 50 Ml Kadın Parfüm",
+          "stock_status": "in_stock",
+          "volume_ml": 50.0,
+          "price_source": "product_jsonld",
+          "match_confidence": 0.98,
+          "checked_at": "2026-10-05T22:20:42.003219+00:00",
+          "evidence_sha256": "a073f433c7cec776f8858e9b071b8e8128d8a95897fb2c6dc31fcc2905fb58c8",
+          "source_id": "perfumepoint",
+          "checkout_verified": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml-edp-10-ml",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Edp 50 Ml + Edp 10 Ml"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml-edp-10-ml",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml-edp-10-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:48.298665+00:00",
+          "observed_at": "2026-10-05T22:20:48.617839+00:00",
+          "seconds": 5.965,
+          "decoded_utf8_bytes": 158851,
+          "decoded_sha256": "5092a128183d1332ec68f27128a765d6766c9644fe16d90ee134a4ae20c80369",
+          "snapshot": "responses/5092a128183d1332ec68f27128a765d6766c9644fe16d90ee134a4ae20c80369.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Edp 90 Ml Kadın Parfüm"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:20:54.560829+00:00",
+          "observed_at": "2026-10-05T22:20:54.854065+00:00",
+          "seconds": 6.163,
+          "decoded_utf8_bytes": 158473,
+          "decoded_sha256": "e9b609363871338b915867ed4a1e2f501c192e9e30ecf61c96660e9a14239194",
+          "snapshot": "responses/e9b609363871338b915867ed4a1e2f501c192e9e30ecf61c96660e9a14239194.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 5007.5,
+          "currency": "TRY",
+          "purchase_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml",
+          "seller_name": "perfumepoint.com.tr",
+          "source_product_name": "Narciso Rodriguez All Of Me Edp 90 Ml Kadın Parfüm",
+          "stock_status": "in_stock",
+          "volume_ml": 90.0,
+          "price_source": "product_jsonld",
+          "match_confidence": 0.98,
+          "checked_at": "2026-10-05T22:20:54.560829+00:00",
+          "evidence_sha256": "e9b609363871338b915867ed4a1e2f501c192e9e30ecf61c96660e9a14239194",
+          "source_id": "perfumepoint",
+          "checkout_verified": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-bl-50-ml-edp-10-ml",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Edp 90 Ml + BL 50 Ml + Edp 10 Ml"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-bl-50-ml-edp-10-ml",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-bl-50-ml-edp-10-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:21:00.810353+00:00",
+          "observed_at": "2026-10-05T22:21:01.106462+00:00",
+          "seconds": 6.189,
+          "decoded_utf8_bytes": 162525,
+          "decoded_sha256": "1104e946c75eb9ef756f8e1cdc8320703166021a1358035a90d26b6995c43456",
+          "snapshot": "responses/1104e946c75eb9ef756f8e1cdc8320703166021a1358035a90d26b6995c43456.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Edp 90 Ml + Body Lotion 50 Ml + Edp 10 Ml"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:21:06.839412+00:00",
+          "observed_at": "2026-10-05T22:21:07.104739+00:00",
+          "seconds": 5.911,
+          "decoded_utf8_bytes": 159135,
+          "decoded_sha256": "050dbdda9d232112bd71fc169a5d8bd9411188698b63f4b9b52cfaac4e91e281",
+          "snapshot": "responses/050dbdda9d232112bd71fc169a5d8bd9411188698b63f4b9b52cfaac4e91e281.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml-23000",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Edp 90 Ml + Body Lotion 50 Ml + Edp 10 Ml"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml-23000",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml-body-lotion-50-ml-edp-10-ml-23000",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:21:13.054256+00:00",
+          "observed_at": "2026-10-05T22:21:13.319680+00:00",
+          "seconds": 6.166,
+          "decoded_utf8_bytes": 159222,
+          "decoded_sha256": "15d607b8324a97beb655f40411f0c7f4067dbee202a236fd560feb7823857595",
+          "snapshot": "responses/15d607b8324a97beb655f40411f0c7f4067dbee202a236fd560feb7823857595.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-50-ml",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Floral Edp 50 Ml"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-50-ml",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-50-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:21:19.325258+00:00",
+          "observed_at": "2026-10-05T22:21:19.590188+00:00",
+          "seconds": 6.221,
+          "decoded_utf8_bytes": 159457,
+          "decoded_sha256": "299ee4a296fe6e3d129f2ef319a3531efd87d0bbca7f2418836e372852d0bdb3",
+          "snapshot": "responses/299ee4a296fe6e3d129f2ef319a3531efd87d0bbca7f2418836e372852d0bdb3.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "perfumepoint",
+        "discovered_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-90-ml",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me Floral Edp 90 Ml"
+        ],
+        "verdict": "identity_or_price_unproven",
+        "page_evidence": {
+          "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-90-ml",
+          "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-floral-edp-90-ml",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:21:25.575994+00:00",
+          "observed_at": "2026-10-05T22:21:25.830638+00:00",
+          "seconds": 6.191,
+          "decoded_utf8_bytes": 159449,
+          "decoded_sha256": "a046d240d61ecdde52712a9a545b12bd898bd24de73c0dab5f0d9917902e45df",
+          "snapshot": "responses/a046d240d61ecdde52712a9a545b12bd898bd24de73c0dab5f0d9917902e45df.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        }
+      },
+      {
+        "source_id": "yesparfumeri",
+        "discovered_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-50-ml-kadin-parfum",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me EDP 50 ml Kadın Parfüm",
+          "Narciso Rodriguez All Of Me EDP 50 ml Kadın Parfüm - Yes Parfümeri"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-50-ml-kadin-parfum",
+          "final_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-50-ml-kadin-parfum",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:21:30.391416+00:00",
+          "observed_at": "2026-10-05T22:21:30.763580+00:00",
+          "seconds": 4.844,
+          "decoded_utf8_bytes": 439460,
+          "decoded_sha256": "87b2d2e2a2a1d62a8e1210fc1b8eba64ad8b2d7448df5055babbb7582d1a5cfb",
+          "snapshot": "responses/87b2d2e2a2a1d62a8e1210fc1b8eba64ad8b2d7448df5055babbb7582d1a5cfb.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 3150.0,
+          "currency": "TRY",
+          "purchase_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-50-ml-kadin-parfum",
+          "seller_name": "yesparfumeri.com",
+          "source_product_name": "Narciso Rodriguez All Of Me EDP 50 ml Kadın Parfüm",
+          "stock_status": "unknown",
+          "volume_ml": 50.0,
+          "price_source": "main_product_meta",
+          "match_confidence": 0.95,
+          "checked_at": "2026-10-05T22:21:30.391416+00:00",
+          "evidence_sha256": "87b2d2e2a2a1d62a8e1210fc1b8eba64ad8b2d7448df5055babbb7582d1a5cfb",
+          "source_id": "yesparfumeri",
+          "checkout_verified": false
+        }
+      },
+      {
+        "source_id": "yesparfumeri",
+        "discovered_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-90-ml-kadin-parfum",
+        "catalogue_titles": [
+          "Narciso Rodriguez All Of Me EDP 90 ml Kadın Parfüm",
+          "Narciso Rodriguez All Of Me EDP 90 ml Kadın Parfüm - Yes Parfümeri"
+        ],
+        "verdict": "verified",
+        "page_evidence": {
+          "requested_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-90-ml-kadin-parfum",
+          "final_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-90-ml-kadin-parfum",
+          "http_status": 200,
+          "error": "",
+          "fetched_at": "2026-10-05T22:21:36.543909+00:00",
+          "observed_at": "2026-10-05T22:21:36.880774+00:00",
+          "seconds": 6.028,
+          "decoded_utf8_bytes": 439475,
+          "decoded_sha256": "8371abc1f1d0ab44045dc9cfc36594cbfef0b4141fde8301c99600fdc96c10e0",
+          "snapshot": "responses/8371abc1f1d0ab44045dc9cfc36594cbfef0b4141fde8301c99600fdc96c10e0.txt.gz",
+          "retry_at": 0,
+          "from_cache": false,
+          "body_limited": false
+        },
+        "offer": {
+          "price_try": 3590.0,
+          "currency": "TRY",
+          "purchase_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-90-ml-kadin-parfum",
+          "seller_name": "yesparfumeri.com",
+          "source_product_name": "Narciso Rodriguez All Of Me EDP 90 ml Kadın Parfüm",
+          "stock_status": "unknown",
+          "volume_ml": 90.0,
+          "price_source": "main_product_meta",
+          "match_confidence": 0.95,
+          "checked_at": "2026-10-05T22:21:36.543909+00:00",
+          "evidence_sha256": "8371abc1f1d0ab44045dc9cfc36594cbfef0b4141fde8301c99600fdc96c10e0",
+          "source_id": "yesparfumeri",
+          "checkout_verified": false
+        }
+      }
+    ],
+    "offers": [
+      {
+        "price_try": 3857.5,
+        "currency": "TRY",
+        "purchase_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+        "seller_name": "perfumepoint.com.tr",
+        "source_product_name": "Narciso Rodriguez All Of Me Edp 50 Ml Kadın Parfüm",
+        "stock_status": "in_stock",
+        "volume_ml": 50.0,
+        "price_source": "product_jsonld",
+        "match_confidence": 0.98,
+        "checked_at": "2026-10-05T22:20:42.003219+00:00",
+        "evidence_sha256": "a073f433c7cec776f8858e9b071b8e8128d8a95897fb2c6dc31fcc2905fb58c8",
+        "source_id": "perfumepoint",
+        "checkout_verified": false
+      },
+      {
+        "price_try": 5007.5,
+        "currency": "TRY",
+        "purchase_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-90-ml",
+        "seller_name": "perfumepoint.com.tr",
+        "source_product_name": "Narciso Rodriguez All Of Me Edp 90 Ml Kadın Parfüm",
+        "stock_status": "in_stock",
+        "volume_ml": 90.0,
+        "price_source": "product_jsonld",
+        "match_confidence": 0.98,
+        "checked_at": "2026-10-05T22:20:54.560829+00:00",
+        "evidence_sha256": "e9b609363871338b915867ed4a1e2f501c192e9e30ecf61c96660e9a14239194",
+        "source_id": "perfumepoint",
+        "checkout_verified": false
+      },
+      {
+        "price_try": 3150.0,
+        "currency": "TRY",
+        "purchase_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-50-ml-kadin-parfum",
+        "seller_name": "yesparfumeri.com",
+        "source_product_name": "Narciso Rodriguez All Of Me EDP 50 ml Kadın Parfüm",
+        "stock_status": "unknown",
+        "volume_ml": 50.0,
+        "price_source": "main_product_meta",
+        "match_confidence": 0.95,
+        "checked_at": "2026-10-05T22:21:30.391416+00:00",
+        "evidence_sha256": "87b2d2e2a2a1d62a8e1210fc1b8eba64ad8b2d7448df5055babbb7582d1a5cfb",
+        "source_id": "yesparfumeri",
+        "checkout_verified": false
+      },
+      {
+        "price_try": 3590.0,
+        "currency": "TRY",
+        "purchase_url": "https://yesparfumeri.com/products/narciso-rodriguez-all-of-me-edp-90-ml-kadin-parfum",
+        "seller_name": "yesparfumeri.com",
+        "source_product_name": "Narciso Rodriguez All Of Me EDP 90 ml Kadın Parfüm",
+        "stock_status": "unknown",
+        "volume_ml": 90.0,
+        "price_source": "main_product_meta",
+        "match_confidence": 0.95,
+        "checked_at": "2026-10-05T22:21:36.543909+00:00",
+        "evidence_sha256": "8371abc1f1d0ab44045dc9cfc36594cbfef0b4141fde8301c99600fdc96c10e0",
+        "source_id": "yesparfumeri",
+        "checkout_verified": false
+      }
+    ],
+    "candidate_checks_limited": true,
+    "checked_at": "2026-10-05T22:21:36.969414+00:00",
+    "best_offer": {
+      "price_try": 3857.5,
+      "currency": "TRY",
+      "purchase_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+      "seller_name": "perfumepoint.com.tr",
+      "source_product_name": "Narciso Rodriguez All Of Me Edp 50 Ml Kadın Parfüm",
+      "stock_status": "in_stock",
+      "volume_ml": 50.0,
+      "price_source": "product_jsonld",
+      "match_confidence": 0.98,
+      "checked_at": "2026-10-05T22:20:42.003219+00:00",
+      "evidence_sha256": "a073f433c7cec776f8858e9b071b8e8128d8a95897fb2c6dc31fcc2905fb58c8",
+      "source_id": "perfumepoint",
+      "checkout_verified": false
+    }
+  }
+]

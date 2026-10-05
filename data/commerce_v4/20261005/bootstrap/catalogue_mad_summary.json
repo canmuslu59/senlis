@@ -1,0 +1,47 @@
+{
+  "source_id": "mad",
+  "root_url": "https://www.madparfum.com/sitemap.xml",
+  "brand": "Mad Parfumeur",
+  "root_ok": true,
+  "expected_maps": 1,
+  "ok_maps": 1,
+  "entry_count": 749,
+  "errors": [],
+  "map_evidence": [
+    {
+      "requested_url": "https://www.madparfum.com/sitemap.xml",
+      "final_url": "https://www.madparfum.com/sitemap.xml",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:13:36.263368+00:00",
+      "observed_at": "2026-10-05T22:13:37.266343+00:00",
+      "seconds": 6.243,
+      "decoded_utf8_bytes": 636,
+      "decoded_sha256": "f6e147638a2c0bf0d18c1d109cb580bb2dc2b32c9016302c8debdfe274bc5561",
+      "snapshot": "responses/f6e147638a2c0bf0d18c1d109cb580bb2dc2b32c9016302c8debdfe274bc5561.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    {
+      "requested_url": "https://www.madparfum.com/sitemap/products-1",
+      "final_url": "https://www.madparfum.com/sitemap/products-1",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-05T22:13:42.640120+00:00",
+      "observed_at": "2026-10-05T22:13:42.930756+00:00",
+      "seconds": 5.664,
+      "decoded_utf8_bytes": 139597,
+      "decoded_sha256": "7d1c7ea09c15dc5aa4db367f69427e3c3e77e8f5661b86388f34e5555d8b2c35",
+      "snapshot": "responses/7d1c7ea09c15dc5aa4db367f69427e3c3e77e8f5661b86388f34e5555d8b2c35.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    }
+  ],
+  "title_pages_expected": 0,
+  "title_pages_ok": 0,
+  "catalogue_sha256": "5a25dc01b23f6cba73afba66228984dd05cac7b5ad78aa2b81e22e321b195937",
+  "catalogue_file": "catalogues/mad.jsonl.gz",
+  "complete": true
+}
