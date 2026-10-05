@@ -34,5 +34,5 @@ Interfaces: CatalogueIndex(source, report, entries).search(row); build_plan(rows
 Files: .github/workflows/commerce-full-v4.yml, tools/commerce_full_v4_trigger.txt, docs/COMMERCE_V4_FULL_RUNBOOK.md.
 - [x] Tests enforce prepare gate, max-parallel 1, 24 slots, timeouts, always checkpoint/artifact handling and old queue paused.
 - [x] One independent branch review; important findings get regression tests and one fix pass.
-- [ ] Push code to feature branch, create separate data branch, trigger workflow; confirm live gate and queue start.
-- [ ] Record run/commit and checkpoint state with measured ETA.
+- [x] Push code to feature branch, create separate data branch, trigger workflow; confirm live gate and queue start.
+- [x] Record run/commit and checkpoint state with measured ETA.

@@ -1,0 +1,59 @@
+{
+  "campaign": "commerce-v4-20261005",
+  "scope_total": 174259,
+  "scope": "five_named_source_catalogues",
+  "code_commit": "dcd5720087962bc0aaa540dbad3fcf223403e7e9",
+  "run_id": 37380948759,
+  "run_url": "https://github.com/canmuslu59/senlis/actions/runs/37380948759",
+  "started_at_utc": "2026-10-05T22:12:26Z",
+  "started_at_istanbul": "2026-10-06T01:12:26+03:00",
+  "initial_status": "prepare_live_gate_running",
+  "github_regression_tests": 59,
+  "worker_slots": 24,
+  "max_parallel": 1,
+  "worker_seconds": 5400,
+  "minimum_same_host_spacing_seconds": 6,
+  "max_page_attempts": 3,
+  "data_branch": "data/commerce-v4-20261005",
+  "data_path": "data/commerce_v4/20261005",
+  "estimated_hours": {
+    "low": 12,
+    "high": 18,
+    "basis": "6867 deduplicated candidate pages from prior catalogue replay; live queue may change"
+  },
+  "review_important_findings_fixed": [
+    "stop queue if durable handoff fails",
+    "minimum spacing enforced against actual prior host start"
+  ],
+  "deferred_minor": "bootstrap pages may be fetched again by the full queue; worker-to-worker completed pages are reused",
+  "status": "scan_running",
+  "prepare": "success",
+  "live_gate": {
+    "products_searched": 10,
+    "verified_price_products": 6,
+    "negative_controls_passed": 2,
+    "http_requests": 85,
+    "http_successes": 85
+  },
+  "initial_durable_checkpoint": {
+    "proven_searches": 174259,
+    "candidate_products": 4697,
+    "total_pages": 6867,
+    "updated_at_utc": "2026-10-05T22:22:05.677214+00:00"
+  },
+  "queue": {
+    "active": 1,
+    "queued": 23,
+    "active_job_id": 112006111579
+  },
+  "watch": {
+    "title": "SENLIS tarama gözcüsü",
+    "enabled": true,
+    "timezone": "Europe/Istanbul",
+    "first_check": "2026-10-06T02:00:00+03:00",
+    "interval": "hourly",
+    "maximum_checks": 36,
+    "notifications": "restart, actionable fault, completion only",
+    "recovery": "retry transient failures only when durable campaign state is intact"
+  }
+}
