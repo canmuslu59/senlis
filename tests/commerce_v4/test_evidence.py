@@ -2,6 +2,7 @@ import importlib.util
 import json
 import sys
 import unittest
+from unittest.mock import patch,Mock
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
 
@@ -61,5 +62,29 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(self.api.search_proven([]))
         self.assertFalse(self.api.search_proven([{'complete':False,'searched_entries':200,'catalogue_sha256':'abc'}]))
         self.assertTrue(self.api.search_proven([{'complete':True,'searched_entries':200,'catalogue_sha256':'abc'}]))
+
+    def test_blocked_responses_preserve_evidence_without_becoming_success(self):
+        from commerce_v3_http import PoliteClient
+        for status,body in [(403,b'Forbidden by store'),(429,b'Rate limit exceeded'),(200,b'<h1>Verify you are human</h1>')]:
+            with self.subTest(status=status):
+                client=PoliteClient(0,1,retain_error_bodies=True)
+                response=Mock(status_code=status,headers={'Content-Type':'text/html'},encoding='utf-8')
+                response.iter_content.return_value=iter([body])
+                context=Mock();context.__enter__=Mock(return_value=response);context.__exit__=Mock(return_value=False)
+                session=Mock();session.get.return_value=context
+                with patch.object(client,'_public_dns',return_value=True),patch.object(client,'_pace',return_value=True),patch.object(client,'_session',return_value=session):
+                    fetched=client.fetch('https://shop.example/product')
+                self.assertFalse(fetched.ok);self.assertEqual(fetched.text,body.decode())
+
+    def test_error_evidence_is_bounded_and_marked_when_truncated(self):
+        from commerce_v3_http import PoliteClient
+        client=PoliteClient(0,1,retain_error_bodies=True)
+        response=Mock(status_code=403,headers={},encoding='utf-8')
+        response.iter_content.return_value=iter([b'x'*150000])
+        context=Mock();context.__enter__=Mock(return_value=response);context.__exit__=Mock(return_value=False)
+        session=Mock();session.get.return_value=context
+        with patch.object(client,'_public_dns',return_value=True),patch.object(client,'_pace',return_value=True),patch.object(client,'_session',return_value=session):
+            fetched=client.fetch('https://shop.example/product')
+        self.assertEqual(len(fetched.text),131072);self.assertTrue(fetched.body_limited)
 
 if __name__=='__main__':unittest.main()

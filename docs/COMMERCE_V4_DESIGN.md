@@ -11,3 +11,9 @@ Her kaynak kök XML'i ve tüm ürün alt haritaları başarıyla okunmadan tamam
 Fiyat kabulü: canlı ürün kimliği, form/konsantrasyon/cinsiyet, seçilen hacim ve TRY fiyatı aynı sayfada doğrulanır. Muadil ve dekant reddedilir; belirsiz hacim fiyat doğrulamasını engeller. Önceki hatalı iki gerçek sayfa negatif kontrol olarak yeniden okunur. Kayıtlar ana veritabanına yazılmaz.
 
 Çalışma: tek GitHub işi, en fazla 25 dakika, 10 hedef + 2 negatif kontrol; aynı siteye en az 5 saniye bekleme; 403/429 ve engellerde mevcut artan bekleme kuralları. Sadece bu pilot çalışır, sonraki tam katalog kuyruğu yoktur. İlk pilot tüm kaynakları/aramaları kanıtlayamazsa başarısız raporlanır ve artifacts yine yüklenir. Büyük katalog için süre tahmini verilmeden bu sonuçlar değerlendirilir.
+
+## İnceleme ve uygulama kaydı
+
+45 başlangıç testi geçti. Tek bağımsız kod incelemesinde hata/engel yanıtlarının gövdelerinin saklanmaması bulundu. Bu hata iki regresyon testi önce başarısız, sonra başarılı olacak şekilde düzeltildi. Toplam 47 test geçti. Hata yanıtları sınırlı boyutta korunur, sınır aşılırsa `body_limited` alanı belirtilir; engel/hata başarısızlığının sınıflandırması değişmez.
+
+İlk tanısal GitHub pilotu: https://github.com/canmuslu59/senlis/actions/runs/37344960846 — commit 53d38d878e1a05d957bed0c6db76187313180aad. Bu koşu hata gövdesi iyileştirmesinden önce başlatılmıştır. Başarılı yanıtların ham kopyaları vardır; hata gövdesi iyileştirmesi sonraki koşular için ayrıca kaydedilir. Tam katalog taraması veya birleştirme planlanmamıştır.

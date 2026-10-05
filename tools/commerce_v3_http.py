@@ -75,6 +75,7 @@ class Fetch:
     retry_at: float = 0
     location: str = ''
     from_cache: bool = False
+    body_limited: bool = False
 
     @property
     def ok(self):
@@ -82,7 +83,7 @@ class Fetch:
 
 
 class PoliteClient:
-    def __init__(self, lane=0, lanes=4, slot=2.5, deadline=None):
+    def __init__(self, lane=0, lanes=4, slot=2.5, deadline=None, retain_error_bodies=False):
         if not 0 <= lane < lanes or lanes < 1 or slot < 2.5:
             raise ValueError('invalid polite lane configuration')
         self.lane, self.lanes, self.slot = lane, lanes, slot
@@ -92,6 +93,20 @@ class PoliteClient:
         self.cache = OrderedDict()
         self.stats = Counter()
         self.local = threading.local()
+        self.retain_error_bodies = retain_error_bodies
+
+    def _error_body(self, response):
+        if not self.retain_error_bodies:return '',False
+        raw=bytearray();limited=False;started=time.monotonic()
+        try:
+            for chunk in response.iter_content(16384):
+                remaining=131072-len(raw)
+                raw.extend(chunk[:remaining])
+                if len(chunk)>remaining or time.monotonic()-started>5:
+                    limited=True;break
+        except requests.RequestException:limited=True
+        encoding=response.encoding if response.encoding and response.encoding.lower()!='iso-8859-1' else 'utf-8'
+        return raw.decode(encoding,errors='replace'),limited
 
     def _session(self):
         if not hasattr(self.local, 'session'):
@@ -180,9 +195,11 @@ class PoliteClient:
                     if r.status_code in (403, 429) or r.status_code >= 500:
                         until = self._cooldown(h, r, challenge=r.status_code == 403)
                         with self.guard: self.stats['http:' + str(r.status_code)] += 1
-                        return Fetch(url, r.status_code, error='http_backoff', fetched_at=started, retry_at=until)
+                        body,limited=self._error_body(r)
+                        return Fetch(url, r.status_code, text=body, error='http_backoff', fetched_at=started, retry_at=until,body_limited=limited)
                     if r.status_code != 200:
-                        return Fetch(url, r.status_code, error='http_error', fetched_at=started)
+                        body,limited=self._error_body(r)
+                        return Fetch(url, r.status_code, text=body,error='http_error', fetched_at=started,body_limited=limited)
                     content_type = r.headers.get('Content-Type', '').lower()
                     if content_type and not any(t in content_type for t in ('text/', 'json', 'xml', 'javascript')):
                         return Fetch(url, r.status_code, error='not_text', fetched_at=started)
@@ -197,7 +214,9 @@ class PoliteClient:
                     text = raw.decode(encoding, errors='replace')
                     if is_challenge(text):
                         until = self._cooldown(h, r, challenge=True)
-                        return Fetch(url, r.status_code, error='challenge', fetched_at=started, retry_at=until)
+                        body=text[:131072] if self.retain_error_bodies else ''
+                        return Fetch(url, r.status_code, text=body,error='challenge', fetched_at=started, retry_at=until,
+                                     body_limited=self.retain_error_bodies and len(text)>131072)
                     result = Fetch(url, 200, text, fetched_at=started)
                     with self.guard:
                         self.failures[h] = 0

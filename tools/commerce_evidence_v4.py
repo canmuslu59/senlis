@@ -110,7 +110,8 @@ class Evidence:
         event={'requested_url':url,'final_url':r.url,'http_status':r.status,'error':r.error,
                'fetched_at':datetime.fromtimestamp(r.fetched_at,timezone.utc).isoformat() if r.fetched_at else None,
                'observed_at':utc(),'seconds':round(time.monotonic()-started,3),'decoded_utf8_bytes':len(raw),
-               'decoded_sha256':sha,'snapshot':snapshot,'retry_at':r.retry_at,'from_cache':r.from_cache}
+               'decoded_sha256':sha,'snapshot':snapshot,'retry_at':r.retry_at,'from_cache':r.from_cache,
+               'body_limited':r.body_limited}
         self.requests.append(event)
         with (self.root/'http_requests.jsonl').open('a',encoding='utf-8') as f:f.write(json.dumps(event,ensure_ascii=False)+'\n')
         return r,event
@@ -213,7 +214,7 @@ def discover(row,catalogues,client,evidence):
 
 def run(args):
     start=time.time();evidence=Evidence(args.output)
-    client=PoliteClient(0,1,slot=6,deadline=start+args.seconds-60)
+    client=PoliteClient(0,1,slot=6,deadline=start+args.seconds-60,retain_error_bodies=True)
     definitions=json.loads(Path('data/commerce_v3_seeds.json').read_text())
     ids=set(definitions['canary_ids']);rows=[]
     for r in load_rows():
