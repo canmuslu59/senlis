@@ -90,6 +90,7 @@ class PoliteClient:
         self.deadline = deadline or time.time() + 18000
         self.guard = threading.RLock()
         self.locks, self.cooldowns, self.failures, self.dns = {}, {}, {}, {}
+        self.last_starts = {}
         self.cache = OrderedDict()
         self.stats = Counter()
         self.local = threading.local()
@@ -158,11 +159,13 @@ class PoliteClient:
         while True:
             now = time.time()
             due = next_slot(now, lane, self.lanes, self.slot)
+            due = max(due, self.last_starts.get(h, -self.slot) + self.slot)
             if due + 0.4 >= self.deadline:
                 return False
             time.sleep(max(0, due - now) + random.uniform(0, 0.4))
             # Do not send late in a neighbouring lane's slot after scheduler delays.
             if time.time() <= due + 0.45:
+                self.last_starts[h] = time.time()
                 return True
 
     def _one(self, url):
@@ -185,6 +188,7 @@ class PoliteClient:
             if not self._pace(h):
                 return Fetch(url, error='deadline')
             started = time.time()
+            self.last_starts[h] = started
             try:
                 with self.guard:
                     self.stats['requests'] += 1

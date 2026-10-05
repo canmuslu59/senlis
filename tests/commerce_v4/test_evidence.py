@@ -58,6 +58,29 @@ class EvidenceTests(unittest.TestCase):
         offer,reason=self.api.verify_listing(self.page(),'https://www.perfumepoint.com.tr/amethyst',self.row)
         self.assertEqual(reason,'verified');self.assertEqual((offer['price_try'],offer['volume_ml']),(3000,100))
 
+    def test_caudalie_category_prefix_preserves_primary_product_identity(self):
+        row={'brand_name':'Caudalie','product_name':'Ange des Vignes','concentration':'EDP'}
+        product={'@type':'Product','name':'Ange des Vignes Parfüm','category':'Aromalı Parfüm & Parfümler','brand':{'name':'Caudalie'},'offers':{'@type':'Offer','price':'1650','priceCurrency':'TRY'}}
+        raw='<h1>Aromalı Parfüm & Parfümler Ange des Vignes Parfüm</h1><p class="selected">50mL</p><div class="product-description">Ange des Vignes ilk Eau de Parfum kokusudur.</div><script type="application/ld+json">'+json.dumps(product)+'</script>'
+        offer,reason=self.api.verify_listing(raw,'https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html',row)
+        self.assertEqual(reason,'verified');self.assertEqual((offer['price_try'],offer['volume_ml']),(1650,50))
+        raw=raw.replace('Parfümler Ange des Vignes Parfüm</h1>','Parfümler Ange des Vignes Duş Jeli</h1>')
+        self.assertIsNone(self.api.verify_listing(raw,'https://tr.caudalie.com/p/531R1/product.html',row)[0])
+
+    def test_innative_single_offer_vid_must_identify_same_primary_product(self):
+        row={'brand_name':'INNATIVE','product_name':'BERRY AURA (Eau de Parfum)','concentration':'EDP','gender':'female'}
+        url='https://innativekozmetik.com/old-nocturne-slug'
+        name='INNATIVE E2002 Eny BERRY AURA Edp 50 ml Kadın Parfümü'
+        product={'@type':'Product','name':name,'productId':'abc-123','offers':[{'@type':'Offer','price':'450.00','priceCurrency':'TRY','url':url+'?vid=abc-123'}]}
+        def page():return '<h1>'+name+'</h1><script type="application/ld+json">'+json.dumps(product)+'</script>'
+        offer,reason=self.api.verify_listing(page(),url,row)
+        self.assertEqual(reason,'verified');self.assertEqual((offer['price_try'],offer['volume_ml']),(450,50))
+        product['offers'][0]['url']=url+'?vid=different'
+        self.assertIsNone(self.api.verify_listing(page(),url,row)[0])
+        product['offers'][0]['url']=url+'?vid=abc-123'
+        product['offers'].append(dict(product['offers'][0],name='100 ml',price='900'))
+        self.assertIsNone(self.api.verify_listing(page(),url,row)[0])
+
     def test_zero_searches_or_partial_catalogue_never_proves_search(self):
         self.assertFalse(self.api.search_proven([]))
         self.assertFalse(self.api.search_proven([{'complete':False,'searched_entries':200,'catalogue_sha256':'abc'}]))
@@ -75,6 +98,30 @@ class EvidenceTests(unittest.TestCase):
                 with patch.object(client,'_public_dns',return_value=True),patch.object(client,'_pace',return_value=True),patch.object(client,'_session',return_value=session):
                     fetched=client.fetch('https://shop.example/product')
                 self.assertFalse(fetched.ok);self.assertEqual(fetched.text,body.decode())
+
+    def test_host_starts_remain_six_seconds_apart_when_jitter_decreases(self):
+        from commerce_v3_http import PoliteClient
+        clock=[100.0];client=PoliteClient(0,1,slot=6,deadline=1000)
+        with patch('commerce_v3_http.time.time',side_effect=lambda:clock[0]),patch('commerce_v3_http.time.sleep',side_effect=lambda n:clock.__setitem__(0,clock[0]+n)),patch('commerce_v3_http.random.uniform',side_effect=[0.4,0.0]):
+            self.assertTrue(client._pace('shop.example'));first=clock[0]
+            clock[0]+=1
+            self.assertTrue(client._pace('shop.example'));second=clock[0]
+        self.assertGreaterEqual(second-first,6)
+
+    def test_retry_waits_and_keeps_both_attempt_evidence(self):
+        import tempfile
+        from commerce_v3_http import Fetch
+        clock=[100.0]
+        client=Mock(deadline=1000)
+        client.fetch.side_effect=[Fetch('https://shop.example/p',503,'busy','http_backoff',100,130),Fetch('https://shop.example/p',200,'product',fetched_at=130)]
+        with tempfile.TemporaryDirectory() as tmp:
+            try:evidence=self.api.Evidence(tmp,retry_attempts=3)
+            except TypeError:self.fail('Evidence has no paced retries')
+            with patch('commerce_evidence_v4.time.time',side_effect=lambda:clock[0]),patch('commerce_evidence_v4.time.sleep',side_effect=lambda n:clock.__setitem__(0,clock[0]+n)):
+                result,event=evidence.fetch(client,'https://shop.example/p')
+            self.assertTrue(result.ok);self.assertGreaterEqual(clock[0],130)
+            self.assertEqual(len(evidence.requests),2)
+            self.assertTrue(all(e['snapshot'] for e in evidence.requests))
 
     def test_error_evidence_is_bounded_and_marked_when_truncated(self):
         from commerce_v3_http import PoliteClient

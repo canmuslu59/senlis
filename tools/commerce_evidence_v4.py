@@ -97,12 +97,23 @@ def search_proven(audits):
 
 
 class Evidence:
-    def __init__(self,root):
+    def __init__(self,root,retry_attempts=1):
         self.root=Path(root);self.root.mkdir(parents=True,exist_ok=True)
         (self.root/'responses').mkdir(exist_ok=True);(self.root/'catalogues').mkdir(exist_ok=True)
         self.requests=[]
+        self.retry_attempts=max(1,min(3,retry_attempts))
 
     def fetch(self,client,url):
+        for attempt in range(self.retry_attempts):
+            result,event=self._fetch_once(client,url)
+            if result.ok or attempt+1==self.retry_attempts:return result,event
+            if result.error not in ('host_cooldown','http_backoff','challenge','ReadTimeout','ConnectTimeout','ConnectionError','ChunkedEncodingError'):return result,event
+            due=max(result.retry_at,time.time()+1)
+            if due+45>=client.deadline:return result,event
+            while time.time()<due:time.sleep(min(30,due-time.time()))
+        return result,event
+
+    def _fetch_once(self,client,url):
         started=time.monotonic();r=client.fetch(url)
         raw=r.text.encode('utf-8');sha=digest(raw) if raw else None
         snapshot='responses/'+sha+'.txt.gz' if raw else None
@@ -213,7 +224,7 @@ def discover(row,catalogues,client,evidence):
 
 
 def run(args):
-    start=time.time();evidence=Evidence(args.output)
+    start=time.time();evidence=Evidence(args.output,retry_attempts=getattr(args,'attempts',1))
     client=PoliteClient(0,1,slot=6,deadline=start+args.seconds-60,retain_error_bodies=True)
     definitions=json.loads(Path('data/commerce_v3_seeds.json').read_text())
     ids=set(definitions['canary_ids']);rows=[]
@@ -254,4 +265,5 @@ def run(args):
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--output',default='commerce_v4_evidence')
     parser.add_argument('--seconds',type=int,default=1200)
+    parser.add_argument('--attempts',type=int,default=1)
     raise SystemExit(run(parser.parse_args()))

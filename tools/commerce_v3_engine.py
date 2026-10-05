@@ -177,6 +177,13 @@ def parse_page(raw,url,row):
         return any(' '+a+' ' in text for a in aliases)
     def named(s,evidence=False):
         return brand+' '+s if evidence and not has_brand(s) else s
+    products=jsonld(soup)
+    # Caudalie places the category label inside its primary H1. Remove only
+    # the exact category+name combination of its sole Product object.
+    if host(url)=='tr.caudalie.com' and len(products)==1:
+        obj=products[0];category=obj.get('category');name=obj.get('name')
+        if isinstance(category,str) and isinstance(name,str) and category and name:
+            if norm(heading)==norm(category+' '+name):heading=name
     # A recommendation's Product object must never override a different page heading.
     if heading and not matches(row,named(heading,True)):return None
     descriptions=[]
@@ -188,7 +195,6 @@ def parse_page(raw,url,row):
                       if re.fullmatch(r'\s*\d+(?:[.,]\d+)?\s*ml\s*',n.get_text(' ',strip=True),re.I)}
     selected_volume=next(iter(selected_volumes)) if len(selected_volumes)==1 else None
     offers=[];brand_conflict=False;main_brand_evidence=False
-    products=jsonld(soup)
     for obj in products:
         name=obj.get('name') or heading
         obj_brand=obj.get('brand',{})
@@ -211,7 +217,13 @@ def parse_page(raw,url,row):
             offer_name=str(offer.get('name') or '')
             offer_volume=volume(offer_name)
             if offer_volume and main_volume and offer_volume!=main_volume:continue
-            if offer.get('url') and product_url_key(urljoin(url,str(offer['url'])))!=product_url_key(url):continue
+            if offer.get('url'):
+                offer_key=product_url_key(urljoin(url,str(offer['url'])));page_key=product_url_key(url)
+                same_single_variant=(host(url)=='innativekozmetik.com' and len(off)==1
+                    and len(products)==1 and main_volume is not None and bool(obj.get('productId'))
+                    and page_key[:2]==offer_key[:2] and not page_key[2]
+                    and offer_key[2]==(('vid',str(obj['productId'])),))
+                if offer_key!=page_key and not same_single_variant:continue
             if offer_name and not re.fullmatch(r'\s*\d+(?:[.,]\d+)?\s*ml\s*',offer_name,re.I):
                 if not matches(row,named(offer_name,main_brand_evidence)):continue
             # A variant-specific amount without a confirmed page volume must not
