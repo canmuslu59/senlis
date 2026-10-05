@@ -1,1 +1,1 @@
-2026-10-05 full catalogue v3 launch: 174259 IDs, all 192 shards queued together.
+2026-10-05T10:09Z USER REQUEST: stop all full-scan work and queued waves; preserve checkpoints; rebuild a bounded evidence pilot.
