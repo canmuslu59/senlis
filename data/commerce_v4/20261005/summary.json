@@ -1,19 +1,19 @@
 {
   "method_version": "v4.1-catalogue-evidence",
-  "updated_at": "2026-10-06T06:20:26.669347+00:00",
+  "updated_at": "2026-10-06T06:25:25.087823+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "candidate_products": 4697,
   "total_pages": 6867,
-  "completed_pages": 4708,
-  "pending_pages": 2159,
-  "page_progress_pct": 68.56,
+  "completed_pages": 4758,
+  "pending_pages": 2109,
+  "page_progress_pct": 69.288,
   "unresolved_pages": 1,
-  "verified_price_products": 1795,
+  "verified_price_products": 1812,
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 2411.6,
-  "worker_completed": 394,
-  "measured_remaining_hours": 3.67
+  "worker_seconds": 2710.0,
+  "worker_completed": 444,
+  "measured_remaining_hours": 3.58
 }
