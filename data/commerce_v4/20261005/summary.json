@@ -1,6 +1,6 @@
 {
   "method_version": "v4.1-catalogue-evidence",
-  "updated_at": "2026-10-06T08:35:08.602680+00:00",
+  "updated_at": "2026-10-06T08:35:11.565443+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "candidate_products": 4697,
@@ -13,7 +13,7 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 5227.9,
+  "worker_seconds": 5230.8,
   "worker_completed": 868,
   "measured_remaining_hours": 1.38
 }
