@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="SENLIS is an AI-powered fragrance discovery and intelligence platform built around a structured catalog of more than 174,000 fragrance products and variants." />
+  <meta name="description" content="Eazilo builds AI-native consumer products. SENLIS, our flagship product, is an AI-powered fragrance discovery and intelligence platform built on a catalog of more than 174,000 fragrance products and variants." />
   <meta name="theme-color" content="#0b0c10" />
-  <title>SENLIS — AI-powered fragrance discovery</title>
+  <title>Eazilo — AI-native products from Türkiye</title>
   <style>
     :root{
       --bg:#0b0c10;
@@ -33,44 +33,31 @@
     }
     a{color:inherit;text-decoration:none}
     .wrap{width:min(calc(100% - 40px),var(--max));margin:auto}
-    nav{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:24px 0;position:relative;z-index:2
-    }
-    .brand{font-weight:800;letter-spacing:.22em;font-size:15px}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:24px 0;position:relative;z-index:2}
+    .brand{font-weight:850;letter-spacing:.16em;font-size:16px}
     .navlinks{display:flex;gap:24px;color:var(--muted);font-size:14px}
     .navlinks a:hover{color:var(--text)}
     .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid var(--line);background:rgba(255,255,255,.025);
-      border-radius:999px;padding:8px 12px;color:#d6d8de;font-size:13px
+      display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
+      background:rgba(255,255,255,.025);border-radius:999px;padding:8px 12px;
+      color:#d6d8de;font-size:13px
     }
     .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
     header{padding:80px 0 62px}
-    h1{
-      margin:20px 0 20px;font-size:clamp(48px,8vw,92px);
-      line-height:.98;letter-spacing:-.055em;max-width:980px
-    }
+    h1{margin:20px 0 20px;font-size:clamp(48px,8vw,92px);line-height:.98;letter-spacing:-.055em;max-width:980px}
     .lead{font-size:clamp(18px,2.2vw,24px);color:#c6c8ce;max-width:820px;margin:0}
     .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-height:46px;padding:0 18px;border-radius:12px;
-      border:1px solid var(--line);font-weight:650;font-size:14px
+      display:inline-flex;align-items:center;justify-content:center;min-height:46px;
+      padding:0 18px;border-radius:12px;border:1px solid var(--line);font-weight:650;font-size:14px
     }
     .btn.primary{background:var(--accent);border-color:var(--accent);color:#15120e}
     .btn.secondary{background:rgba(255,255,255,.025)}
     section{padding:58px 0}
-    .kicker{
-      text-transform:uppercase;letter-spacing:.16em;color:var(--accent-2);
-      font-size:12px;font-weight:800;margin-bottom:12px
-    }
+    .kicker{text-transform:uppercase;letter-spacing:.16em;color:var(--accent-2);font-size:12px;font-weight:800;margin-bottom:12px}
     h2{font-size:clamp(30px,4vw,50px);line-height:1.08;letter-spacing:-.035em;margin:0 0 18px}
     .section-copy{max-width:780px;color:var(--muted);font-size:17px}
-    .stats{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
-      margin-top:38px
-    }
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:38px}
     .stat{
       background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));
       border:1px solid var(--line);border-radius:var(--radius);padding:24px
@@ -78,37 +65,21 @@
     .stat strong{display:block;font-size:32px;letter-spacing:-.035em}
     .stat span{display:block;color:var(--muted);font-size:13px;margin-top:5px}
     .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
-    .card{
-      padding:25px;border:1px solid var(--line);border-radius:var(--radius);
-      background:rgba(255,255,255,.02)
-    }
+    .card{padding:25px;border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.02)}
     .card h3{font-size:18px;margin:0 0 9px}
     .card p{margin:0;color:var(--muted);font-size:15px}
-    .prompt-list{
-      display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px
-    }
-    .prompt{
-      border:1px solid var(--line);background:var(--panel);
-      border-radius:16px;padding:18px 20px;color:#dfe1e5
-    }
+    .prompt-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
+    .prompt{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:18px 20px;color:#dfe1e5}
     .prompt:before{content:"“";color:var(--accent);font-size:26px;line-height:0;vertical-align:-5px;margin-right:4px}
     .split{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
     .list{margin:18px 0 0;padding:0;list-style:none}
-    .list li{
-      position:relative;padding:10px 0 10px 26px;border-bottom:1px solid rgba(255,255,255,.06);
-      color:#c8cbd1
-    }
+    .list li{position:relative;padding:10px 0 10px 26px;border-bottom:1px solid rgba(255,255,255,.06);color:#c8cbd1}
     .list li:before{content:"";position:absolute;left:1px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--accent-2)}
-    .founder{
-      display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:30px
-    }
+    .founder{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:30px}
     .founder .card{min-height:180px}
     .big-quote{font-size:24px;line-height:1.35;letter-spacing:-.02em;color:#ecebe6}
     .legal{color:#8f939d;font-size:12px;margin-top:16px}
-    footer{
-      border-top:1px solid var(--line);margin-top:30px;padding:34px 0 54px;
-      color:#898e98;font-size:13px
-    }
+    footer{border-top:1px solid var(--line);margin-top:30px;padding:34px 0 54px;color:#898e98;font-size:13px}
     .footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
     @media (max-width:850px){
       .stats{grid-template-columns:1fr 1fr}
@@ -127,27 +98,59 @@
 <body>
   <div class="wrap">
     <nav>
-      <a class="brand" href="#top">SENLIS</a>
+      <a class="brand" href="#top">EAZILO!</a>
       <div class="navlinks">
-        <a href="#platform">Platform</a>
+        <a href="#company">Company</a>
+        <a href="#senlis">SENLIS</a>
         <a href="#data">Data</a>
-        <a href="#ai">AI</a>
         <a href="#founder">Founder</a>
       </div>
     </nav>
 
     <header id="top">
-      <span class="pill"><span class="dot"></span> Building from Türkiye for global fragrance discovery</span>
-      <h1>Find the fragrance you mean.</h1>
-      <p class="lead">SENLIS is an AI-powered fragrance discovery and intelligence platform built around a large structured catalog of perfumes, body mists, fragrance notes, market data and product relationships.</p>
+      <span class="pill"><span class="dot"></span> Bootstrapped · Türkiye · AI-native products</span>
+      <h1>We build products that make complex decisions easier.</h1>
+      <p class="lead">Eazilo is a bootstrapped technology company from Türkiye building AI-native consumer products. Our flagship product, SENLIS, brings conversational intelligence to fragrance discovery.</p>
       <div class="cta-row">
-        <a class="btn primary" href="#platform">Explore SENLIS</a>
-        <a class="btn secondary" href="#data">See the data foundation</a>
+        <a class="btn primary" href="#senlis">Explore SENLIS</a>
+        <a class="btn secondary" href="#company">About Eazilo</a>
       </div>
     </header>
 
+    <section id="company">
+      <div class="kicker">Eazilo</div>
+      <h2>Product-first, data-driven, built to ship.</h2>
+      <p class="section-copy">Eazilo develops focused software products around real consumer and business problems. We combine hands-on industry experience, structured data and AI to build practical tools rather than AI demos.</p>
+      <div class="grid3">
+        <div class="card">
+          <h3>AI-native</h3>
+          <p>We design products with AI as part of the core workflow, not as a superficial layer added later.</p>
+        </div>
+        <div class="card">
+          <h3>Domain-driven</h3>
+          <p>Our products are informed by first-hand experience in fragrance manufacturing, e-commerce and digital product development.</p>
+        </div>
+        <div class="card">
+          <h3>Bootstrapped</h3>
+          <p>Eazilo is currently founder-funded and focused on disciplined product development, data quality and early market fit.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="senlis">
+      <div class="kicker">Flagship product · SENLIS</div>
+      <h2>Find the fragrance you mean.</h2>
+      <p class="section-copy">SENLIS is an AI-powered fragrance discovery and intelligence platform built around a large structured catalog of perfumes, body mists, fragrance notes, market data and product relationships.</p>
+      <div class="prompt-list">
+        <div class="prompt">I want a winter fragrance with vanilla and amber, but not something overly sweet.</div>
+        <div class="prompt">Show me fragrances similar in character to this one, available in Türkiye at a lower price.</div>
+        <div class="prompt">I need something suitable for daily office use with good longevity.</div>
+        <div class="prompt">Compare these two fragrances and explain which profile fits my preferences better.</div>
+      </div>
+    </section>
+
     <section id="data">
-      <div class="kicker">Data foundation</div>
+      <div class="kicker">SENLIS data foundation</div>
       <h2>AI is only as useful as the data underneath it.</h2>
       <p class="section-copy">SENLIS is being developed on top of a cleaned and normalized fragrance catalog designed for semantic search, recommendation and commercial enrichment.</p>
       <div class="stats">
@@ -158,24 +161,12 @@
       </div>
     </section>
 
-    <section id="platform">
-      <div class="kicker">The platform</div>
-      <h2>Discovery should start with intent, not a product name.</h2>
-      <p class="section-copy">Most fragrance search experiences assume users already know what to type. SENLIS is being built to understand what a person wants first, then search across products, notes, similarities, availability and price context.</p>
-      <div class="prompt-list">
-        <div class="prompt">I want a winter fragrance with vanilla and amber, but not something overly sweet.</div>
-        <div class="prompt">Show me fragrances similar in character to this one, available in Türkiye at a lower price.</div>
-        <div class="prompt">I need something suitable for daily office use with good longevity.</div>
-        <div class="prompt">Compare these two fragrances and explain which profile fits my preferences better.</div>
-      </div>
-    </section>
-
     <section id="ai">
       <div class="split">
         <div>
-          <div class="kicker">AI-native architecture</div>
+          <div class="kicker">AI roadmap</div>
           <h2>Reasoning across fragrance data.</h2>
-          <p class="section-copy">The product roadmap is designed around conversational discovery and model-assisted data intelligence rather than adding a chatbot on top of a conventional catalog.</p>
+          <p class="section-copy">The next phase of SENLIS focuses on conversational discovery, personalized recommendation and model-assisted data intelligence.</p>
         </div>
         <div class="card">
           <ul class="list">
@@ -191,36 +182,17 @@
       </div>
     </section>
 
-    <section>
-      <div class="kicker">Market</div>
-      <h2>Starting with a fragmented fragrance market.</h2>
-      <div class="grid3">
-        <div class="card">
-          <h3>Consumers</h3>
-          <p>Make complex fragrance catalogs understandable through natural-language discovery and clear product comparisons.</p>
-        </div>
-        <div class="card">
-          <h3>Brands & retailers</h3>
-          <p>Create relevant discovery surfaces and future partnership opportunities around qualified fragrance intent.</p>
-        </div>
-        <div class="card">
-          <h3>Commercial model</h3>
-          <p>Initial monetization is planned through advertising and commercial partnerships with fragrance brands and retailers.</p>
-        </div>
-      </div>
-    </section>
-
     <section id="founder">
       <div class="kicker">Founder</div>
       <div class="founder">
         <div class="card">
-          <div class="big-quote">“SENLIS combines software development with first-hand fragrance and e-commerce experience.”</div>
-          <p class="section-copy" style="margin-top:18px">Founded by Can Muslu in Türkiye. The founder’s operating background includes fragrance manufacturing, consumer e-commerce and hands-on software product development.</p>
+          <div class="big-quote">“Eazilo combines product development with first-hand operating experience.”</div>
+          <p class="section-copy" style="margin-top:18px">Founded by Can Muslu in Türkiye. The founder’s background includes fragrance manufacturing, consumer e-commerce and hands-on Android and software product development.</p>
         </div>
         <div class="card">
           <h3>Current stage</h3>
-          <p>Bootstrapped. Android product and data infrastructure are under active development. The next phase focuses on AI-powered search, recommendations and production-grade data enrichment.</p>
-          <p class="legal">SENLIS is an independent product and is not affiliated with the fragrance brands represented in its catalog.</p>
+          <p>Eazilo is bootstrapped. SENLIS is under active development with an Android product, structured data infrastructure and ongoing Türkiye-focused commercial enrichment.</p>
+          <p class="legal">SENLIS is an independent Eazilo product and is not affiliated with the fragrance brands represented in its catalog.</p>
         </div>
       </div>
     </section>
@@ -228,13 +200,13 @@
     <section id="contact">
       <div class="kicker">Partnerships</div>
       <h2>Building the intelligence layer for fragrance discovery.</h2>
-      <p class="section-copy">SENLIS is currently preparing its custom domain and company email for startup, technology and commercial partnership inquiries.</p>
+      <p class="section-copy">Eazilo is open to technology, startup and commercial partnership conversations around SENLIS and future AI-native products.</p>
     </section>
 
     <footer>
       <div class="footer-row">
-        <span>© 2026 SENLIS</span>
-        <span>AI-powered fragrance discovery & intelligence · Türkiye</span>
+        <span>© 2026 Eazilo!</span>
+        <span>SENLIS — an Eazilo product · Türkiye</span>
       </div>
     </footer>
   </div>
