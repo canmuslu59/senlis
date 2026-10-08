@@ -1,2 +1,0 @@
-strict-validation=2026-10-02T13:35+03:00
-pilot_size=200
