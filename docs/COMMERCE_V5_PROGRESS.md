@@ -1,0 +1,28 @@
+# SDD ledger — plan: docs/superpowers/plans/2026-10-07-commerce-global-v5.md
+Baseline: v4 24 + v3 35 tests green; isolated feature/commerce-global-v5-20261006 checkout.
+Pre-flight: parser produces offer/observation dictionaries consumed by queue; discovery produces task/audit dictionaries atomically stored by queue. No conflicts.
+Pre-flight: pilot consumes the same parser/source policy as workers; immutable code SHA pins them. No conflicts.
+Authorization: user explicitly requests fixing pipeline and launching new scan, and confirms continue on 2026-10-07; routine implementation and new campaign launch are authorized.
+Task 1 complete: 15 v5 tests observed RED (missing parser), then GREEN. Real sanitized Trendyol, Innative, Yes and Caudalie fixtures. Existing 59 tests remain green. Brand conflict remains a review reason; rejected price observations are retained.
+Task 2 complete: 9 discovery tests RED to GREEN (24 v5 total). Trendyol public A-Z directory fetched; robot exclusions explicitly cover redirected /sr/ brand routes. New products can still be found from public product-page related links, and 3294 existing Trendyol identity URLs seed checks. Official unknowns remain explicit; dynamic official confirmation requires a reference link plus matching Organization/Brand homepage evidence.
+Task 3 implementation: 16 queue/CLI/policy tests added RED to GREEN, 40 v5 total. Real git checkpoint push/readback and branch/push failure gates passed. 174259-identity plan/restore passed in 12 seconds: 19234 initial tasks, 10505 page URLs (3290 unique Trendyol URLs), 8702 unknown-official reference tasks, 26 sitemap roots and public Trendyol directory. State persists append-only events, not rewritten SQLite blobs.
+Live source observations: Trendyol A-Z directory has 14699 brand links, matching 565 existing database brands. 8159 unmatched brands are explicitly outside that directory, not proved unavailable in Turkey. Caudalie US price 42.00 USD/50ml is out of stock; this does not count as Turkish availability.
+
+## Launch verification — 2026-10-08
+
+One independent final review of edaaf0f..21e8efc completed. Eight Important findings were reproduced before fixes, then verified in one regression pass:
+
+1. Secondary Product identifiers cannot lend their price to the primary page.
+2. Conflicting explicit ProductGroup or selected variant identifiers fail closed.
+3. Same-name release editions receive scope-wide ambiguity context; an undated page cannot verify both editions.
+4. Ordered event manifests bind campaign identity, every segment, event count and hash chain. Missing campaign/event manifests, missing middle/tail segments and unindexed segments require recovery. A rejected event rolls back all queue mutations.
+5. Missing/blocked/partial discovery prevents complete=true, including sitemap 404s.
+6. Textual member, coupon, subscription and cart-only prices remain observations.
+7. Formatted TRY thousands separators cannot turn 1.234 TL into 1.23 TRY.
+8. Page language does not establish the country of sale; unknown official market remains unknown.
+
+Verification: 54 v5 + 35 v3 + 24 v4 tests pass (113 total), including real Git checkpoint push, clone, resume without a second fetch and export. Full-scope initialization previously verified 174259 identities. The 2026-10-07 live 10-product pilot found 8 verified products, 2 Trendyol checks and TRY/EUR/USD, with both negative controls passing. A fresh pilot using the final immutable code SHA is mandatory in GitHub prepare before scan workers start.
+
+Reviewer scope rulings: source reachability and future GitHub jobs remain live checks, not code guarantees. Registry domains are curated from existing source provenance; ownership has not been independently audited for every brand. Unknown official sites require reference and homepage evidence. Checkout, shipping and purchase completion are not tested (checkout_verified=false); foreign/out-of-stock offers never imply availability in Turkey. Unchanged v3/v4 modules pass their 59 existing tests, without asserting universal legacy correctness. Robots exclusions and unknown sources remain explicit coverage limits; no bypass or guessed absence.
+
+Publishing is authorized by the user's new-scan request and repeated continue instructions. New v5 code/data branches only; preserve main, all product identities, v3 and v4 evidence. Previous v4 input is pinned to commit 8bd19c6a4c5168b7a3412af07e77ab9c77c8caf7. Keep the existing worktree for follow-up and do not merge into main.

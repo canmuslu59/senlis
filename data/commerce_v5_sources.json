@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "trendyol",
+      "host": "trendyol.com",
+      "market": "TR",
+      "kind": "marketplace"
+    },
+    {
+      "id": "perfumepoint",
+      "host": "perfumepoint.com.tr",
+      "market": "TR",
+      "kind": "retailer",
+      "root": "https://www.perfumepoint.com.tr/xml/sitemap/sitemap.xml"
+    },
+    {
+      "id": "yesparfumeri",
+      "host": "yesparfumeri.com",
+      "market": "TR",
+      "kind": "retailer",
+      "root": "https://yesparfumeri.com/sitemap.xml",
+      "prefix": "/products/"
+    },
+    {
+      "id": "innativekozmetik_com",
+      "host": "innativekozmetik.com",
+      "brand": "INNATIVE",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://innativekozmetik.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "madparfum_com",
+      "host": "madparfum.com",
+      "brand": "Mad Parfumeur",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://madparfum.com/sitemap.xml",
+      "prefix": "/urun/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "tr_caudalie_com",
+      "host": "tr.caudalie.com",
+      "brand": "Caudalie",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://tr.caudalie.com/sitemap.xml",
+      "prefix": "/p/",
+      "authority_basis": "Caudalie regional official site"
+    },
+    {
+      "id": "fr_caudalie_com",
+      "host": "fr.caudalie.com",
+      "brand": "Caudalie",
+      "kind": "official",
+      "market": "FR",
+      "root": "https://fr.caudalie.com/sitemap.xml",
+      "prefix": "/p/",
+      "authority_basis": "Caudalie regional official site"
+    },
+    {
+      "id": "us_caudalie_com",
+      "host": "us.caudalie.com",
+      "brand": "Caudalie",
+      "kind": "official",
+      "market": "US",
+      "root": "https://us.caudalie.com/sitemap.xml",
+      "prefix": "/p/",
+      "authority_basis": "Caudalie regional official site"
+    },
+    {
+      "id": "lorisparfum_com",
+      "host": "lorisparfum.com",
+      "brand": "Loris",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://lorisparfum.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "lorisparfum_eu",
+      "host": "lorisparfum.eu",
+      "brand": "Loris",
+      "kind": "official",
+      "market": "EU",
+      "root": "https://lorisparfum.eu/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "dpperfumum_com_tr",
+      "host": "dpperfumum.com.tr",
+      "brand": "D&P Perfumum",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://dpperfumum.com.tr/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "eyfelparfum_com",
+      "host": "eyfelparfum.com",
+      "brand": "Eyfel",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://eyfelparfum.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "e-bargello_com",
+      "host": "e-bargello.com",
+      "brand": "Bargello",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://e-bargello.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "pariscornerperfumes_com",
+      "host": "pariscornerperfumes.com",
+      "brand": "PARIS CORNER",
+      "kind": "official",
+      "market": "AE",
+      "root": "https://pariscornerperfumes.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "qlife_com_tr",
+      "host": "qlife.com.tr",
+      "brand": "Qlife",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://qlife.com.tr/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "laverne_com",
+      "host": "laverne.com",
+      "brand": "Laverne",
+      "kind": "official",
+      "market": "SA",
+      "root": "https://laverne.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "atelierrebul_com_tr",
+      "host": "atelierrebul.com.tr",
+      "brand": "Atelier Rebul",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://atelierrebul.com.tr/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "alwataniah_com",
+      "host": "alwataniah.com",
+      "brand": "Al Wataniah",
+      "kind": "official",
+      "market": "AE",
+      "root": "https://alwataniah.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "goldenrose_com_tr",
+      "host": "goldenrose.com.tr",
+      "brand": "Golden Rose",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://goldenrose.com.tr/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "edataspinar_com",
+      "host": "edataspinar.com",
+      "brand": "Eda Taşpınar",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://edataspinar.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "royalplatinumstore_com",
+      "host": "royalplatinumstore.com",
+      "brand": "Royal Platinum",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://royalplatinumstore.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "thespiritofdubai_com",
+      "host": "thespiritofdubai.com",
+      "brand": "The Spirit of Dubai",
+      "kind": "official",
+      "market": "AE",
+      "root": "https://thespiritofdubai.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "romeron_com_tr",
+      "host": "romeron.com.tr",
+      "brand": "Romeron",
+      "kind": "official",
+      "market": "TR",
+      "root": "https://romeron.com.tr/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "fugazzifragrances_com",
+      "host": "fugazzifragrances.com",
+      "brand": "Fugazzi",
+      "kind": "official",
+      "market": "NL",
+      "root": "https://fugazzifragrances.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "widian_com",
+      "host": "widian.com",
+      "brand": "WIDIAN",
+      "kind": "official",
+      "market": "AE",
+      "root": "https://widian.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "rarebeauty_com",
+      "host": "rarebeauty.com",
+      "brand": "Rare Beauty",
+      "kind": "official",
+      "market": "US",
+      "root": "https://rarebeauty.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    },
+    {
+      "id": "dedcool_com",
+      "host": "dedcool.com",
+      "brand": "DedCool",
+      "kind": "official",
+      "market": "US",
+      "root": "https://dedcool.com/sitemap.xml",
+      "prefix": "/",
+      "authority_basis": "existing_master_brand_source"
+    }
+  ],
+  "unknown_official_sites": "explicit_reference_discovery_required"
+}
