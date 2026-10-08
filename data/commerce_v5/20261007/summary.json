@@ -1,44 +1,44 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-08T19:02:06.868347+00:00",
+  "updated_at": "2026-10-08T19:07:06.872838+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
   "total_pages": 17806,
-  "completed_pages": 1821,
-  "pending_pages": 15985,
-  "page_progress_pct": 10.227,
+  "completed_pages": 1871,
+  "pending_pages": 15935,
+  "page_progress_pct": 10.508,
   "unresolved_pages": 0,
   "unavailable_pages": 1,
   "tasks_total": 27348,
-  "tasks_completed": 2095,
-  "tasks_pending": 25253,
-  "task_progress_pct": 7.661,
-  "verified_price_products": 819,
-  "in_stock_price_products": 701,
-  "turkey_in_stock_products": 701,
+  "tasks_completed": 2145,
+  "tasks_pending": 25203,
+  "task_progress_pct": 7.843,
+  "verified_price_products": 830,
+  "in_stock_price_products": 714,
+  "turkey_in_stock_products": 714,
   "currency_products": {
-    "TRY": 819
+    "TRY": 830
   },
   "partial_discovery_tasks": 125,
   "task_status_counts": {
-    "done": 2091,
+    "done": 2141,
     "error": 2,
-    "pending": 25253,
+    "pending": 25203,
     "unavailable": 2
   },
   "decision_reasons": {
-    "brand_conflict": 333,
-    "name_mismatch": 3225,
-    "verified": 1706,
+    "brand_conflict": 383,
+    "name_mismatch": 3268,
+    "verified": 1747,
     "gender_mismatch": 372,
     "form_mismatch": 826,
     "variant_mismatch": 582,
-    "concentration_mismatch": 1355,
+    "concentration_mismatch": 1385,
     "main_product_identifier_mismatch": 8,
     "format_mismatch": 583,
     "concentration_unproven": 49,
-    "identity_ambiguous": 80
+    "identity_ambiguous": 83
   },
   "source_coverage": [
     {
@@ -253,8 +253,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 2698.1,
-  "worker_completed_tasks": 450,
-  "measured_remaining_hours_current_queue": 42.06,
+  "worker_seconds": 2998.1,
+  "worker_completed_tasks": 500,
+  "measured_remaining_hours_current_queue": 41.98,
   "eta_includes_undiscovered_pages": false
 }
