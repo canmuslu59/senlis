@@ -1,28 +1,28 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-08T15:39:25.038083+00:00",
+  "updated_at": "2026-10-08T15:44:31.234326+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
-  "total_pages": 14835,
+  "total_pages": 17042,
   "completed_pages": 0,
-  "pending_pages": 14835,
+  "pending_pages": 17042,
   "page_progress_pct": 0.0,
   "unresolved_pages": 0,
   "unavailable_pages": 0,
-  "tasks_total": 24377,
-  "tasks_completed": 99,
-  "tasks_pending": 24278,
-  "task_progress_pct": 0.406,
+  "tasks_total": 26584,
+  "tasks_completed": 148,
+  "tasks_pending": 26436,
+  "task_progress_pct": 0.557,
   "verified_price_products": 0,
   "in_stock_price_products": 0,
   "turkey_in_stock_products": 0,
   "currency_products": {},
-  "partial_discovery_tasks": 26,
+  "partial_discovery_tasks": 31,
   "task_status_counts": {
-    "done": 96,
+    "done": 145,
     "error": 2,
-    "pending": 24278,
+    "pending": 26436,
     "unavailable": 1
   },
   "decision_reasons": {},
@@ -97,15 +97,15 @@
       "brand": "Loris",
       "market": "EU",
       "maps": 20,
-      "completed_maps": 12
+      "completed_maps": 20
     },
     {
       "source_id": "dpperfumum_com_tr",
-      "complete": false,
+      "complete": true,
       "brand": "D&P Perfumum",
       "market": "TR",
       "maps": 5,
-      "completed_maps": 1
+      "completed_maps": 5
     },
     {
       "source_id": "eyfelparfum_com",
@@ -117,11 +117,11 @@
     },
     {
       "source_id": "e-bargello_com",
-      "complete": false,
+      "complete": true,
       "brand": "Bargello",
       "market": "TR",
       "maps": 11,
-      "completed_maps": 1
+      "completed_maps": 11
     },
     {
       "source_id": "pariscornerperfumes_com",
@@ -129,7 +129,7 @@
       "brand": "PARIS CORNER",
       "market": "AE",
       "maps": 7,
-      "completed_maps": 1
+      "completed_maps": 7
     },
     {
       "source_id": "qlife_com_tr",
@@ -141,19 +141,19 @@
     },
     {
       "source_id": "laverne_com",
-      "complete": false,
+      "complete": true,
       "brand": "Laverne",
       "market": "SA",
       "maps": 4,
-      "completed_maps": 1
+      "completed_maps": 4
     },
     {
       "source_id": "atelierrebul_com_tr",
-      "complete": false,
+      "complete": true,
       "brand": "Atelier Rebul",
       "market": "TR",
       "maps": 6,
-      "completed_maps": 1
+      "completed_maps": 6
     },
     {
       "source_id": "alwataniah_com",
@@ -161,7 +161,7 @@
       "brand": "Al Wataniah",
       "market": "AE",
       "maps": 8,
-      "completed_maps": 1
+      "completed_maps": 8
     },
     {
       "source_id": "goldenrose_com_tr",
@@ -185,7 +185,7 @@
       "brand": "Royal Platinum",
       "market": "TR",
       "maps": 7,
-      "completed_maps": 1
+      "completed_maps": 7
     },
     {
       "source_id": "thespiritofdubai_com",
@@ -239,8 +239,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 918.5,
-  "worker_completed_tasks": 99,
-  "measured_remaining_hours_current_queue": 62.57,
+  "worker_seconds": 1224.7,
+  "worker_completed_tasks": 148,
+  "measured_remaining_hours_current_queue": 60.77,
   "eta_includes_undiscovered_pages": false
 }
