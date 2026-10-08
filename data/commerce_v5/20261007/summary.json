@@ -1,28 +1,28 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-08T15:44:31.234326+00:00",
+  "updated_at": "2026-10-08T15:49:34.265973+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
-  "total_pages": 17042,
+  "total_pages": 17655,
   "completed_pages": 0,
-  "pending_pages": 17042,
+  "pending_pages": 17655,
   "page_progress_pct": 0.0,
   "unresolved_pages": 0,
   "unavailable_pages": 0,
-  "tasks_total": 26584,
-  "tasks_completed": 148,
-  "tasks_pending": 26436,
-  "task_progress_pct": 0.557,
+  "tasks_total": 27197,
+  "tasks_completed": 198,
+  "tasks_pending": 26999,
+  "task_progress_pct": 0.728,
   "verified_price_products": 0,
   "in_stock_price_products": 0,
   "turkey_in_stock_products": 0,
   "currency_products": {},
-  "partial_discovery_tasks": 31,
+  "partial_discovery_tasks": 55,
   "task_status_counts": {
-    "done": 145,
+    "done": 195,
     "error": 2,
-    "pending": 26436,
+    "pending": 26999,
     "unavailable": 1
   },
   "decision_reasons": {},
@@ -197,11 +197,11 @@
     },
     {
       "source_id": "romeron_com_tr",
-      "complete": false,
+      "complete": true,
       "brand": "Romeron",
       "market": "TR",
       "maps": 5,
-      "completed_maps": 1
+      "completed_maps": 5
     },
     {
       "source_id": "fugazzifragrances_com",
@@ -209,7 +209,7 @@
       "brand": "Fugazzi",
       "market": "NL",
       "maps": 23,
-      "completed_maps": 1
+      "completed_maps": 23
     },
     {
       "source_id": "widian_com",
@@ -225,7 +225,7 @@
       "brand": "Rare Beauty",
       "market": "US",
       "maps": 81,
-      "completed_maps": 1
+      "completed_maps": 25
     },
     {
       "source_id": "dedcool_com",
@@ -239,8 +239,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 1224.7,
-  "worker_completed_tasks": 148,
-  "measured_remaining_hours_current_queue": 60.77,
+  "worker_seconds": 1527.7,
+  "worker_completed_tasks": 198,
+  "measured_remaining_hours_current_queue": 57.87,
   "eta_includes_undiscovered_pages": false
 }
