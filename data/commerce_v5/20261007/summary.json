@@ -1,42 +1,43 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-08T16:50:10.038622+00:00",
+  "updated_at": "2026-10-08T16:55:44.455813+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
   "total_pages": 17806,
-  "completed_pages": 512,
-  "pending_pages": 17294,
-  "page_progress_pct": 2.875,
+  "completed_pages": 562,
+  "pending_pages": 17244,
+  "page_progress_pct": 3.156,
   "unresolved_pages": 0,
   "unavailable_pages": 1,
   "tasks_total": 27348,
-  "tasks_completed": 786,
-  "tasks_pending": 26562,
-  "task_progress_pct": 2.874,
-  "verified_price_products": 265,
-  "in_stock_price_products": 214,
-  "turkey_in_stock_products": 214,
+  "tasks_completed": 836,
+  "tasks_pending": 26512,
+  "task_progress_pct": 3.057,
+  "verified_price_products": 289,
+  "in_stock_price_products": 234,
+  "turkey_in_stock_products": 234,
   "currency_products": {
-    "TRY": 265
+    "TRY": 289
   },
   "partial_discovery_tasks": 125,
   "task_status_counts": {
-    "done": 782,
+    "done": 832,
     "error": 2,
-    "pending": 26562,
+    "pending": 26512,
     "unavailable": 2
   },
   "decision_reasons": {
-    "brand_conflict": 189,
-    "name_mismatch": 312,
-    "verified": 381,
-    "gender_mismatch": 69,
-    "form_mismatch": 104,
-    "variant_mismatch": 34,
-    "concentration_mismatch": 121,
+    "brand_conflict": 190,
+    "name_mismatch": 374,
+    "verified": 443,
+    "gender_mismatch": 101,
+    "form_mismatch": 165,
+    "variant_mismatch": 83,
+    "concentration_mismatch": 148,
     "main_product_identifier_mismatch": 3,
-    "format_mismatch": 32
+    "format_mismatch": 87,
+    "concentration_unproven": 6
   },
   "source_coverage": [
     {
@@ -251,8 +252,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 5163.5,
-  "worker_completed_tasks": 786,
-  "measured_remaining_hours_current_queue": 48.47,
+  "worker_seconds": 302.5,
+  "worker_completed_tasks": 50,
+  "measured_remaining_hours_current_queue": 44.55,
   "eta_includes_undiscovered_pages": false
 }
