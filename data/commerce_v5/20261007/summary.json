@@ -1,6 +1,6 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-08T15:49:34.265973+00:00",
+  "updated_at": "2026-10-08T15:54:37.497579+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
@@ -11,18 +11,18 @@
   "unresolved_pages": 0,
   "unavailable_pages": 0,
   "tasks_total": 27197,
-  "tasks_completed": 198,
-  "tasks_pending": 26999,
-  "task_progress_pct": 0.728,
+  "tasks_completed": 247,
+  "tasks_pending": 26950,
+  "task_progress_pct": 0.908,
   "verified_price_products": 0,
   "in_stock_price_products": 0,
   "turkey_in_stock_products": 0,
   "currency_products": {},
-  "partial_discovery_tasks": 55,
+  "partial_discovery_tasks": 104,
   "task_status_counts": {
-    "done": 195,
+    "done": 244,
     "error": 2,
-    "pending": 26999,
+    "pending": 26950,
     "unavailable": 1
   },
   "decision_reasons": {},
@@ -225,7 +225,7 @@
       "brand": "Rare Beauty",
       "market": "US",
       "maps": 81,
-      "completed_maps": 25
+      "completed_maps": 74
     },
     {
       "source_id": "dedcool_com",
@@ -239,8 +239,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 1527.7,
-  "worker_completed_tasks": 198,
-  "measured_remaining_hours_current_queue": 57.87,
+  "worker_seconds": 1831.0,
+  "worker_completed_tasks": 247,
+  "measured_remaining_hours_current_queue": 55.49,
   "eta_includes_undiscovered_pages": false
 }
