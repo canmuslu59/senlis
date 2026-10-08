@@ -1,0 +1,29 @@
+{
+  "method_version": "v5.0-live-pilot",
+  "created_at": "2026-10-08T15:23:36.889604+00:00",
+  "code_sha": "15a827b3f5a10c4712a5fec934471348052df4e7",
+  "targets": 10,
+  "verified_price_products": 8,
+  "trendyol_verified": 2,
+  "currencies": [
+    "EUR",
+    "TRY",
+    "USD"
+  ],
+  "negative_controls_passed": 2,
+  "negative_controls_total": 2,
+  "seconds": 160.3,
+  "http_stats": {
+    "requests": 26,
+    "host:yesparfumeri.com": 7,
+    "ok": 26,
+    "host:trendyol.com": 3,
+    "host:innativekozmetik.com": 4,
+    "host:fr.caudalie.com": 2,
+    "host:us.caudalie.com": 2,
+    "host:tr.caudalie.com": 4,
+    "host:madparfum.com": 2,
+    "host:perfumepoint.com.tr": 2
+  },
+  "gate_passed": true
+}

@@ -1,0 +1,9 @@
+{
+  "method_version": "v5.0-global-evidence",
+  "code_sha": "15a827b3f5a10c4712a5fec934471348052df4e7",
+  "created_at": "2026-10-08T15:23:43.863318+00:00",
+  "scope_total": 174259,
+  "run_id": "37799951233",
+  "scope_sha256": "2ed506ab0a38d32990710ddfb37420aff20e776474c9b1c1181f858ccf0d9771",
+  "tasks_sha256": "7c923264ec96705766b8e7b0c0be7e8a394dea35e3f0a1e36be0b8f37dc7fdc5"
+}

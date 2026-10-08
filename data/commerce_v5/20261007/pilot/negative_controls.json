@@ -1,0 +1,14 @@
+[
+  {
+    "control": "wrong_form",
+    "passed": true,
+    "reason": "form_mismatch",
+    "evidence_sha256": "f1f3c120d2f7bdef10f533fd450fbdd55cd9c756133ec3540afbe5be4d8e48ec"
+  },
+  {
+    "control": "wrong_variant",
+    "passed": true,
+    "reason": "name_mismatch",
+    "evidence_sha256": "f1f3c120d2f7bdef10f533fd450fbdd55cd9c756133ec3540afbe5be4d8e48ec"
+  }
+]

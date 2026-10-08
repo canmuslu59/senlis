@@ -1,0 +1,662 @@
+[
+  {
+    "product_id": "1000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "1001"
+  },
+  {
+    "product_id": "2000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "2001"
+  },
+  {
+    "product_id": "3000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "3001"
+  },
+  {
+    "product_id": "4000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "4001"
+  },
+  {
+    "product_id": "6000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "6001"
+  },
+  {
+    "product_id": "7000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "7001"
+  },
+  {
+    "product_id": "8000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "8001"
+  },
+  {
+    "product_id": "9000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "9001"
+  },
+  {
+    "product_id": "11000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "11001"
+  },
+  {
+    "product_id": "12000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "12001"
+  },
+  {
+    "product_id": "13000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "13001"
+  },
+  {
+    "product_id": "14000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "14001"
+  },
+  {
+    "product_id": "16000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "16001"
+  },
+  {
+    "product_id": "17000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "17001"
+  },
+  {
+    "product_id": "18000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "18001"
+  },
+  {
+    "product_id": "19000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "19001"
+  },
+  {
+    "product_id": "21000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "21001"
+  },
+  {
+    "product_id": "22000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "22001"
+  },
+  {
+    "product_id": "23000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "23001"
+  },
+  {
+    "product_id": "24000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "24001"
+  },
+  {
+    "product_id": "26000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "26001"
+  },
+  {
+    "product_id": "27000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "27001"
+  },
+  {
+    "product_id": "28000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "28001"
+  },
+  {
+    "product_id": "29000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "29001"
+  },
+  {
+    "product_id": "31000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "31001"
+  },
+  {
+    "product_id": "32000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "32001"
+  },
+  {
+    "product_id": "33000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "33001"
+  },
+  {
+    "product_id": "34000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "34001"
+  },
+  {
+    "product_id": "36000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "36001"
+  },
+  {
+    "product_id": "37000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "37001"
+  },
+  {
+    "product_id": "38000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "38001"
+  },
+  {
+    "product_id": "39000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "39001"
+  },
+  {
+    "product_id": "41000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "41001"
+  },
+  {
+    "product_id": "42000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "42001"
+  },
+  {
+    "product_id": "43000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "43001"
+  },
+  {
+    "product_id": "44000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "44001"
+  },
+  {
+    "product_id": "46000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "46001"
+  },
+  {
+    "product_id": "47000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "47001"
+  },
+  {
+    "product_id": "48000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "48001"
+  },
+  {
+    "product_id": "49000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "49001"
+  },
+  {
+    "product_id": "51000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "51001"
+  },
+  {
+    "product_id": "52000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "52001"
+  },
+  {
+    "product_id": "53000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "53001"
+  },
+  {
+    "product_id": "54000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "54001"
+  },
+  {
+    "product_id": "56000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "56001"
+  },
+  {
+    "product_id": "57000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "57001"
+  },
+  {
+    "product_id": "58000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "58001"
+  },
+  {
+    "product_id": "59000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "59001"
+  },
+  {
+    "product_id": "61000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "61001"
+  },
+  {
+    "product_id": "62000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "62001"
+  },
+  {
+    "product_id": "63000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "63001"
+  },
+  {
+    "product_id": "64000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "64001"
+  },
+  {
+    "product_id": "66000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "66001"
+  },
+  {
+    "product_id": "67000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "67001"
+  },
+  {
+    "product_id": "68000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "68001"
+  },
+  {
+    "product_id": "69000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "69001"
+  },
+  {
+    "product_id": "71000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "71001"
+  },
+  {
+    "product_id": "72000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "72001"
+  },
+  {
+    "product_id": "73000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "73001"
+  },
+  {
+    "product_id": "74000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "74001"
+  },
+  {
+    "product_id": "76000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "76001"
+  },
+  {
+    "product_id": "77000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "77001"
+  },
+  {
+    "product_id": "78000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "78001"
+  },
+  {
+    "product_id": "79000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "79001"
+  },
+  {
+    "product_id": "81000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "81001"
+  },
+  {
+    "product_id": "82000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "82001"
+  },
+  {
+    "product_id": "83000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "83001"
+  },
+  {
+    "product_id": "84000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "84001"
+  },
+  {
+    "product_id": "86000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "86001"
+  },
+  {
+    "product_id": "87000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "87001"
+  },
+  {
+    "product_id": "88000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "88001"
+  },
+  {
+    "product_id": "89000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "89001"
+  },
+  {
+    "product_id": "91000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "91001"
+  },
+  {
+    "product_id": "92000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "92001"
+  },
+  {
+    "product_id": "93000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "93001"
+  },
+  {
+    "product_id": "94000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "94001"
+  },
+  {
+    "product_id": "96000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "96001"
+  },
+  {
+    "product_id": "97000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "97001"
+  },
+  {
+    "product_id": "98000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "98001"
+  },
+  {
+    "product_id": "99000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "99001"
+  },
+  {
+    "product_id": "101000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "101001"
+  },
+  {
+    "product_id": "102000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "102001"
+  },
+  {
+    "product_id": "103000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "103001"
+  },
+  {
+    "product_id": "104000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "104001"
+  },
+  {
+    "product_id": "106000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "106001"
+  },
+  {
+    "product_id": "107000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "107001"
+  },
+  {
+    "product_id": "108000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "108001"
+  },
+  {
+    "product_id": "109000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "109001"
+  },
+  {
+    "product_id": "111000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "111001"
+  },
+  {
+    "product_id": "112000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "112001"
+  },
+  {
+    "product_id": "113000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "113001"
+  },
+  {
+    "product_id": "114000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "114001"
+  },
+  {
+    "product_id": "116000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "116001"
+  },
+  {
+    "product_id": "117000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "117001"
+  },
+  {
+    "product_id": "118000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "118001"
+  },
+  {
+    "product_id": "119000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "119001"
+  },
+  {
+    "product_id": "121000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "121001"
+  },
+  {
+    "product_id": "122000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "122001"
+  },
+  {
+    "product_id": "123000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "123001"
+  },
+  {
+    "product_id": "124000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "124001"
+  },
+  {
+    "product_id": "126000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "126001"
+  },
+  {
+    "product_id": "127000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "127001"
+  },
+  {
+    "product_id": "128000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "128001"
+  },
+  {
+    "product_id": "129000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "129001"
+  },
+  {
+    "product_id": "131000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "131001"
+  },
+  {
+    "product_id": "132000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "132001"
+  },
+  {
+    "product_id": "133000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "133001"
+  },
+  {
+    "product_id": "134000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "134001"
+  },
+  {
+    "product_id": "136000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "136001"
+  },
+  {
+    "product_id": "137000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "137001"
+  },
+  {
+    "product_id": "138000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "138001"
+  },
+  {
+    "product_id": "139000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "139001"
+  },
+  {
+    "product_id": "141000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "141001"
+  },
+  {
+    "product_id": "142000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "142001"
+  },
+  {
+    "product_id": "143000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "143001"
+  },
+  {
+    "product_id": "144000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "144001"
+  },
+  {
+    "product_id": "146000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "146001"
+  },
+  {
+    "product_id": "147000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "147001"
+  },
+  {
+    "product_id": "148000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "148001"
+  },
+  {
+    "product_id": "149000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "149001"
+  },
+  {
+    "product_id": "151000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "151001"
+  },
+  {
+    "product_id": "152000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "152001"
+  },
+  {
+    "product_id": "153000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "153001"
+  },
+  {
+    "product_id": "154000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "154001"
+  },
+  {
+    "product_id": "156000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "156001"
+  },
+  {
+    "product_id": "157000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "157001"
+  },
+  {
+    "product_id": "158000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "158001"
+  },
+  {
+    "product_id": "159000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "159001"
+  },
+  {
+    "product_id": "161000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "161001"
+  },
+  {
+    "product_id": "162000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "162001"
+  },
+  {
+    "product_id": "163000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "163001"
+  },
+  {
+    "product_id": "164000",
+    "repair": "duplicated_next_row_at_chunk_boundary",
+    "next_id": "164001"
+  }
+]

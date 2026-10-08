@@ -1,0 +1,80 @@
+[
+  {
+    "id": "2440",
+    "brand_name": "Abercrombie & Fitch",
+    "product_name": "Authentic Moment Man",
+    "release_year": "2022",
+    "source_url": "https://www.fragrantica.com/perfume/Abercrombie-Fitch/Authentic-Moment-Man-79927.html"
+  },
+  {
+    "id": "60336",
+    "brand_name": "Floraïku",
+    "product_name": "First Dream of the Year",
+    "release_year": "2017",
+    "source_url": "https://www.fragrantica.com/perfume/Floraiku/First-Dream-of-the-Year-46164.html"
+  },
+  {
+    "id": "77268",
+    "brand_name": "INNATIVE",
+    "product_name": "BLUE ESSENCE (Eau de Parfum)",
+    "release_year": "",
+    "source_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-2"
+  },
+  {
+    "id": "77290",
+    "brand_name": "INNATIVE",
+    "product_name": "SERENE BLOOM (Eau de Parfum)",
+    "release_year": "",
+    "source_url": "https://innativekozmetik.com/innative-e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu"
+  },
+  {
+    "id": "77267",
+    "brand_name": "INNATIVE",
+    "product_name": "BERRY AURA (Eau de Parfum)",
+    "release_year": "",
+    "source_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+    "concentration": "EDP",
+    "gender": "female"
+  },
+  {
+    "id": "36022",
+    "brand_name": "Caudalie",
+    "product_name": "Thé Des Vignes",
+    "release_year": "2011",
+    "source_url": "https://www.fragrantica.com/perfume/Caudalie/The-Des-Vignes-12696.html"
+  },
+  {
+    "id": "36013",
+    "brand_name": "Caudalie",
+    "product_name": "Ange des Vignes",
+    "release_year": "2023",
+    "source_url": "https://www.fragrantica.com/perfume/Caudalie/Ange-des-Vignes-83510.html",
+    "concentration": "EDP"
+  },
+  {
+    "id": "90677",
+    "brand_name": "Lalique",
+    "product_name": "Amethyst",
+    "release_year": "2007",
+    "source_url": "https://www.fragrantica.com/perfume/Lalique/Amethyst-1835.html",
+    "concentration": "EDP",
+    "gender": "female"
+  },
+  {
+    "id": "100781",
+    "brand_name": "Mad Parfumeur",
+    "product_name": "1923",
+    "release_year": "2025",
+    "source_url": "https://www.fragrantica.com/perfume/Mad-Parfumeur/1923-119692.html",
+    "gender": "male"
+  },
+  {
+    "id": "113828",
+    "brand_name": "Narciso Rodriguez",
+    "product_name": "All Of Me",
+    "release_year": "2023",
+    "source_url": "https://www.fragrantica.com/perfume/Narciso-Rodriguez/All-Of-Me-84201.html",
+    "concentration": "EDP",
+    "gender": "female"
+  }
+]

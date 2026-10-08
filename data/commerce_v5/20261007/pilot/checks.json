@@ -1,0 +1,902 @@
+[
+  {
+    "product_id": "2440",
+    "url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-100-ml-erkek-parfum",
+    "evidence": {
+      "requested_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-100-ml-erkek-parfum",
+      "final_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-100-ml-erkek-parfum",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:21:12.462171+00:00",
+      "observed_at": "2026-10-08T15:21:12.821873+00:00",
+      "seconds": 10.257,
+      "decoded_utf8_bytes": 391031,
+      "decoded_sha256": "0652c647594e07b88300ac81351494361e0b2572a39adb8febfa8af68e2fb8c2",
+      "snapshot": "responses/0652c647594e07b88300ac81351494361e0b2572a39adb8febfa8af68e2fb8c2.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "brand_conflict",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "6900.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-100-ml-erkek-parfum?variant=53327774744939",
+        "source_product_name": "Abercrombie & Fitch Authentic Moment Men EDT 100 ml Erkek Parfüm",
+        "source_id": "yesparfumeri",
+        "seller_name": "yesparfumeri.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "brand_conflict",
+        "checked_at": "2026-10-08T15:21:12.462171+00:00",
+        "evidence_sha256": "0652c647594e07b88300ac81351494361e0b2572a39adb8febfa8af68e2fb8c2"
+      }
+    ]
+  },
+  {
+    "product_id": "2440",
+    "url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-50-ml-erkek-parfum",
+    "evidence": {
+      "requested_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-50-ml-erkek-parfum",
+      "final_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-50-ml-erkek-parfum",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:21:18.832506+00:00",
+      "observed_at": "2026-10-08T15:21:19.164118+00:00",
+      "seconds": 6.277,
+      "decoded_utf8_bytes": 390990,
+      "decoded_sha256": "51d458da51b578b202e6be565a713d4c8df855432574e19188467dc190aacf39",
+      "snapshot": "responses/51d458da51b578b202e6be565a713d4c8df855432574e19188467dc190aacf39.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "brand_conflict",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "6350.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-men-edt-50-ml-erkek-parfum?variant=53327778775403",
+        "source_product_name": "Abercrombie & Fitch Authentic Moment Men EDT 50 ml Erkek Parfüm",
+        "source_id": "yesparfumeri",
+        "seller_name": "yesparfumeri.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "brand_conflict",
+        "checked_at": "2026-10-08T15:21:18.832506+00:00",
+        "evidence_sha256": "51d458da51b578b202e6be565a713d4c8df855432574e19188467dc190aacf39"
+      }
+    ]
+  },
+  {
+    "product_id": "2440",
+    "url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-100-ml-kadin-parfum",
+    "evidence": {
+      "requested_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-100-ml-kadin-parfum",
+      "final_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-100-ml-kadin-parfum",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:21:25.066340+00:00",
+      "observed_at": "2026-10-08T15:21:25.679141+00:00",
+      "seconds": 6.455,
+      "decoded_utf8_bytes": 391253,
+      "decoded_sha256": "c5be1d990faa9f6330c372b933a0fa689119aa563e8abe13842a32a7e356a4c3",
+      "snapshot": "responses/c5be1d990faa9f6330c372b933a0fa689119aa563e8abe13842a32a7e356a4c3.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "brand_conflict",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "6990.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-100-ml-kadin-parfum?variant=53327839134059",
+        "source_product_name": "Abercrombie & Fitch Authentic Moment Women EDP 100 ml Kadın Parfüm",
+        "source_id": "yesparfumeri",
+        "seller_name": "yesparfumeri.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "brand_conflict",
+        "checked_at": "2026-10-08T15:21:25.066340+00:00",
+        "evidence_sha256": "c5be1d990faa9f6330c372b933a0fa689119aa563e8abe13842a32a7e356a4c3"
+      }
+    ]
+  },
+  {
+    "product_id": "2440",
+    "url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-50-ml-kadin-parfum",
+    "evidence": {
+      "requested_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-50-ml-kadin-parfum",
+      "final_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-50-ml-kadin-parfum",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:21:31.254900+00:00",
+      "observed_at": "2026-10-08T15:21:31.612584+00:00",
+      "seconds": 5.86,
+      "decoded_utf8_bytes": 391149,
+      "decoded_sha256": "01acf47e657d8af853f521e8b61675ed1ee57c71160e1f60f7f9443812d7bd49",
+      "snapshot": "responses/01acf47e657d8af853f521e8b61675ed1ee57c71160e1f60f7f9443812d7bd49.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "brand_conflict",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "6350.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://yesparfumeri.com/products/abercrombie-fitch-authentic-moment-women-edp-50-ml-kadin-parfum?variant=53327799320939",
+        "source_product_name": "Abercrombie & Fitch Authentic Moment Women EDP 50 ml Kadın Parfüm",
+        "source_id": "yesparfumeri",
+        "seller_name": "yesparfumeri.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "brand_conflict",
+        "checked_at": "2026-10-08T15:21:31.254900+00:00",
+        "evidence_sha256": "01acf47e657d8af853f521e8b61675ed1ee57c71160e1f60f7f9443812d7bd49"
+      }
+    ]
+  },
+  {
+    "product_id": "60336",
+    "url": "https://yesparfumeri.com/products/floraiku-first-dream-of-the-year-unisex-edp-parfum",
+    "evidence": {
+      "requested_url": "https://yesparfumeri.com/products/floraiku-first-dream-of-the-year-unisex-edp-parfum",
+      "final_url": "https://yesparfumeri.com/products/floraiku-first-dream-of-the-year-unisex-edp-parfum",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:21:37.563895+00:00",
+      "observed_at": "2026-10-08T15:21:37.916024+00:00",
+      "seconds": 6.24,
+      "decoded_utf8_bytes": 399032,
+      "decoded_sha256": "af7dd952579ee3a02833423ce86cfcfe16e7c1b3670ea5b357da252bcdb566da",
+      "snapshot": "responses/af7dd952579ee3a02833423ce86cfcfe16e7c1b3670ea5b357da252bcdb566da.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "volume_unproven",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "9400.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": null,
+        "stock_status": "in_stock",
+        "purchase_url": "https://yesparfumeri.com/products/floraiku-first-dream-of-the-year-unisex-edp-parfum?variant=53327865643371",
+        "source_product_name": "Floraiku First Dream Of The Year Unisex EDP Parfüm",
+        "source_id": "yesparfumeri",
+        "seller_name": "yesparfumeri.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "volume_unproven",
+        "checked_at": "2026-10-08T15:21:37.563895+00:00",
+        "evidence_sha256": "af7dd952579ee3a02833423ce86cfcfe16e7c1b3670ea5b357da252bcdb566da"
+      }
+    ]
+  },
+  {
+    "product_id": "77268",
+    "url": "https://www.trendyol.com/innative/e4001-eny-blue-essence-edp-50-ml-temiz-cicekler-kadin-parfumu-p-991091641",
+    "evidence": {
+      "requested_url": "https://www.trendyol.com/innative/e4001-eny-blue-essence-edp-50-ml-temiz-cicekler-kadin-parfumu-p-991091641",
+      "final_url": "https://www.trendyol.com/innative/e4001-eny-blue-essence-edp-50-ml-temiz-cicekler-kadin-parfumu-p-991091641",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:21:48.497080+00:00",
+      "observed_at": "2026-10-08T15:21:49.089963+00:00",
+      "seconds": 11.112,
+      "decoded_utf8_bytes": 428799,
+      "decoded_sha256": "f1f3c120d2f7bdef10f533fd450fbdd55cd9c756133ec3540afbe5be4d8e48ec",
+      "snapshot": "responses/f1f3c120d2f7bdef10f533fd450fbdd55cd9c756133ec3540afbe5be4d8e48ec.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "613.29",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.trendyol.com/innative/e4001-eny-blue-essence-edp-50-ml-temiz-cicekler-kadin-parfumu-p-991091641",
+        "source_product_name": "INNATIVE E4001 Eny BLUE ESSENCE Edp 50 ml Temiz Çiçekler Kadın Parfümü",
+        "source_id": "trendyol",
+        "seller_name": "INNATIVE",
+        "seller_id": "830391",
+        "price_source": "trendyol_selected_seller",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:21:48.497080+00:00",
+        "evidence_sha256": "f1f3c120d2f7bdef10f533fd450fbdd55cd9c756133ec3540afbe5be4d8e48ec"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "613.29",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.trendyol.com/innative/e4001-eny-blue-essence-edp-50-ml-temiz-cicekler-kadin-parfumu-p-991091641",
+        "source_product_name": "INNATIVE E4001 Eny BLUE ESSENCE Edp 50 ml Temiz Çiçekler Kadın Parfümü",
+        "source_id": "trendyol",
+        "seller_name": "INNATIVE",
+        "seller_id": "830391",
+        "price_source": "trendyol_selected_seller",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:21:48.497080+00:00",
+        "evidence_sha256": "f1f3c120d2f7bdef10f533fd450fbdd55cd9c756133ec3540afbe5be4d8e48ec"
+      }
+    ]
+  },
+  {
+    "product_id": "77268",
+    "url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-2",
+    "evidence": {
+      "requested_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-2",
+      "final_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-2",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:22:00.214472+00:00",
+      "observed_at": "2026-10-08T15:22:00.413560+00:00",
+      "seconds": 11.258,
+      "decoded_utf8_bytes": 914181,
+      "decoded_sha256": "348e217f65c7d8bffbf1391926e1abb78267ed748da9ca438a01f366937fd3e1",
+      "snapshot": "responses/348e217f65c7d8bffbf1391926e1abb78267ed748da9ca438a01f366937fd3e1.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "450.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-2?vid=84c320d9-396e-4e76-8e35-7b5faede7da0",
+        "source_product_name": "INNATIVE E4001 Eny BLUE ESSENCE Edp 50 ml Temiz Çiçekler Kadın Parfümü",
+        "source_id": "innativekozmetik_com",
+        "seller_name": "innativekozmetik.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:00.214472+00:00",
+        "evidence_sha256": "348e217f65c7d8bffbf1391926e1abb78267ed748da9ca438a01f366937fd3e1"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "450.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-2?vid=84c320d9-396e-4e76-8e35-7b5faede7da0",
+        "source_product_name": "INNATIVE E4001 Eny BLUE ESSENCE Edp 50 ml Temiz Çiçekler Kadın Parfümü",
+        "source_id": "innativekozmetik_com",
+        "seller_name": "innativekozmetik.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:00.214472+00:00",
+        "evidence_sha256": "348e217f65c7d8bffbf1391926e1abb78267ed748da9ca438a01f366937fd3e1"
+      }
+    ]
+  },
+  {
+    "product_id": "77290",
+    "url": "https://www.trendyol.com/innative/e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu-p-1043366296",
+    "evidence": {
+      "requested_url": "https://www.trendyol.com/innative/e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu-p-1043366296",
+      "final_url": "https://www.trendyol.com/innative/e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu-p-1043366296",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:22:06.323700+00:00",
+      "observed_at": "2026-10-08T15:22:06.824403+00:00",
+      "seconds": 5.488,
+      "decoded_utf8_bytes": 427024,
+      "decoded_sha256": "5b58af4ad80960b2e980c2352b73c59ac6300fd53358cf7271782c90de688f75",
+      "snapshot": "responses/5b58af4ad80960b2e980c2352b73c59ac6300fd53358cf7271782c90de688f75.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "579.77",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.trendyol.com/innative/e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu-p-1043366296",
+        "source_product_name": "INNATIVE E2005 Eny SERENE BLOOM Edp 50 ml ORYANTAL ÇİÇEKSİ Kadın Parfümü",
+        "source_id": "trendyol",
+        "seller_name": "INNATIVE",
+        "seller_id": "830391",
+        "price_source": "trendyol_selected_seller",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:06.323700+00:00",
+        "evidence_sha256": "5b58af4ad80960b2e980c2352b73c59ac6300fd53358cf7271782c90de688f75"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "579.77",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.trendyol.com/innative/e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu-p-1043366296",
+        "source_product_name": "INNATIVE E2005 Eny SERENE BLOOM Edp 50 ml ORYANTAL ÇİÇEKSİ Kadın Parfümü",
+        "source_id": "trendyol",
+        "seller_name": "INNATIVE",
+        "seller_id": "830391",
+        "price_source": "trendyol_selected_seller",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:06.323700+00:00",
+        "evidence_sha256": "5b58af4ad80960b2e980c2352b73c59ac6300fd53358cf7271782c90de688f75"
+      }
+    ]
+  },
+  {
+    "product_id": "77290",
+    "url": "https://innativekozmetik.com/innative-e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu",
+    "evidence": {
+      "requested_url": "https://innativekozmetik.com/innative-e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu",
+      "final_url": "https://innativekozmetik.com/innative-e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:22:12.333135+00:00",
+      "observed_at": "2026-10-08T15:22:12.538586+00:00",
+      "seconds": 5.691,
+      "decoded_utf8_bytes": 916071,
+      "decoded_sha256": "d621b30a11d2e2292066269352a8d1f6ac57f9be0e92dcda3271324d46166af5",
+      "snapshot": "responses/d621b30a11d2e2292066269352a8d1f6ac57f9be0e92dcda3271324d46166af5.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "brand_conflict",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "450.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://innativekozmetik.com/innative-e2005-eny-serene-bloom-edp-50-ml-oryantal-ciceksi-kadin-parfumu?vid=970497b0-b3f0-4c4d-8c2f-e2ed9edb80a0",
+        "source_product_name": "INNATIVE E2005 Eny SERENE BLOOM Edp 50 ml ORYANTAL ÇİÇEKSİ Kadın Parfümü",
+        "source_id": "innativekozmetik_com",
+        "seller_name": "innativekozmetik.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "brand_conflict",
+        "checked_at": "2026-10-08T15:22:12.333135+00:00",
+        "evidence_sha256": "d621b30a11d2e2292066269352a8d1f6ac57f9be0e92dcda3271324d46166af5"
+      }
+    ]
+  },
+  {
+    "product_id": "77267",
+    "url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+    "evidence": {
+      "requested_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+      "final_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:22:18.420946+00:00",
+      "observed_at": "2026-10-08T15:22:18.613147+00:00",
+      "seconds": 6.04,
+      "decoded_utf8_bytes": 928000,
+      "decoded_sha256": "873078a3895d863bdf22a6c39b35b9ff9bd8eae65926a1dd46419b0bd695ed44",
+      "snapshot": "responses/873078a3895d863bdf22a6c39b35b9ff9bd8eae65926a1dd46419b0bd695ed44.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "450.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1?vid=9def0438-074e-4a63-a922-074de6c0c107",
+        "source_product_name": "INNATIVE E2002 Eny BERRY AURA Edp 50 ml Sulu Armut Ve Taze Çiçekler Kadın Parfümü",
+        "source_id": "innativekozmetik_com",
+        "seller_name": "innativekozmetik.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:18.420946+00:00",
+        "evidence_sha256": "873078a3895d863bdf22a6c39b35b9ff9bd8eae65926a1dd46419b0bd695ed44"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "450.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://innativekozmetik.com/innative-e3001-eny-nocturne-kiss-edp-50-ml-baharatlikremsi-hindistan-cevizi-kadin-parfumu-1-1?vid=9def0438-074e-4a63-a922-074de6c0c107",
+        "source_product_name": "INNATIVE E2002 Eny BERRY AURA Edp 50 ml Sulu Armut Ve Taze Çiçekler Kadın Parfümü",
+        "source_id": "innativekozmetik_com",
+        "seller_name": "innativekozmetik.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:18.420946+00:00",
+        "evidence_sha256": "873078a3895d863bdf22a6c39b35b9ff9bd8eae65926a1dd46419b0bd695ed44"
+      }
+    ]
+  },
+  {
+    "product_id": "36022",
+    "url": "https://fr.caudalie.com/p/528R1C/the-des-vignes-eau-fraiche-528r1c.html",
+    "evidence": {
+      "requested_url": "https://fr.caudalie.com/p/528R1C/the-des-vignes-eau-fraiche-528r1c.html",
+      "final_url": "https://fr.caudalie.com/p/528R1C/the-des-vignes-eau-fraiche-528r1c.html",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:22:30.310344+00:00",
+      "observed_at": "2026-10-08T15:22:32.130006+00:00",
+      "seconds": 13.482,
+      "decoded_utf8_bytes": 535379,
+      "decoded_sha256": "ed1dd6b324f0be70a921c0d16d1c51a574509bae73fb4bbc8892da0176d4d252",
+      "snapshot": "responses/ed1dd6b324f0be70a921c0d16d1c51a574509bae73fb4bbc8892da0176d4d252.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "29.50",
+        "currency": "EUR",
+        "market": "FR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://fr.caudalie.com/p/528R1C/the-des-vignes-eau-fraiche-528r1c.html?MjE5=Y29uZmlndXJhYmxlLzIxOS8xMjg=",
+        "source_product_name": "Eau Fraîche Thé des Vignes - 100mL",
+        "source_id": "fr_caudalie_com",
+        "seller_name": "fr.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:30.310344+00:00",
+        "evidence_sha256": "ed1dd6b324f0be70a921c0d16d1c51a574509bae73fb4bbc8892da0176d4d252"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "29.50",
+        "currency": "EUR",
+        "market": "FR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://fr.caudalie.com/p/528R1C/the-des-vignes-eau-fraiche-528r1c.html?MjE5=Y29uZmlndXJhYmxlLzIxOS8xMjg=",
+        "source_product_name": "Eau Fraîche Thé des Vignes - 100mL",
+        "source_id": "fr_caudalie_com",
+        "seller_name": "fr.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:30.310344+00:00",
+        "evidence_sha256": "ed1dd6b324f0be70a921c0d16d1c51a574509bae73fb4bbc8892da0176d4d252"
+      }
+    ]
+  },
+  {
+    "product_id": "36022",
+    "url": "https://us.caudalie.com/p/528R1/528r1.html",
+    "evidence": {
+      "requested_url": "https://us.caudalie.com/p/528R1/528r1.html",
+      "final_url": "https://us.caudalie.com/p/528R1/528r1.html",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:22:42.475500+00:00",
+      "observed_at": "2026-10-08T15:22:43.573376+00:00",
+      "seconds": 11.376,
+      "decoded_utf8_bytes": 432952,
+      "decoded_sha256": "27e33be396be5083b4ad645cdf3921bcd3125199ff015a3aca6c233d35a3c523",
+      "snapshot": "responses/27e33be396be5083b4ad645cdf3921bcd3125199ff015a3aca6c233d35a3c523.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "42.00",
+        "currency": "USD",
+        "market": "US",
+        "volume_ml": 50.0,
+        "stock_status": "out_of_stock",
+        "purchase_url": "https://us.caudalie.com/p/528R1/528r1.html",
+        "source_product_name": "Thé des Vignes Fresh Fragrance",
+        "source_id": "us_caudalie_com",
+        "seller_name": "us.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:42.475500+00:00",
+        "evidence_sha256": "27e33be396be5083b4ad645cdf3921bcd3125199ff015a3aca6c233d35a3c523"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "42.00",
+        "currency": "USD",
+        "market": "US",
+        "volume_ml": 50.0,
+        "stock_status": "out_of_stock",
+        "purchase_url": "https://us.caudalie.com/p/528R1/528r1.html",
+        "source_product_name": "Thé des Vignes Fresh Fragrance",
+        "source_id": "us_caudalie_com",
+        "seller_name": "us.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:22:42.475500+00:00",
+        "evidence_sha256": "27e33be396be5083b4ad645cdf3921bcd3125199ff015a3aca6c233d35a3c523"
+      }
+    ]
+  },
+  {
+    "product_id": "36022",
+    "url": "https://tr.caudalie.com/p/369C/hyaluronic-nourishing-body-lotion-the-des-vignes-369c.html",
+    "evidence": {
+      "requested_url": "https://tr.caudalie.com/p/369C/hyaluronic-nourishing-body-lotion-the-des-vignes-369c.html",
+      "final_url": "https://tr.caudalie.com/p/369C/hyaluronic-nourishing-body-lotion-the-des-vignes-369c.html",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:22:54.186464+00:00",
+      "observed_at": "2026-10-08T15:22:55.008498+00:00",
+      "seconds": 11.378,
+      "decoded_utf8_bytes": 494368,
+      "decoded_sha256": "c10829215da4eb6f54eee0296d08d8638a76708d36050fc7826818887d9f1150",
+      "snapshot": "responses/c10829215da4eb6f54eee0296d08d8638a76708d36050fc7826818887d9f1150.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "form_mismatch",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "1025.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 200.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://tr.caudalie.com/p/369C/hyaluronic-nourishing-body-lotion-the-des-vignes-369c.html?MjE5=Y29uZmlndXJhYmxlLzIxOS8xMzE=",
+        "source_product_name": "Besleyici Hiyalüronik Vücut Losyonu-200ml",
+        "source_id": "tr_caudalie_com",
+        "seller_name": "tr.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "form_mismatch",
+        "checked_at": "2026-10-08T15:22:54.186464+00:00",
+        "evidence_sha256": "c10829215da4eb6f54eee0296d08d8638a76708d36050fc7826818887d9f1150"
+      }
+    ]
+  },
+  {
+    "product_id": "36022",
+    "url": "https://tr.caudalie.com/p/382/the-des-vignes-dus-jeli-200ml-382.html",
+    "evidence": {
+      "requested_url": "https://tr.caudalie.com/p/382/the-des-vignes-dus-jeli-200ml-382.html",
+      "final_url": "https://tr.caudalie.com/p/382/the-des-vignes-dus-jeli-200ml-382.html",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:23:00.276079+00:00",
+      "observed_at": "2026-10-08T15:23:00.842197+00:00",
+      "seconds": 5.774,
+      "decoded_utf8_bytes": 459820,
+      "decoded_sha256": "696abbc6e942c7a6ab6188a6ff730e6fb04de771ff71efb8bbac1e37f599436e",
+      "snapshot": "responses/696abbc6e942c7a6ab6188a6ff730e6fb04de771ff71efb8bbac1e37f599436e.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "form_mismatch",
+    "offers": [],
+    "observations": [
+      {
+        "amount": "495.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 200.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://tr.caudalie.com/p/382/the-des-vignes-dus-jeli-200ml-382.html",
+        "source_product_name": "Thé des Vignes Duş Jeli -200ml",
+        "source_id": "tr_caudalie_com",
+        "seller_name": "tr.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "form_mismatch",
+        "checked_at": "2026-10-08T15:23:00.276079+00:00",
+        "evidence_sha256": "696abbc6e942c7a6ab6188a6ff730e6fb04de771ff71efb8bbac1e37f599436e"
+      }
+    ]
+  },
+  {
+    "product_id": "36013",
+    "url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+    "evidence": {
+      "requested_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+      "final_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:23:06.492373+00:00",
+      "observed_at": "2026-10-08T15:23:07.397592+00:00",
+      "seconds": 6.504,
+      "decoded_utf8_bytes": 494623,
+      "decoded_sha256": "6ccfa4d768e055d88be89eaf51d6d6bdc87381efca9a00eca83576fb93b6037f",
+      "snapshot": "responses/6ccfa4d768e055d88be89eaf51d6d6bdc87381efca9a00eca83576fb93b6037f.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "1650.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+        "source_product_name": "Ange des Vignes Parfüm",
+        "source_id": "tr_caudalie_com",
+        "seller_name": "tr.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:06.492373+00:00",
+        "evidence_sha256": "6ccfa4d768e055d88be89eaf51d6d6bdc87381efca9a00eca83576fb93b6037f"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "1650.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://tr.caudalie.com/p/531R1/parfum-ange-des-vignes-531r1.html",
+        "source_product_name": "Ange des Vignes Parfüm",
+        "source_id": "tr_caudalie_com",
+        "seller_name": "tr.caudalie.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:06.492373+00:00",
+        "evidence_sha256": "6ccfa4d768e055d88be89eaf51d6d6bdc87381efca9a00eca83576fb93b6037f"
+      }
+    ]
+  },
+  {
+    "product_id": "90677",
+    "url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+    "evidence": {
+      "requested_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+      "final_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:23:12.143011+00:00",
+      "observed_at": "2026-10-08T15:23:12.493546+00:00",
+      "seconds": 5.036,
+      "decoded_utf8_bytes": 440632,
+      "decoded_sha256": "d1a6bc4887720ae68620b5b06a193ea43b4a2ceb54d8fc5746ca9a7599867dd3",
+      "snapshot": "responses/d1a6bc4887720ae68620b5b06a193ea43b4a2ceb54d8fc5746ca9a7599867dd3.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "3450.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum?variant=53327727886699",
+        "source_product_name": "Lalique Amethyst EDP 100 ml Kadın Parfüm",
+        "source_id": "yesparfumeri",
+        "seller_name": "yesparfumeri.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:12.143011+00:00",
+        "evidence_sha256": "d1a6bc4887720ae68620b5b06a193ea43b4a2ceb54d8fc5746ca9a7599867dd3"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "3450.00",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://yesparfumeri.com/products/lalique-amethyst-edp-100-ml-kadin-parfum?variant=53327727886699",
+        "source_product_name": "Lalique Amethyst EDP 100 ml Kadın Parfüm",
+        "source_id": "yesparfumeri",
+        "seller_name": "yesparfumeri.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:12.143011+00:00",
+        "evidence_sha256": "d1a6bc4887720ae68620b5b06a193ea43b4a2ceb54d8fc5746ca9a7599867dd3"
+      }
+    ]
+  },
+  {
+    "product_id": "100781",
+    "url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+    "evidence": {
+      "requested_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+      "final_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:23:24.274128+00:00",
+      "observed_at": "2026-10-08T15:23:25.382494+00:00",
+      "seconds": 12.82,
+      "decoded_utf8_bytes": 298027,
+      "decoded_sha256": "c6fa8b1a3fef412e219ee63a9ca85611e53f07416640caaafc5648cf53e41387",
+      "snapshot": "responses/c6fa8b1a3fef412e219ee63a9ca85611e53f07416640caaafc5648cf53e41387.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "1999.99",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+        "source_product_name": "Mad 1923 Erkek 100 ml Parfüm",
+        "source_id": "madparfum_com",
+        "seller_name": "madparfum.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:24.274128+00:00",
+        "evidence_sha256": "c6fa8b1a3fef412e219ee63a9ca85611e53f07416640caaafc5648cf53e41387"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "1999.99",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 100.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.madparfum.com/urun/mad-1923-erkek-100-ml-parfum-mad-tff-1923-for-men/",
+        "source_product_name": "Mad 1923 Erkek 100 ml Parfüm",
+        "source_id": "madparfum_com",
+        "seller_name": "madparfum.com",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:24.274128+00:00",
+        "evidence_sha256": "c6fa8b1a3fef412e219ee63a9ca85611e53f07416640caaafc5648cf53e41387"
+      }
+    ]
+  },
+  {
+    "product_id": "113828",
+    "url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+    "evidence": {
+      "requested_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+      "final_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+      "http_status": 200,
+      "error": "",
+      "fetched_at": "2026-10-08T15:23:36.511291+00:00",
+      "observed_at": "2026-10-08T15:23:36.839339+00:00",
+      "seconds": 11.427,
+      "decoded_utf8_bytes": 159733,
+      "decoded_sha256": "b5e48eaebf717d4ffcae10ff3d460c430b12a4eb0d26fdb971b01b34a45b1218",
+      "snapshot": "responses/b5e48eaebf717d4ffcae10ff3d460c430b12a4eb0d26fdb971b01b34a45b1218.txt.gz",
+      "retry_at": 0,
+      "from_cache": false,
+      "body_limited": false
+    },
+    "reason": "verified",
+    "offers": [
+      {
+        "amount": "3857.50",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+        "source_product_name": "Narciso Rodriguez All Of Me Edp 50 Ml Kadın Parfüm",
+        "source_id": "perfumepoint",
+        "seller_name": "perfumepoint.com.tr",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:36.511291+00:00",
+        "evidence_sha256": "b5e48eaebf717d4ffcae10ff3d460c430b12a4eb0d26fdb971b01b34a45b1218"
+      }
+    ],
+    "observations": [
+      {
+        "amount": "3857.50",
+        "currency": "TRY",
+        "market": "TR",
+        "volume_ml": 50.0,
+        "stock_status": "in_stock",
+        "purchase_url": "https://www.perfumepoint.com.tr/narciso-rodriguez-all-of-me-edp-50-ml",
+        "source_product_name": "Narciso Rodriguez All Of Me Edp 50 Ml Kadın Parfüm",
+        "source_id": "perfumepoint",
+        "seller_name": "perfumepoint.com.tr",
+        "seller_id": "",
+        "price_source": "main_product_jsonld",
+        "checkout_verified": false,
+        "reason": "verified",
+        "checked_at": "2026-10-08T15:23:36.511291+00:00",
+        "evidence_sha256": "b5e48eaebf717d4ffcae10ff3d460c430b12a4eb0d26fdb971b01b34a45b1218"
+      }
+    ]
+  }
+]

@@ -1,0 +1,239 @@
+{
+  "method_version": "v5.0-global-evidence",
+  "updated_at": "2026-10-08T15:23:44.270882+00:00",
+  "scope_total": 174259,
+  "proven_searches": 0,
+  "search_scope": "successfully_read_named_catalogues_only",
+  "total_pages": 10509,
+  "completed_pages": 0,
+  "pending_pages": 10509,
+  "page_progress_pct": 0.0,
+  "unresolved_pages": 0,
+  "unavailable_pages": 0,
+  "tasks_total": 19238,
+  "tasks_completed": 0,
+  "tasks_pending": 19238,
+  "task_progress_pct": 0.0,
+  "verified_price_products": 0,
+  "in_stock_price_products": 0,
+  "turkey_in_stock_products": 0,
+  "currency_products": {},
+  "partial_discovery_tasks": 0,
+  "task_status_counts": {
+    "pending": 19238
+  },
+  "decision_reasons": {},
+  "source_coverage": [
+    {
+      "source_id": "perfumepoint",
+      "complete": false,
+      "brand": "",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "yesparfumeri",
+      "complete": false,
+      "brand": "",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "innativekozmetik_com",
+      "complete": false,
+      "brand": "INNATIVE",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "madparfum_com",
+      "complete": false,
+      "brand": "Mad Parfumeur",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "tr_caudalie_com",
+      "complete": false,
+      "brand": "Caudalie",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "fr_caudalie_com",
+      "complete": false,
+      "brand": "Caudalie",
+      "market": "FR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "us_caudalie_com",
+      "complete": false,
+      "brand": "Caudalie",
+      "market": "US",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "lorisparfum_com",
+      "complete": false,
+      "brand": "Loris",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "lorisparfum_eu",
+      "complete": false,
+      "brand": "Loris",
+      "market": "EU",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "dpperfumum_com_tr",
+      "complete": false,
+      "brand": "D&P Perfumum",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "eyfelparfum_com",
+      "complete": false,
+      "brand": "Eyfel",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "e-bargello_com",
+      "complete": false,
+      "brand": "Bargello",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "pariscornerperfumes_com",
+      "complete": false,
+      "brand": "PARIS CORNER",
+      "market": "AE",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "qlife_com_tr",
+      "complete": false,
+      "brand": "Qlife",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "laverne_com",
+      "complete": false,
+      "brand": "Laverne",
+      "market": "SA",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "atelierrebul_com_tr",
+      "complete": false,
+      "brand": "Atelier Rebul",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "alwataniah_com",
+      "complete": false,
+      "brand": "Al Wataniah",
+      "market": "AE",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "goldenrose_com_tr",
+      "complete": false,
+      "brand": "Golden Rose",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "edataspinar_com",
+      "complete": false,
+      "brand": "Eda Taşpınar",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "royalplatinumstore_com",
+      "complete": false,
+      "brand": "Royal Platinum",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "thespiritofdubai_com",
+      "complete": false,
+      "brand": "The Spirit of Dubai",
+      "market": "AE",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "romeron_com_tr",
+      "complete": false,
+      "brand": "Romeron",
+      "market": "TR",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "fugazzifragrances_com",
+      "complete": false,
+      "brand": "Fugazzi",
+      "market": "NL",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "widian_com",
+      "complete": false,
+      "brand": "WIDIAN",
+      "market": "AE",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "rarebeauty_com",
+      "complete": false,
+      "brand": "Rare Beauty",
+      "market": "US",
+      "maps": 1,
+      "completed_maps": 0
+    },
+    {
+      "source_id": "dedcool_com",
+      "complete": false,
+      "brand": "DedCool",
+      "market": "US",
+      "maps": 1,
+      "completed_maps": 0
+    }
+  ],
+  "finished": false,
+  "complete": false,
+  "global_absence_proven": false
+}
