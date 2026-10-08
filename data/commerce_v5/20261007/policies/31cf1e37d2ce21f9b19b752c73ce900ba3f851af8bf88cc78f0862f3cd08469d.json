@@ -1,0 +1,1 @@
+{"host": "widian.com", "checked_at": 1791473418.7051108, "ok": true, "rules": "User-agent: *\nDisallow:\n", "http_status": 200, "snapshot": "responses/e5c4b84484ee4216e9373be99380320c25dd94805f99f0a805846f087636553f.txt.gz", "sha256": "e5c4b84484ee4216e9373be99380320c25dd94805f99f0a805846f087636553f", "url": "https://widian.com/robots.txt", "error": ""}

@@ -1,55 +1,55 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-08T15:29:18.647153+00:00",
+  "updated_at": "2026-10-08T15:34:21.669239+00:00",
   "scope_total": 174259,
-  "proven_searches": 11,
+  "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
-  "total_pages": 10829,
+  "total_pages": 11557,
   "completed_pages": 0,
-  "pending_pages": 10829,
+  "pending_pages": 11557,
   "page_progress_pct": 0.0,
   "unresolved_pages": 0,
   "unavailable_pages": 0,
-  "tasks_total": 20245,
-  "tasks_completed": 20,
-  "tasks_pending": 20225,
-  "task_progress_pct": 0.099,
+  "tasks_total": 21099,
+  "tasks_completed": 53,
+  "tasks_pending": 21046,
+  "task_progress_pct": 0.251,
   "verified_price_products": 0,
   "in_stock_price_products": 0,
   "turkey_in_stock_products": 0,
   "currency_products": {},
-  "partial_discovery_tasks": 3,
+  "partial_discovery_tasks": 6,
   "task_status_counts": {
-    "done": 18,
-    "error": 1,
-    "pending": 20225,
+    "done": 50,
+    "error": 2,
+    "pending": 21046,
     "unavailable": 1
   },
   "decision_reasons": {},
   "source_coverage": [
     {
       "source_id": "perfumepoint",
-      "complete": false,
+      "complete": true,
       "brand": "",
       "market": "TR",
       "maps": 11,
-      "completed_maps": 1
+      "completed_maps": 11
     },
     {
       "source_id": "yesparfumeri",
-      "complete": false,
+      "complete": true,
       "brand": "",
       "market": "TR",
       "maps": 10,
-      "completed_maps": 1
+      "completed_maps": 10
     },
     {
       "source_id": "innativekozmetik_com",
-      "complete": false,
+      "complete": true,
       "brand": "INNATIVE",
       "market": "TR",
       "maps": 4,
-      "completed_maps": 1
+      "completed_maps": 4
     },
     {
       "source_id": "madparfum_com",
@@ -57,7 +57,7 @@
       "brand": "Mad Parfumeur",
       "market": "TR",
       "maps": 6,
-      "completed_maps": 1
+      "completed_maps": 5
     },
     {
       "source_id": "tr_caudalie_com",
@@ -189,27 +189,27 @@
     },
     {
       "source_id": "thespiritofdubai_com",
-      "complete": false,
+      "complete": true,
       "brand": "The Spirit of Dubai",
       "market": "AE",
       "maps": 1,
-      "completed_maps": 0
+      "completed_maps": 1
     },
     {
       "source_id": "romeron_com_tr",
       "complete": false,
       "brand": "Romeron",
       "market": "TR",
-      "maps": 1,
-      "completed_maps": 0
+      "maps": 5,
+      "completed_maps": 1
     },
     {
       "source_id": "fugazzifragrances_com",
       "complete": false,
       "brand": "Fugazzi",
       "market": "NL",
-      "maps": 1,
-      "completed_maps": 0
+      "maps": 23,
+      "completed_maps": 1
     },
     {
       "source_id": "widian_com",
@@ -217,30 +217,30 @@
       "brand": "WIDIAN",
       "market": "AE",
       "maps": 1,
-      "completed_maps": 0
+      "completed_maps": 1
     },
     {
       "source_id": "rarebeauty_com",
       "complete": false,
       "brand": "Rare Beauty",
       "market": "US",
-      "maps": 1,
-      "completed_maps": 0
+      "maps": 81,
+      "completed_maps": 1
     },
     {
       "source_id": "dedcool_com",
       "complete": false,
       "brand": "DedCool",
       "market": "US",
-      "maps": 1,
-      "completed_maps": 0
+      "maps": 21,
+      "completed_maps": 1
     }
   ],
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 312.1,
-  "worker_completed_tasks": 20,
-  "measured_remaining_hours_current_queue": 87.67,
+  "worker_seconds": 615.1,
+  "worker_completed_tasks": 53,
+  "measured_remaining_hours_current_queue": 67.85,
   "eta_includes_undiscovered_pages": false
 }
