@@ -6,6 +6,15 @@ from commerce_v3_http import PoliteClient,Fetch,host,public_url
 from commerce_v5_sources import robots_allowed
 
 class PolicyClient(PoliteClient):
+    def _session(self):
+        session=super()._session()
+        # Public storefront preferences from Trendyol's own page context.
+        # Select the requested Turkish market on foreign runners; this is not
+        # authentication. Robots and access checks still run on every URL.
+        for name,value in {'countryCode':'TR','storefrontId':'1','language':'tr'}.items():
+            session.cookies.set(name,value,domain='.trendyol.com',path='/',secure=True)
+        return session
+
     def __init__(self,root,deadline):
         super().__init__(0,1,slot=6,deadline=deadline,retain_error_bodies=True)
         self.root=Path(root);self.policies={}

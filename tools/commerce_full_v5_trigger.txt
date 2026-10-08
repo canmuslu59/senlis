@@ -2,3 +2,4 @@ User-authorized global commerce v5 launch, 2026-10-08.
 Existing 174259 identities; public Trendyol and approved brand/retailer sources.
 Preserve original TRY/EUR/USD offers and evidence, gated by a fresh ten-product pilot.
 One serial queue; durable state data/commerce-v5-20261007.
+2026-10-08 retry after diagnosed country-selection redirect: explicitly select public TR storefront preferences; keep the unchanged live pilot gate and robots policy.
