@@ -84,3 +84,37 @@ Independent recovery review: no Critical or Important findings; approved for
 continuation. A historical binary cannot enforce a newer sidecar, so rerunning
 the original failed workflow remains prohibited. New workers reject any
 unstamped post-transition events rather than accepting mixed runtimes.
+
+## Continuation verified live — 2026-10-09 15:43:59 UTC
+
+Active run [37900782488](https://github.com/canmuslu59/senlis/actions/runs/37900782488),
+code d9a1976433016e65a4afcad7189adb6a14b65caf, passed all 123 GitHub tests and
+the saved-page/resume gate. Activation commit 5fe18366df1f78c6b35ef4dd8115f5f179d34ce1
+retains original campaign and all counters. The formerly crashing page is the
+first post-revision event, done/success at 07:46:25 UTC, attempts=1.
+
+Scan parts 9–13 succeeded; part 14 is active and 15–48 are queued (34 slots).
+No new failed job. GitHub's aggregate run status still says queued while the
+job endpoint confirms an active worker; evaluate job and checkpoint evidence.
+
+Pinned checkpoint 07a0247437721fbb0695b500fca83c3a8550392c has 10924 events
+in 252 segments: 3283 new durable events. The original 160 manifest entries
+match the preserved baseline. Recomputed the entire manifest chain and verified
+the first and latest new segment payload hashes/counts and runtime-revision
+attribution. The current checkpoint is fresh; no restart is warranted.
+
+Pages: 10423/19105 (54.556%), pending 8682, unresolved 240, unavailable 17.
+Tasks: 10697/28647 (37.341%), pending 17950. Catalogue scope: 174259/174259,
+which does not imply price completeness. Verified products: 3213 (+567 since
+repair); Turkish in-stock: 2948. Currency product counts: TRY 3210, EUR 4, USD 5
+(overlap possible). finished=false, complete=false.
+
+The latest segment has 15 done events and 3 robots_disallowed events for
+Trendyol /pd/ product addresses. These are source-access restrictions, not a
+recurrence of the nullable parser crash. No access rules or attempt caps were
+relaxed. The last worker pace estimates 106.81 hours for its pending queue;
+this volatile estimate excludes undiscovered pages and now exceeds remaining
+run budget. The current 34 queued slots provide approximately 49 scan hours,
+so completion is not guaranteed within this run. Pending work must remain
+checkpointed; never claim completion based only on catalogue scope or all
+workflow jobs exiting successfully.

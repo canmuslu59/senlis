@@ -11,6 +11,7 @@
   "launched_at": "2026-10-08T15:20:31Z",
   "verification": "114 regression tests passed; GitHub fresh pilot 8/10 with Trendyol 2, TRY/EUR/USD, negative controls 2/2; durable prepare checkpoint matches immutable code SHA",
   "resume_rules": [
+    "Use active_run for current workflow/code. Preserve campaign.json code as original provenance and validate runtime_revision.json against its approved event boundary. Never rerun original run 37799951233 after runtime activation.",
     "Do not change main, product identities, v3 queues or v4 evidence.",
     "Never start a second concurrent campaign or cancel an active healthy worker.",
     "Read run/jobs, summary.json, campaign.json and event_manifest.json before acting.",
@@ -102,5 +103,353 @@
     "commit": "005878b40348552bf3deac50b8b3cedb1d11689c",
     "durable_events": 23,
     "integrity_verified": true
+  },
+  "active_run": {
+    "run_id": 37900782488,
+    "run_url": "https://github.com/canmuslu59/senlis/actions/runs/37900782488",
+    "code_sha": "d9a1976433016e65a4afcad7189adb6a14b65caf",
+    "code_tree_sha": "5e702a9ff9106e7918b7c721ab167efdc3e882a7",
+    "workflow": ".github/workflows/commerce-resume-v5.yml",
+    "started_at": "2026-10-09T07:44:46Z",
+    "type": "same_campaign_continuation",
+    "activation_commit": "5fe18366df1f78c6b35ef4dd8115f5f179d34ce1",
+    "runtime_revision_path": "data/commerce_v5/20261007/runtime_revision.json",
+    "base_event_count": 7641,
+    "base_event_chain_sha256": "f6646fd90cb7a3f4f3542db54939be789ca424400f91f98dd59e2436b776d3c4",
+    "regression_tests_passed": 123,
+    "prior_files_and_counters_preserved": true,
+    "serial_worker_slots": 40,
+    "latest_verified_checkpoint": {
+      "method_version": "v5.0-global-evidence",
+      "updated_at": "2026-10-09T15:43:59.126516+00:00",
+      "scope_total": 174259,
+      "proven_searches": 174259,
+      "search_scope": "successfully_read_named_catalogues_only",
+      "total_pages": 19105,
+      "completed_pages": 10423,
+      "pending_pages": 8682,
+      "page_progress_pct": 54.556,
+      "unresolved_pages": 240,
+      "unavailable_pages": 17,
+      "tasks_total": 28647,
+      "tasks_completed": 10697,
+      "tasks_pending": 17950,
+      "task_progress_pct": 37.341,
+      "verified_price_products": 3213,
+      "in_stock_price_products": 2949,
+      "turkey_in_stock_products": 2948,
+      "currency_products": {
+        "EUR": 4,
+        "TRY": 3210,
+        "USD": 5
+      },
+      "partial_discovery_tasks": 125,
+      "task_status_counts": {
+        "done": 10437,
+        "error": 3,
+        "pending": 17950,
+        "restricted": 239,
+        "unavailable": 18
+      },
+      "decision_reasons": {
+        "brand_conflict": 4118,
+        "name_mismatch": 72616,
+        "verified": 6051,
+        "gender_mismatch": 1666,
+        "form_mismatch": 14984,
+        "variant_mismatch": 2272,
+        "concentration_mismatch": 4183,
+        "main_product_identifier_mismatch": 767,
+        "format_mismatch": 11012,
+        "concentration_unproven": 563,
+        "identity_ambiguous": 1061,
+        "volume_unproven": 82,
+        "volume_conflict": 87,
+        "main_product_data_missing": 1682,
+        "offer_url_mismatch": 8,
+        "currency_unsupported": 35,
+        "selected_variant_unproven": 7,
+        "dupe": 9
+      },
+      "source_coverage": [
+        {
+          "source_id": "perfumepoint",
+          "complete": true,
+          "brand": "",
+          "market": "TR",
+          "maps": 11,
+          "completed_maps": 11
+        },
+        {
+          "source_id": "yesparfumeri",
+          "complete": true,
+          "brand": "",
+          "market": "TR",
+          "maps": 10,
+          "completed_maps": 10
+        },
+        {
+          "source_id": "innativekozmetik_com",
+          "complete": true,
+          "brand": "INNATIVE",
+          "market": "TR",
+          "maps": 4,
+          "completed_maps": 4
+        },
+        {
+          "source_id": "madparfum_com",
+          "complete": false,
+          "brand": "Mad Parfumeur",
+          "market": "TR",
+          "maps": 6,
+          "completed_maps": 6
+        },
+        {
+          "source_id": "tr_caudalie_com",
+          "complete": true,
+          "brand": "Caudalie",
+          "market": "TR",
+          "maps": 1,
+          "completed_maps": 1
+        },
+        {
+          "source_id": "fr_caudalie_com",
+          "complete": true,
+          "brand": "Caudalie",
+          "market": "FR",
+          "maps": 1,
+          "completed_maps": 1
+        },
+        {
+          "source_id": "us_caudalie_com",
+          "complete": true,
+          "brand": "Caudalie",
+          "market": "US",
+          "maps": 1,
+          "completed_maps": 1
+        },
+        {
+          "source_id": "lorisparfum_com",
+          "complete": false,
+          "brand": "Loris",
+          "market": "TR",
+          "maps": 35,
+          "completed_maps": 35
+        },
+        {
+          "source_id": "lorisparfum_eu",
+          "complete": false,
+          "brand": "Loris",
+          "market": "EU",
+          "maps": 20,
+          "completed_maps": 20
+        },
+        {
+          "source_id": "dpperfumum_com_tr",
+          "complete": true,
+          "brand": "D&P Perfumum",
+          "market": "TR",
+          "maps": 5,
+          "completed_maps": 5
+        },
+        {
+          "source_id": "eyfelparfum_com",
+          "complete": false,
+          "brand": "Eyfel",
+          "market": "TR",
+          "maps": 1,
+          "completed_maps": 0
+        },
+        {
+          "source_id": "e-bargello_com",
+          "complete": true,
+          "brand": "Bargello",
+          "market": "TR",
+          "maps": 11,
+          "completed_maps": 11
+        },
+        {
+          "source_id": "pariscornerperfumes_com",
+          "complete": false,
+          "brand": "PARIS CORNER",
+          "market": "AE",
+          "maps": 7,
+          "completed_maps": 7
+        },
+        {
+          "source_id": "qlife_com_tr",
+          "complete": false,
+          "brand": "Qlife",
+          "market": "TR",
+          "maps": 1,
+          "completed_maps": 1
+        },
+        {
+          "source_id": "laverne_com",
+          "complete": true,
+          "brand": "Laverne",
+          "market": "SA",
+          "maps": 4,
+          "completed_maps": 4
+        },
+        {
+          "source_id": "atelierrebul_com_tr",
+          "complete": true,
+          "brand": "Atelier Rebul",
+          "market": "TR",
+          "maps": 6,
+          "completed_maps": 6
+        },
+        {
+          "source_id": "alwataniah_com",
+          "complete": false,
+          "brand": "Al Wataniah",
+          "market": "AE",
+          "maps": 8,
+          "completed_maps": 8
+        },
+        {
+          "source_id": "goldenrose_com_tr",
+          "complete": false,
+          "brand": "Golden Rose",
+          "market": "TR",
+          "maps": 1,
+          "completed_maps": 0
+        },
+        {
+          "source_id": "edataspinar_com",
+          "complete": false,
+          "brand": "Eda Taşpınar",
+          "market": "TR",
+          "maps": 1,
+          "completed_maps": 0
+        },
+        {
+          "source_id": "royalplatinumstore_com",
+          "complete": false,
+          "brand": "Royal Platinum",
+          "market": "TR",
+          "maps": 7,
+          "completed_maps": 7
+        },
+        {
+          "source_id": "thespiritofdubai_com",
+          "complete": true,
+          "brand": "The Spirit of Dubai",
+          "market": "AE",
+          "maps": 1,
+          "completed_maps": 1
+        },
+        {
+          "source_id": "romeron_com_tr",
+          "complete": true,
+          "brand": "Romeron",
+          "market": "TR",
+          "maps": 5,
+          "completed_maps": 5
+        },
+        {
+          "source_id": "fugazzifragrances_com",
+          "complete": false,
+          "brand": "Fugazzi",
+          "market": "NL",
+          "maps": 23,
+          "completed_maps": 23
+        },
+        {
+          "source_id": "widian_com",
+          "complete": false,
+          "brand": "WIDIAN",
+          "market": "AE",
+          "maps": 1,
+          "completed_maps": 1
+        },
+        {
+          "source_id": "rarebeauty_com",
+          "complete": false,
+          "brand": "Rare Beauty",
+          "market": "US",
+          "maps": 81,
+          "completed_maps": 81
+        },
+        {
+          "source_id": "dedcool_com",
+          "complete": false,
+          "brand": "DedCool",
+          "market": "US",
+          "maps": 21,
+          "completed_maps": 21
+        }
+      ],
+      "finished": false,
+      "complete": false,
+      "global_absence_proven": false,
+      "worker_seconds": 2484.9,
+      "worker_completed_tasks": 116,
+      "measured_remaining_hours_current_queue": 106.81,
+      "eta_includes_undiscovered_pages": false,
+      "commit": "07a0247437721fbb0695b500fca83c3a8550392c",
+      "durable_events": 10924,
+      "event_segments": 252,
+      "event_chain_sha256": "8eb1599a07133f497ec980ea1666ba864d948b1c7cf249a5f467cfe16901c780",
+      "original_160_segment_prefix_unchanged": true,
+      "first_and_latest_new_segments_verified": true,
+      "previously_crashing_task_now_done": true
+    },
+    "jobs_observed": {
+      "completed_scan_parts": [
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "active_scan_part": 14,
+      "queued_scan_parts": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "failed_jobs": 0
+    },
+    "budget_note": "Current worker pace estimates 106.81 hours for the pending queue, excluding undiscovered pages. Remaining 34 serial slots provide roughly 49 hours of active scan budget; completion within this run is not guaranteed. Preserve pending work if the budget expires; never reset attempts or start a concurrent campaign."
+  },
+  "original_run_conclusion": {
+    "conclusion": "failure",
+    "finished_at": "2026-10-09T04:21:23Z",
+    "failed_job_id": 113390827411,
+    "reason": "optional Trendyol isRelatedTo null caused TypeError",
+    "rerun_permitted": false
   }
 }
