@@ -25,6 +25,22 @@ class SourceTests(unittest.TestCase):
   raw='<a href="/innative/blue-essence-edp-50-ml-p-555">INNATIVE BLUE ESSENCE EDP 50 ml</a><a href="https://evil.example/p">BLUE ESSENCE</a>'
   tasks,audit=self.api.discover(task,raw,task['url'],self.rows,self.registry)
   self.assertEqual(len(tasks),1);self.assertEqual(tasks[0]['product_ids'],['1']);self.assertNotIn('offers',tasks[0])
+ def test_optional_related_products_never_abort_main_page(self):
+  task={'kind':'product','url':self.rows[0]['source_url'],'source':self.registry['sources'][0],'product_ids':['1']}
+  for related in [None,False,42,[],{}]:
+   with self.subTest(related=related):
+    raw='<script type="application/ld+json">'+json.dumps({'@type':'Product','name':'BLUE ESSENCE','offers':{'price':99,'priceCurrency':'TRY'},'isRelatedTo':related})+'</script>'
+    tasks,audit=self.api.discover(task,raw,task['url'],self.rows,self.registry)
+    self.assertEqual(tasks,[]);self.assertTrue(audit['complete'])
+ def test_single_or_list_related_url_remains_discovery_only(self):
+  url='https://www.trendyol.com/innative/blue-essence-edp-50-ml-p-555'
+  task={'kind':'product','url':self.rows[0]['source_url'],'source':self.registry['sources'][0],'product_ids':['1']}
+  for related in [url,[url],{'url':url,'offers':{'price':1}},[None,42,{'@id':url},'https://evil.example/innative/blue-essence-p-888']]:
+   with self.subTest(related=related):
+    raw='<script type="application/ld+json">'+json.dumps({'@type':'Product','name':'BLUE ESSENCE','offers':{'price':99,'priceCurrency':'TRY'},'isRelatedTo':related})+'</script>'
+    tasks,audit=self.api.discover(task,raw,task['url'],self.rows,self.registry)
+    self.assertEqual(len(tasks),1);self.assertEqual(tasks[0]['url'],url)
+    self.assertEqual(tasks[0]['product_ids'],['1']);self.assertNotIn('offers',tasks[0])
  def test_sitemap_indexes_do_not_become_product_pages(self):
   task={'kind':'sitemap','url':'https://fr.caudalie.com/sitemap.xml','source':self.registry['sources'][1],'depth':0}
   raw='<sitemapindex><sitemap><loc>https://fr.caudalie.com/products.xml</loc></sitemap><sitemap><loc>https://evil.example/map.xml</loc></sitemap></sitemapindex>'

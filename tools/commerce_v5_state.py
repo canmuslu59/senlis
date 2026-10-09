@@ -1,7 +1,7 @@
 """Replayable append-only queue events; the SQLite working index is disposable."""
 from collections import Counter,defaultdict
 from decimal import Decimal
-import gzip,hashlib,json,os,sqlite3,time
+import gzip,hashlib,json,os,re,sqlite3,time
 from pathlib import Path
 from commerce_evidence_v4 import utc
 from commerce_v4_state import read_jsonl,write_jsonl
@@ -18,6 +18,29 @@ def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 def chain(head,digest,count):
     return hashlib.sha256(f'{head}:{digest}:{count}'.encode()).hexdigest()
+
+
+def activate_runtime(root,code_sha,anchor):
+    """Explicit one-time, schema-compatible hotfix; never rewrite old evidence."""
+    root=Path(root);path=root/'runtime_revision.json'
+    if not re.fullmatch('[0-9a-f]{40}',code_sha) or code_sha==anchor['previous_code_sha']:
+        raise ValueError('new runtime code must be a different immutable commit')
+    if path.exists():
+        revision=json.loads(path.read_text())
+        if any(revision.get(k)!=v for k,v in anchor.items()):raise ValueError('runtime revision checkpoint mismatch')
+        store=Store(root,code_sha=code_sha);store.close();return revision
+    store=Store(root,code_sha=anchor['previous_code_sha'])
+    try:
+        if (sha(root/'campaign.json')!=anchor['campaign_sha256'] or
+            store.manifest['event_count']!=anchor['base_event_count'] or
+            store.manifest['head_sha256']!=anchor['base_event_chain_sha256']):
+            raise ValueError('unexpected campaign/checkpoint for runtime revision')
+    finally:store.close()
+    revision={**anchor,'version':1,'code_sha':code_sha,'created_at':utc(),
+              'run_id':os.environ.get('GITHUB_RUN_ID','local'),
+              'reason':'Authorized nullable related-products hotfix; same campaign and queue'}
+    tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(revision,sort_keys=True,indent=2)+'\n');tmp.replace(path)
+    store=Store(root,code_sha=code_sha);store.close();return revision
 
 
 class Store:
@@ -39,7 +62,18 @@ class Store:
             self._write_manifest({'version':1,'campaign_sha256':sha(path),'segments':[],
                                   'event_count':0,'head_sha256':sha(path)})
         self.campaign=json.loads(path.read_text())
-        if self.campaign['code_sha']!=self.code_sha:raise ValueError('campaign code mismatch')
+        self.revision=None;self.revision_sha=None
+        revision_path=self.root/'runtime_revision.json'
+        if revision_path.exists():
+            self.revision=json.loads(revision_path.read_text());rev=self.revision
+            if (rev.get('version')!=1 or rev.get('campaign_sha256')!=sha(path) or
+                rev.get('previous_code_sha')!=self.campaign['code_sha'] or
+                rev.get('code_sha')!=self.code_sha or self.code_sha==self.campaign['code_sha'] or
+                not re.fullmatch('[0-9a-f]{40}',self.code_sha) or
+                type(rev.get('base_event_count')) is not int or rev['base_event_count']<0):
+                raise ValueError('runtime revision identity/code mismatch')
+            self.revision_sha=sha(revision_path)
+        elif self.campaign['code_sha']!=self.code_sha:raise ValueError('campaign code mismatch')
         for f,k in [('scope.jsonl.gz','scope_sha256'),('initial_tasks.jsonl.gz','tasks_sha256')]:
             if sha(self.root/f)!=self.campaign[k]:raise ValueError('campaign hash mismatch')
         try:
@@ -63,7 +97,7 @@ class Store:
         CREATE INDEX product_tasks ON task_products(product);
         ''')
         for task in tasks if tasks is not None else read_jsonl(self.root/'initial_tasks.jsonl.gz'):self._enqueue(task)
-        head=self.manifest['campaign_sha256'];event_count=0
+        head=self.manifest['campaign_sha256'];event_count=0;boundaries={(0,head)}
         for segment in segments:
             path=self.root/'events'/segment['file']
             try:
@@ -71,11 +105,21 @@ class Store:
                 digest=hashlib.sha256(raw).hexdigest();lines=raw.splitlines()
                 if digest!=segment['sha256'] or digest!=path.name.split('-')[-1].removesuffix('.jsonl.gz'):raise ValueError('event hash mismatch')
                 if len(lines)!=segment['event_count']:raise ValueError('event count mismatch')
-                head=chain(head,digest,len(lines));event_count+=len(lines)
+                head=chain(head,digest,len(lines))
                 if head!=segment['chain_sha256']:raise ValueError('event chain mismatch')
-                for line in lines:self._apply(json.loads(line))
+                for line in lines:
+                    event=json.loads(line)
+                    if self.revision and event_count>=self.revision['base_event_count']:
+                        if event.get('code_sha')!=self.code_sha or event.get('runtime_revision_sha256')!=self.revision_sha:
+                            raise ValueError('event runtime revision mismatch')
+                    elif event.get('code_sha',self.campaign['code_sha'])!=self.campaign['code_sha'] or event.get('runtime_revision_sha256'):
+                        raise ValueError('unexpected event runtime before revision')
+                    self._apply(event);event_count+=1
+                boundaries.add((event_count,head))
             except (OSError,ValueError,KeyError) as e:raise ValueError('invalid durable event '+path.name) from e
         if head!=self.manifest['head_sha256'] or event_count!=self.manifest['event_count']:raise ValueError('event checkpoint head mismatch')
+        if self.revision and (self.revision['base_event_count'],self.revision.get('base_event_chain_sha256')) not in boundaries:
+            raise ValueError('runtime revision is not a verified event boundary')
         self.db.commit()
 
     def _write_manifest(self,manifest):
@@ -130,6 +174,7 @@ class Store:
         event={'task_id':task['id'],'attempts':attempts,'status':status,'success':success,'error':error,
                'retry_at':retry_at if not success else 0,'evidence':evidence,'decisions':decisions,
                'next_tasks':accepted,'audit':audit,'observed_at':utc()}
+        if self.revision:event.update(code_sha=self.code_sha,runtime_revision_sha256=self.revision_sha)
         self.db.execute('SAVEPOINT record_event')
         try:self._apply(event)
         except Exception:

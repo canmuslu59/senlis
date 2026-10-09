@@ -182,7 +182,10 @@ def discover(task,raw,final_url,rows,registry):
             soup=BeautifulSoup(raw,'lxml')
             for a in soup.select('a[href]'):emit_product(urljoin(final_url,a['href']),a.get_text(' ',strip=True))
             for obj in primary_objects(soup):
-                for u in obj.get('isRelatedTo',[]):
+                related=obj.get('isRelatedTo')
+                if not isinstance(related,list):related=[related]
+                for u in related:
+                    if isinstance(u,dict):u=u.get('url') or u.get('@id')
                     if isinstance(u,str):emit_product(u)
     elif kind=='reference':
         if host(final_url) not in REFERENCE_HOSTS:return [],dict(audit,complete=False,reason='official_site_unconfirmed')

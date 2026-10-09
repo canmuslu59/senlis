@@ -32,3 +32,55 @@ First GitHub launch 37798573781 (code e0b0efa3ce508551cda6a5a12070320d95d063eb) 
 Confirmed live launch: run 37799951233, immutable code 15a827b3f5a10c4712a5fec934471348052df4e7. All 114 regression tests pass locally and on GitHub. Fresh pilot at 2026-10-08T15:23:36Z passes with 8/10 products, 2 Trendyol verified checks, TRY/EUR/USD, both negative controls and 26/26 HTTP requests successful. Prepare persisted 174259 product identities and the initial 19238 tasks / 10509 product URLs at 15:23:44Z; scope/tasks hashes, campaign code/run identity and event-manifest campaign hash read back successfully. Scan (1) is running and 47 serial workers are queued. These initial zero counters are separate from the pilot and will advance with the first worker checkpoint. Exact run/state links and recovery rules are in COMMERCE_V5_LAUNCH.json.
 
 First worker checkpoint verified at 2026-10-08T15:29:18Z (commit 005878b40348552bf3deac50b8b3cedb1d11689c). All 23 durable events match segment hash, count and campaign-anchored chain. Queue: 20/20245 terminal tasks (0.099%); 11/174259 catalogue queries proven (0.0063%); product pages 0/10829 completed, with full-scan verified-price count 0 distinct from the passed pilot. Source discovery has priority, so page checks follow catalogue expansion. Three terminal discovery limits: Eyfel robots unavailable after bounded attempts, Qlife sitemap not valid XML, Golden Rose sitemap unavailable. Eda Taspinar robots retrieval is still retrying. These do not prove product absence and do not stop other sources. Early current-queue ETA is 87.67 hours from only 312.1 seconds and 20 terminal discovery tasks; it is not a reliable full-campaign forecast and excludes undiscovered pages. Existing serial budget is 48 x 90 minutes (72 hours); report preserves remaining tasks if budget is exhausted, without declaring complete.
+
+## Nullable related-product recovery — 2026-10-09
+
+Run 37799951233 stopped at 04:21:23 UTC in scan (9), job 113390827411.
+The optional JSON-LD `isRelatedTo` field was null, causing a TypeError in
+discovery after a successful Trendyol page response. Scan (1)..(8) succeeded.
+Later scan slots were cancelled by fail-fast. This is a deterministic parser
+edge case; rerunning the unchanged code is not a recovery.
+
+The failed worker's final push succeeded at checkpoint
+6997c5a3106bfba111cd29feb9165f893cbd27d9. Recovery artifact 11594563792
+(SHA-256 08a4cccb9559a8588e7b29da56926f4d8cfec27a13b4a49711d171bc2f15fee7)
+contains exactly the same campaign, manifest and summary as GitHub. All 7,641
+events in 160 segments, compressed scope/tasks hashes and the manifest chain
+were verified. There are no unpublished event segments.
+
+Preserved baseline: 174259/174259 catalogue scope, 7320/18138 terminal product
+pages (40.357%), 7594/27680 terminal tasks (27.435%), 10818 pending pages,
+10 unresolved pages and 6 unavailable pages. Verified products: 2646; Turkish
+in-stock: 2393; currencies TRY 2645, USD 1. Catalogue completeness is not price
+coverage. Current-queue estimate before the stop was 35.11 hours, excluding
+undiscovered pages. Terminal source restrictions remain explicit.
+
+Can authorized the repair and continuation on 2026-10-09. The optional field
+now accepts absent/null, single URL/node and lists without aborting the primary
+page. Related prices remain excluded; candidates need their own verification.
+The actual failing saved page now parses without a crash, but its offer remains
+unverified because concentration is unproven. No identity/price gate was relaxed.
+
+An explicit runtime revision binds the new code to the original campaign and
+the verified event boundary. Campaign, scope, initial queue and all previous
+events stay immutable. New events name their runtime and revision hash.
+The dedicated continuation workflow shares the original concurrency group,
+runs regression and recovery gates, then 40 serial worker slots from the saved
+queue; it never runs prepare or initializes a second campaign. Preserve the
+original launch code as provenance; use runtime_revision.json for active code.
+Do not rerun the historical failed run: it contains the defective original code.
+
+Local validation: 64 v5 + 24 v4 + 35 v3 tests pass (123 total), including a real
+Git push/clone round trip, revision idempotence, stale-runtime rejection,
+checkpoint tamper/loss detection, attempt/cooldown preservation and no refetch
+of completed work. Continuation is not considered live until a new GitHub
+checkpoint advances past 7,641 events.
+
+Full recovered-state transition also passed locally: all 7641 events replayed,
+168 existing files retained identical hashes, counters remained unchanged and
+the next pending task is exactly the failed Trendyol URL with attempts=0.
+
+Independent recovery review: no Critical or Important findings; approved for
+continuation. A historical binary cannot enforce a newer sidecar, so rerunning
+the original failed workflow remains prohibited. New workers reject any
+unstamped post-transition events rather than accepting mixed runtimes.
