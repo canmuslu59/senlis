@@ -1,0 +1,12 @@
+{
+  "base_event_chain_sha256": "f6646fd90cb7a3f4f3542db54939be789ca424400f91f98dd59e2436b776d3c4",
+  "base_event_count": 7641,
+  "base_state_commit": "6997c5a3106bfba111cd29feb9165f893cbd27d9",
+  "campaign_sha256": "38b4bd2223e4a0008b3172665ef07e7a6a4e4730a2f381de0a561a0212d060e7",
+  "code_sha": "d9a1976433016e65a4afcad7189adb6a14b65caf",
+  "created_at": "2026-10-09T07:45:30.697799+00:00",
+  "previous_code_sha": "15a827b3f5a10c4712a5fec934471348052df4e7",
+  "reason": "Authorized nullable related-products hotfix; same campaign and queue",
+  "run_id": "37900782488",
+  "version": 1
+}
