@@ -1,6 +1,6 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-09T09:12:16.599344+00:00",
+  "updated_at": "2026-10-09T09:12:19.893100+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
@@ -261,8 +261,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 5157.8,
+  "worker_seconds": 5161.1,
   "worker_completed_tasks": 741,
-  "measured_remaining_hours_current_queue": 38.21,
+  "measured_remaining_hours_current_queue": 38.23,
   "eta_includes_undiscovered_pages": false
 }
