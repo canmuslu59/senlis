@@ -1,40 +1,40 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-09T03:47:43.537912+00:00",
+  "updated_at": "2026-10-09T03:52:50.404754+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
-  "total_pages": 17895,
-  "completed_pages": 7008,
-  "pending_pages": 10887,
-  "page_progress_pct": 39.162,
-  "unresolved_pages": 1,
-  "unavailable_pages": 2,
-  "tasks_total": 27437,
-  "tasks_completed": 7282,
-  "tasks_pending": 20155,
-  "task_progress_pct": 26.541,
-  "verified_price_products": 2511,
-  "in_stock_price_products": 2264,
-  "turkey_in_stock_products": 2264,
+  "total_pages": 17938,
+  "completed_pages": 7054,
+  "pending_pages": 10884,
+  "page_progress_pct": 39.324,
+  "unresolved_pages": 2,
+  "unavailable_pages": 4,
+  "tasks_total": 27480,
+  "tasks_completed": 7328,
+  "tasks_pending": 20152,
+  "task_progress_pct": 26.667,
+  "verified_price_products": 2515,
+  "in_stock_price_products": 2267,
+  "turkey_in_stock_products": 2267,
   "currency_products": {
-    "TRY": 2511
+    "TRY": 2515
   },
   "partial_discovery_tasks": 125,
   "task_status_counts": {
-    "done": 7276,
+    "done": 7319,
     "error": 2,
-    "pending": 20155,
-    "restricted": 1,
-    "unavailable": 3
+    "pending": 20152,
+    "restricted": 2,
+    "unavailable": 5
   },
   "decision_reasons": {
     "brand_conflict": 2883,
-    "name_mismatch": 9335,
-    "verified": 5323,
+    "name_mismatch": 9350,
+    "verified": 5327,
     "gender_mismatch": 1365,
     "form_mismatch": 2889,
-    "variant_mismatch": 2135,
+    "variant_mismatch": 2154,
     "concentration_mismatch": 4094,
     "main_product_identifier_mismatch": 26,
     "format_mismatch": 1634,
@@ -42,7 +42,8 @@
     "identity_ambiguous": 1059,
     "volume_unproven": 11,
     "volume_conflict": 15,
-    "main_product_data_missing": 188
+    "main_product_data_missing": 276,
+    "offer_url_mismatch": 3
   },
   "source_coverage": [
     {
@@ -257,8 +258,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 3035.6,
-  "worker_completed_tasks": 487,
-  "measured_remaining_hours_current_queue": 34.9,
+  "worker_seconds": 3342.4,
+  "worker_completed_tasks": 533,
+  "measured_remaining_hours_current_queue": 35.1,
   "eta_includes_undiscovered_pages": false
 }
