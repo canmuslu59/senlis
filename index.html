@@ -3,180 +3,179 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020">
-<meta name="description" content="Eazilo is an independent product development studio in Türkiye building Android apps, AI-native products, e-commerce software and games. Explore Hisse Portföyüm, SENLIS, Pazarpilot, Şarj Yolum and more.">
-<meta property="og:title" content="Eazilo — Independent Software Studio">
-<meta property="og:description" content="Real products. Thoughtful technology. Built from Türkiye.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://eazilo.site">
-<link rel="canonical" href="https://eazilo.site">
-<title>Eazilo — Independent Software Studio</title>
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Eazilo is an independent software and AI product studio in Türkiye. Explore SENLIS fragrance intelligence, Hisse Portföyüm, Pazarpilot, Şarj Yolum, PufPuf Arena and our business tools.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Eazilo">
+<meta property="og:title" content="Eazilo — Practical software and AI products">
+<meta property="og:description" content="Independent, bootstrapped product development from Türkiye.">
+<meta property="og:url" content="https://eazilo.site/">
+<link rel="canonical" href="https://eazilo.site/">
+<title>Eazilo — Practical software & AI products</title>
 <style>
-:root{--bg:#080e1c;--panel:#101b2d;--panel2:#142239;--ink:#f3f6fb;--muted:#a7b5c8;--line:#27364d;--aqua:#92e8d5;--amber:#ffcf95;--violet:#b3a4ff;--wrap:1160px}
+:root{--navy:#121a3b;--blue:#245bfb;--violet:#734df6;--ink:#14214c;--muted:#66738e;--line:#e5eaf5;--soft:#f6f8ff;--white:#fff;--rose:#fbecf0;--radius:22px;--w:1180px}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(900px 600px at 90% 0%,#182b4b 0%,transparent 65%),radial-gradient(600px 550px at 0% 26%,#12283d 0%,transparent 62%),var(--bg);color:var(--ink);font:16px/1.63 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{margin:0;background:linear-gradient(165deg,#fff 0%,#f9fbff 60%,#fff 100%);color:var(--ink);font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-a:focus-visible{outline:3px solid var(--aqua);outline-offset:4px;border-radius:8px}
-.wrap{width:min(calc(100% - 42px),var(--wrap));margin-inline:auto}
-nav{display:flex;align-items:center;justify-content:space-between;min-height:78px;gap:22px}
-.logo{font-size:22px;font-weight:900;letter-spacing:.08em}
-.logo span{color:var(--aqua)}
-.nav-links{display:flex;align-items:center;gap:27px;color:#d5e0ed;font-size:14px}
-.nav-links a:hover,.footer-nav a:hover{color:var(--aqua)}
-.cta{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 19px;border-radius:12px;border:1px solid #5d7f90;background:rgba(255,255,255,.035);font-size:14px;font-weight:700;transition:transform .2s ease,border .2s ease}
-.cta:hover{transform:translateY(-2px);border-color:var(--aqua)}
-.cta.primary{background:var(--aqua);color:#071324;border-color:var(--aqua)}
-.hero{padding:92px 0 100px;position:relative}
-.eyebrow{color:var(--aqua);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
-h1{font-size:clamp(49px,8vw,96px);line-height:1.04;max-width:850px;letter-spacing:-.066em;margin:22px 0 24px}
-h1 em{font-style:normal;background:linear-gradient(95deg,var(--aqua),#bfb4ff);color:transparent;background-clip:text}
-.lead{max-width:780px;font-size:clamp(18px,2.1vw,23px);color:#bfcbda;line-height:1.55;margin:0}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.hero-facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:56px}
-.chip{padding:7px 12px;border-radius:999px;border:1px solid #32445e;background:rgba(255,255,255,.035);font-size:12px;color:#c4d0e0}
-section{padding:70px 0}
-.sec-heading{margin-bottom:29px}
-.sec-heading h2{font-size:clamp(33px,4.8vw,55px);line-height:1.12;letter-spacing:-.045em;margin:13px 0 12px}
-.sec-heading p{max-width:750px;margin:0;color:var(--muted);font-size:17px}
-.product{border:1px solid var(--line);border-radius:25px;background:linear-gradient(140deg,rgba(29,47,76,.72),rgba(12,23,39,.92));padding:26px;overflow:hidden}
-.product h3{font-size:27px;letter-spacing:-.03em;margin:0 0 8px}
-.product p{color:#acbbcd;margin:0 0 22px}
-.tag{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:#cee2e6;font-weight:800;display:inline-block;margin-bottom:12px}
-.status{font-size:12px;color:#aec0d1;padding:5px 9px;border:1px solid #3c4c62;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
-.status .point{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--aqua)}
-.featured{display:grid;grid-template-columns:1fr 1fr;gap:17px}
-.featured .product{min-height:535px;display:flex;flex-direction:column}
-.product-copy{max-width:480px}
-.bullets{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 23px;padding:0;list-style:none}
-.bullets li{background:#22334b;border:1px solid #344861;color:#d4e1ef;font-size:12px;border-radius:8px;padding:5px 8px}
-.preview{position:relative;min-height:245px;border-radius:20px;background:linear-gradient(135deg,#183452,#0c182c);border:1px solid #344962;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-top:auto;padding:20px}
-.preview-label{position:absolute;bottom:9px;right:12px;font-size:10px;color:#b2bdcb;letter-spacing:.05em}
-.phone{width:188px;height:253px;border:5px solid #0a1220;border-radius:28px;background:#13243b;box-shadow:0 20px 35px #0008;overflow:hidden;transform:rotate(-5deg);padding:15px}
-.phone:before{content:"";display:block;width:43px;height:5px;background:#050912;border-radius:9px;margin:0 auto 16px}
-.screen-top{display:flex;justify-content:space-between;font-size:10px;color:#dceafb}
-.screen-title{font-size:14px;font-weight:800;margin:10px 0 6px}
-.screen-money{font-size:23px;font-weight:800;letter-spacing:-.03em}
-.screen-up{font-size:9px;color:#7bdfb2}
-.chart-mini{height:65px;display:flex;gap:3px;align-items:end;margin:12px 0;background:linear-gradient(0deg,#253a52aa,transparent);padding:0 5px 3px;border-radius:7px}
-.chart-mini i{flex:1;display:block;background:linear-gradient(var(--aqua),#399b98);border-radius:3px 3px 0 0}
-.mini-row{display:flex;justify-content:space-between;border-top:1px solid #31485d;padding-top:9px;margin-top:8px;color:#dce6ee;font-size:9px}
-.scent-ui{width:87%;min-height:206px;border:1px solid #6c6377;border-radius:17px;padding:20px;background:radial-gradient(circle at 85% 10%,#594b70,#2c233b 52%,#171c34);box-shadow:0 22px 45px #0004;transform:rotate(3deg)}
-.scent-ui .query{border:1px solid #9588a7;color:#e4d5e6;background:#ffffff14;font-size:11px;border-radius:12px;padding:11px;max-width:95%;margin-top:12px}
-.scent-bottles{display:flex;gap:10px;margin-top:18px}
-.bottle{height:69px;flex:1;border-radius:8px;background:linear-gradient(120deg,#b5a9bf,#edbba4);position:relative;border:1px solid #e9d9ce7a}
-.bottle:before{content:"";position:absolute;width:25px;height:11px;background:#2b2837;top:-10px;left:calc(50% - 12px);border-radius:3px 3px 0 0}
-.bottle:nth-child(2){background:linear-gradient(130deg,#8d839f,#d9bfdb)}
-.bottle:nth-child(3){background:linear-gradient(130deg,#c4937c,#f2dbac)}
-.small-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px;margin-top:17px}
-.small-grid .product{display:flex;flex-direction:column;min-height:403px}
-.small-grid .product h3{font-size:24px}
-.small-grid .preview{min-height:170px;padding:13px}
-.sales-ui{width:92%;border:1px solid #3d6271;border-radius:11px;padding:12px;background:#102c3c;transform:rotate(-2deg)}
-.sales-ui .bar{height:8px;background:#28566a;border-radius:9px;margin:9px 0}
-.sales-ui .bar:nth-child(2){width:65%}
-.sales-ui .bar:nth-child(3){width:92%;background:#47a5a5}
-.sales-ui .bar:nth-child(4){width:76%;background:#86d4bd}
-.sales-numbers{display:flex;gap:8px;margin-top:13px}
-.sales-numbers b{flex:1;height:32px;border-radius:7px;background:#183f4c}
-.route-ui{width:96%;height:147px;background:linear-gradient(100deg,transparent 48%,#446576 49%,#446576 51%,transparent 52%),repeating-linear-gradient(0deg,#1c3549 0 18px,#254157 19px 20px);border-radius:10px;transform:rotate(-3deg);position:relative}
-.route-ui:before{content:"";position:absolute;top:26px;left:17%;width:63%;height:71px;border:7px solid #96e6d2;border-top-color:transparent;border-left-color:transparent;border-radius:35%}
-.map-pin{position:absolute;top:82px;left:70%;border-radius:50%;height:19px;width:19px;background:#90e5c7;border:5px solid #17344b}
-.arena-ui{height:145px;width:100%;border-radius:50%;background:radial-gradient(ellipse,#c6c1ec 5%,#716da1 55%,#373e66 74%);border:8px solid #676f9e;transform:perspective(400px) rotateX(19deg);display:flex;justify-content:center;align-items:center;gap:15px}
-.fighter{width:60px;height:70px;border-radius:45% 45% 35% 35%;background:linear-gradient(130deg,#ffcba0,#d9807e);box-shadow:inset 9px 3px #ffffff45,0 8px 0 #292b4e}
-.fighter:last-child{background:linear-gradient(130deg,#a8def0,#828fcf);transform:translateY(12px) rotate(18deg)}
-.fighter:before{content:"•   •";display:block;margin-top:15px;text-align:center;color:#4a4351;font-size:21px}
-.more-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:17px;margin-top:17px}
-.more-grid .product h3{font-size:22px}
-.more-grid .product{min-height:188px}
-.number-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:25px}
-.number-strip>div{background:#13243b;border:1px solid #30435a;border-radius:16px;padding:22px}
-.number-strip strong{display:block;font-size:34px;line-height:1.1;letter-spacing:-.06em;color:var(--aqua)}
-.number-strip span{display:block;margin-top:7px;color:#acbaca;font-size:12px}
-.story{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.story-box{border:1px solid var(--line);background:#101c2e;border-radius:22px;padding:28px}
-.story-box h3{margin:0 0 13px;font-size:23px}
-.story-box p{color:var(--muted);margin:0 0 13px}
-.story-box p:last-child{margin-bottom:0}
-.proof{padding:20px 0;border-bottom:1px solid #263a50}
-.proof:last-child{border:0}
-.proof strong{display:block;font-size:15px}
-.proof span{font-size:13px;color:var(--muted)}
-.footer{border-top:1px solid #27384a;margin-top:45px;padding:38px 0 60px;color:#a8b7c9;font-size:13px}
-.footer-nav{display:flex;gap:22px;flex-wrap:wrap;margin-top:10px}
-.small{font-size:12px;color:#8fa3ba}
-.contact-block{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:34px;border:1px solid #486575;background:linear-gradient(115deg,#1c3447,#182c45);border-radius:24px}
-.contact-block h2{font-size:clamp(26px,3vw,40px);margin:8px 0 0;letter-spacing:-.035em}
-.contact-block p{color:#bdcbda;margin:6px 0 0}
-@media(max-width:930px){.featured,.small-grid,.story{grid-template-columns:1fr 1fr}.small-grid .product:last-child{grid-column:1 / -1}.nav-links{gap:14px}}
-@media(max-width:690px){.nav-links{display:none}.hero{padding:54px 0 67px}h1{font-size:54px}.featured,.small-grid,.more-grid,.story,.number-strip{grid-template-columns:1fr}.small-grid .product:last-child{grid-column:auto}.featured .product{min-height:490px}.contact-block{flex-direction:column;align-items:start}.wrap{width:min(calc(100% - 28px),var(--wrap))}section{padding:48px 0}.preview{min-height:210px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+button{font:inherit}
+a:focus-visible{outline:3px solid var(--blue);outline-offset:4px;border-radius:8px}
+.wrap{max-width:var(--w);width:calc(100% - 54px);margin:auto}
+.navbar{display:flex;justify-content:space-between;align-items:center;gap:24px;min-height:78px}
+.logo{display:flex;align-items:center;gap:11px;font-size:29px;font-weight:850;letter-spacing:-.065em;color:var(--navy)}
+.logo-mark{width:27px;height:27px;display:grid;grid-template-columns:repeat(2,1fr);gap:2px;transform:rotate(18deg)}
+.logo-mark i{display:block;border-radius:8px;background:linear-gradient(145deg,#2675ff,#9148ed)}
+.logo-mark i:nth-child(2){background:#5a9dff}
+.logo-mark i:nth-child(3){background:#9560f3}
+.logo-mark i:nth-child(4){background:#f08ac9}
+.navlinks{display:flex;align-items:center;gap:29px;color:#374a76;font-size:14px;font-weight:600}
+.navlinks a:hover{color:var(--blue)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:0 24px;border:1px solid #c8d6fc;background:#fff;color:#2454e6;border-radius:999px;font-weight:700;font-size:14px;transition:transform .17s ease,box-shadow .17s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 9px 22px #2e63ef19}
+.btn.primary{color:#fff;background:var(--blue);border-color:var(--blue)}
+.smallcaps{font-size:11px;letter-spacing:.19em;font-weight:850;color:#687bad;text-transform:uppercase}
+header.hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:32px;padding:54px 0 44px;min-height:560px}
+.hero h1{font-size:clamp(43px,5.3vw,67px);letter-spacing:-.066em;line-height:1.08;margin:17px 0 19px;color:#0e1638}
+.gradient{background:linear-gradient(100deg,#159cfd,#7d4af3);color:transparent;background-clip:text}
+.hero p{color:#566584;font-size:18px;max-width:590px;margin:0}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.hero-points{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-top:44px}
+.hero-points>div{font-weight:600;font-size:11px;color:#465477;display:flex;gap:7px;align-items:center;line-height:1.4}
+.picon{width:31px;height:31px;flex:0 0 31px;border-radius:12px;background:#edf3ff;color:#3e66f8;display:grid;place-items:center;font-size:16px}
+.hero-art{position:relative;align-self:stretch;min-height:510px;border-radius:38px;background:radial-gradient(circle at 84% 24%,#f3d6e7,transparent 34%),radial-gradient(circle at 19% 24%,#e0eaff,transparent 40%),linear-gradient(137deg,#f7f8ff,#fff3f2 75%);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:24px}
+.hero-art:before{content:"";position:absolute;width:240px;height:240px;right:-55px;bottom:-52px;background:radial-gradient(circle at 25% 25%,#f7c2d3,#e7bbce 54%,#ffffff00 55%);border-radius:50%;filter:blur(7px);opacity:.8}
+.hero-art:after{content:"Fragrance meets intelligence";position:absolute;right:10px;top:22px;max-width:135px;transform:rotate(-9deg);color:#8452ac;font:italic 20px/1.2 Georgia,serif;text-align:center}
+.hero-phone{width:min(74%,325px);height:455px;border-radius:38px;overflow:hidden;border:7px solid #1d1421;background:linear-gradient(145deg,#2a142c,#151225);box-shadow:0 24px 65px #3d224652;position:relative;z-index:1;transform:rotate(3deg)}
+.hero-phone img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.hero-placeholder{display:flex;align-items:center;justify-content:center;flex-direction:column;width:100%;height:100%;color:#e7caca;text-align:center;padding:20px}
+.hero-placeholder strong{font:38px Georgia,serif;letter-spacing:.12em;color:#fff1e6}
+.hero-placeholder span{font:italic 26px/1.3 Georgia,serif;margin-top:28px}
+.image-note{position:absolute;bottom:10px;left:12px;right:12px;color:#738097;font-size:10px;text-align:center;z-index:2}
+section{padding:55px 0}
+.featured{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding:32px 36px;position:relative;border-radius:25px;background:radial-gradient(circle at 94% 48%,#efd3dc 0%,transparent 27%),linear-gradient(118deg,#fff0f0,#fff7f8 47%,#fff0ea);overflow:hidden}
+.featured h2{font:400 51px/1.1 Georgia,serif;letter-spacing:.2em;color:#271a2a;margin:15px 0 4px}
+.featured .kicker{font-size:10px;letter-spacing:.32em;color:#5f5062}
+.featured p{color:#61556b;margin:19px 0;max-width:460px}
+.featured-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:23px 17px}
+.feature-item{display:flex;gap:11px;align-items:start}
+.feature-icon{display:grid;place-items:center;background:#f8dce3;border-radius:15px;flex:0 0 42px;height:42px;font-size:19px}
+.feature-item strong{display:block;font-size:14px;line-height:1.36}
+.feature-item span:last-child{font-size:12px;color:#76697d;line-height:1.45;display:block;margin-top:4px}
+.portfolio h2{font-size:clamp(31px,3.3vw,43px);line-height:1.17;letter-spacing:-.055em;color:#0c1434;margin:8px 0 24px}
+.heading-row{display:flex;justify-content:space-between;align-items:end;gap:20px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.card{background:#fff;border:1px solid var(--line);border-radius:19px;overflow:hidden;box-shadow:0 8px 25px #394a7310;display:flex;flex-direction:column}
+.card-media{height:260px;overflow:hidden;background:linear-gradient(130deg,#dce9ff,#f0f1ff);display:flex;justify-content:center;align-items:flex-start;position:relative}
+.card-media img{height:100%;width:100%;object-fit:cover;object-position:top center}
+.card-media.senlis{background:linear-gradient(130deg,#e9d9e8,#393047)}
+.card-media.puf{background:linear-gradient(130deg,#e1ecff,#ebd8fa)}
+.card-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.card h3{font-size:19px;color:#172047;margin:0 0 6px;letter-spacing:-.035em}
+.card p{font-size:12px;color:var(--muted);line-height:1.55;margin:0 0 13px;flex:1}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chips span{font-size:10px;color:#456095;background:#f0f4ff;padding:4px 7px;border-radius:999px}
+.status{color:#8d6484!important;background:#faf0f6!important}
+.concept{font-size:10px;color:#5b6e88;padding:4px 8px;background:#fff9;position:absolute;bottom:7px;right:7px;border-radius:999px}
+.additional{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.morecard{border-radius:20px;border:1px solid var(--line);padding:20px;background:#f6f9ff}
+.morecard h3{margin:10px 0 5px;font-size:19px}
+.morecard p{color:#687692;font-size:13px;margin:0}
+.morecard .picon{font-size:21px}
+.proof{background:#f4f8ff;border:1px solid #e7efff;border-radius:22px;padding:24px;display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:15px;margin-top:20px}
+.proof h2{margin:0 0 8px;font-size:26px;letter-spacing:-.04em}
+.proof p{font-size:13px;margin:0;color:var(--muted)}
+.proof-item{padding:0 13px;border-left:1px solid #dbe5f8}
+.proof-item strong{display:block;font-size:14px;margin:6px 0}
+.proof-item span:last-child{display:block;font-size:12px;color:#72809a}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.about-panel{border-radius:23px;border:1px solid var(--line);background:#fff;padding:27px}
+.about h2{font-size:34px;letter-spacing:-.05em;line-height:1.15;margin:10px 0}
+.about p{color:#5b6984;margin:14px 0;line-height:1.7;font-size:14px}
+.about strong{color:#1a315d}
+.data-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.data-grid div{border-radius:13px;padding:14px;background:#f1f5ff}
+.data-grid b{color:#3159e7;font-size:25px;display:block;line-height:1.2}
+.data-grid span{font-size:11px;color:#73819f}
+.contact{border-radius:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:30px;background:linear-gradient(125deg,#1e3b84,#694ad2);color:white}
+.contact h2{font-size:28px;margin:8px 0 0;letter-spacing:-.04em}
+.contact p{color:#e4e8ff;margin:8px 0 0;font-size:13px}
+.contact .btn{background:#fff;border:none;color:#2b4fa2}
+footer{padding:38px 0 48px}
+.foot-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.foot-row a{font-size:12px;color:#657491}
+.fineprint{color:#8e9ab0;font-size:11px;line-height:1.7;margin-top:18px}
+@media(max-width:990px){.navbar .navlinks{gap:15px}.hero h1{font-size:48px}.hero-points{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.proof{grid-template-columns:repeat(2,1fr)}.proof-item:nth-child(2){border:0;padding:0}}
+@media(max-width:680px){.wrap{width:calc(100% - 28px)}.navbar{min-height:68px}.navbar .navlinks{display:none}.logo{font-size:25px}.navbar .btn{padding:0 14px;font-size:12px;min-height:39px}.hero{display:flex!important;flex-direction:column;padding:30px 0 20px!important;gap:22px!important}.hero h1{font-size:clamp(38px,10.5vw,53px);line-height:1.11}.hero p{font-size:16px}.hero-art{width:100%;min-height:390px;height:415px}.hero-phone{height:355px;max-width:245px}.hero-art:after{font-size:15px;max-width:98px}.featured{grid-template-columns:1fr;padding:23px 20px}.featured-list{gap:14px}.featured h2{font-size:44px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card-media{height:185px}.card-body{padding:12px}.card h3{font-size:16px}.card p{font-size:11px}.additional{grid-template-columns:1fr}.proof{grid-template-columns:1fr}.proof-item{border:0;border-top:1px solid #dbe5f8;padding:13px 0}.about{grid-template-columns:1fr}.contact{align-items:start;flex-direction:column;padding:23px}section{padding:37px 0}.heading-row .btn{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<nav aria-label="Main navigation">
-  <a class="logo" href="#home" aria-label="Eazilo home">EAZILO<span>!</span></a>
-  <div class="nav-links"><a href="#products">Products</a><a href="#technology">Technology</a><a href="#about">About</a><a href="#contact">Contact</a></div>
-  <a class="cta" href="mailto:founder@eazilo.site">Get in touch ↗</a>
+<nav class="navbar" aria-label="Main navigation">
+<a href="#top" class="logo"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span> Eazilo</a>
+<div class="navlinks"><a href="#products">Products</a><a href="#senlis">SENLIS</a><a href="#about">About</a><a href="#contact">Contact</a></div>
+<a href="mailto:founder@eazilo.site?subject=Eazilo%20inquiry" class="btn primary">Get in touch →</a>
 </nav>
-<main>
-<header class="hero" id="home">
- <div class="eyebrow">Independent software studio · Sakarya, Türkiye</div>
- <h1>Real products.<br><em>Thoughtful technology.</em></h1>
- <p class="lead">We build and iterate on Android apps, AI-native discovery tools, e-commerce software and games. Eazilo is the development brand behind a growing portfolio of practical products.</p>
- <div class="actions"><a class="cta primary" href="#products">Explore our products →</a><a class="cta" href="#about">Meet Eazilo</a></div>
- <div class="hero-facts"><span class="chip">Independent & bootstrapped</span><span class="chip">Founded in 2026</span><span class="chip">Android · AI · Data · Web</span></div>
-</header>
-<section id="products">
- <div class="sec-heading"><div class="eyebrow">Selected work</div><h2>Products, not just pitches.</h2><p>From Android portfolio tracking to large-scale fragrance intelligence, these are projects with working source code, application builds or active development infrastructure. Product stages are noted below.</p></div>
- <div class="featured">
-  <article class="product" id="hisse-portfoyum">
-   <div class="product-copy"><span class="tag">Finance · Android application</span><h3>Hisse Portföyüm</h3><p>A mobile portfolio companion for BIST investors: holdings, gains and losses, market context, performance charts, IPO information and alerts.</p><ul class="bullets"><li>Android release builds</li><li>Portfolio analytics</li><li>Market notifications</li></ul><span class="status"><i class="point"></i> Release build prepared · store availability unverified</span></div>
-   <div class="preview" role="img" aria-label="Stylized portfolio app interface preview, not a product screenshot">
-    <div class="phone"><div class="screen-top"><span>Hisse Portföyüm</span><span>●</span></div><div class="screen-title">My portfolio</div><div class="screen-money">₺126,480</div><div class="screen-up">↗ +2.36% today</div><div class="chart-mini"><i style="height:30%"></i><i style="height:44%"></i><i style="height:38%"></i><i style="height:64%"></i><i style="height:56%"></i><i style="height:70%"></i><i style="height:86%"></i><i style="height:100%"></i></div><div class="mini-row"><span>Performance</span><span>+6.4%</span></div></div>
-    <div class="preview-label">Illustrative UI · not live financial data</div>
-   </div>
-  </article>
-  <article class="product" id="senlis">
-   <div class="product-copy"><span class="tag">AI · Data · Fragrance intelligence</span><h3>SENLIS</h3><p>Conversational fragrance discovery powered by structured product data. The platform is being developed for semantic search, comparisons and personalized recommendations.</p><ul class="bullets"><li>174K+ catalog items</li><li>157K+ note profiles</li><li>Claude API integration planned</li></ul><span class="status"><i class="point"></i> Active development</span></div>
-   <div class="preview" role="img" aria-label="Stylized fragrance discovery interface concept, not a product screenshot" style="background:linear-gradient(125deg,#342945,#1a223f)">
-    <div class="scent-ui"><div style="color:#fae8da;font-size:19px;letter-spacing:.05em;font-weight:800">SENLIS</div><div style="color:#decde4;font-size:10px">Find the fragrance you mean</div><div class="query">Something warm, elegant and not too sweet… ↗</div><div class="scent-bottles"><div class="bottle"></div><div class="bottle"></div><div class="bottle"></div></div></div>
-    <div class="preview-label">Illustrative product concept</div>
-   </div>
-  </article>
- </div>
- <div class="small-grid">
-  <article class="product" id="pazarpilot"><span class="tag">Commerce · Analytics</span><h3>Pazarpilot</h3><p>An e-commerce analytics tool focused on marketplace sales, fees, operating costs and practical seller insights.</p><div style="margin-bottom:17px"><span class="status"><i class="point"></i> In development</span></div><div class="preview" role="img" aria-label="Illustrative marketplace analytics dashboard"><div class="sales-ui"><strong style="font-size:12px">Marketplace overview</strong><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="sales-numbers"><b></b><b></b><b></b></div></div><div class="preview-label">Illustrative UI</div></div></article>
-  <article class="product" id="sarj-yolum"><span class="tag">Mobility · EV</span><h3>Şarj Yolum</h3><p>Electric vehicle routing and charging-station exploration, with range-aware planning and AC/DC charging filters.</p><div style="margin-bottom:17px"><span class="status"><i class="point"></i> Prototype</span></div><div class="preview" role="img" aria-label="Illustrative map of an electric vehicle route"><div class="route-ui"><div class="map-pin"></div></div><div class="preview-label">Illustrative route view</div></div></article>
-  <article class="product" id="pufpuf-arena"><span class="tag">Games · Android</span><h3>PufPuf Arena</h3><p>A playful physics-based arena game with soft animal characters, local battles and Android builds.</p><div style="margin-bottom:17px"><span class="status"><i class="point"></i> Playable prototype</span></div><div class="preview" role="img" aria-label="Illustrative animal arena characters"><div class="arena-ui"><div class="fighter"></div><div class="fighter"></div></div><div class="preview-label">Illustrative scene</div></div></article>
- </div>
- <div class="more-grid">
-  <article class="product"><span class="tag">Business operations · Inventory</span><h3>INNATIVE Stock Center</h3><p>Centralized stock management software integrating marketplace and store operations, bundles and inventory synchronization. A business-use product in the Eazilo development portfolio.</p><span class="status"><i class="point"></i> Working business system</span></article>
-  <article class="product"><span class="tag">Market intelligence · Research</span><h3>KDV Radar</h3><p>A product research dashboard using category selection, scheduled price snapshots and marketplace evaluation trends to support commerce decisions.</p><span class="status"><i class="point"></i> Developer tool</span></article>
- </div>
- <p class="small" style="margin-top:15px">Interface illustrations are explanatory mockups, not screenshots, verified live quotes or app store images. We publish real product captures once validated.</p>
-</section>
-<section id="technology">
- <div class="sec-heading"><div class="eyebrow">Engineering</div><h2>Built across the stack.</h2><p>Our portfolio spans product interfaces, mobile packaging, cloud services, data pipelines and automation—not only concept design.</p></div>
- <div class="story">
-  <div class="story-box"><h3>What we're building with AI</h3><p>For SENLIS, Claude is a planned intelligence layer for natural-language discovery, structured fragrance comparisons and agent-supported catalog quality workflows.</p><p>We have created a Claude Console organization to evaluate API integration. We do not claim that Claude is already deployed in the product.</p><div class="hero-facts" style="margin-top:20px"><span class="chip">Conversational search</span><span class="chip">Recommendation evaluation</span><span class="chip">Catalog enrichment</span></div></div>
-  <div class="story-box"><h3>Selected technical evidence</h3><div class="proof"><strong>Android builds and release workflow</strong><span>Versioned Hisse Portföyüm AAB releases, testing and push messaging infrastructure.</span></div><div class="proof"><strong>Commerce integrations</strong><span>Marketplace integration, inventory rules and web dashboard for INNATIVE operations.</span></div><div class="proof"><strong>Data-driven product architecture</strong><span>Catalog cleaning, note reconciliation and Türkiye-focused commercial data enrichment for SENLIS.</span></div></div>
- </div>
- <div class="number-strip"><div><strong>174K+</strong><span>SENLIS fragrance products and variants in the working catalog</span></div><div><strong>157K+</strong><span>Items with note data in the current reported dataset</span></div><div><strong>2026</strong><span>Founding year of the registered founder-operated business</span></div></div>
-</section>
-<section id="about">
- <div class="sec-heading"><div class="eyebrow">About Eazilo</div><h2>Independent by design.</h2><p>Eazilo is a product and development brand operated by founder Can Muslu in Sakarya, Türkiye. The founder's registered business is under Can Muslu; Eazilo identifies the software product portfolio rather than claiming to be a separately incorporated legal entity.</p></div>
- <div class="story"><div class="story-box"><h3>Founder-led development</h3><p>Our work builds on hands-on experience in fragrance manufacturing and e-commerce, combined with iterative development of mobile apps, operational software and data-intensive products.</p><p>We are currently bootstrapped, without outside venture funding.</p></div><div class="story-box"><h3>Product status and transparency</h3><p>Some projects are production-oriented tools; others remain in testing, development or prototype stages. We disclose those distinctions and do not represent planned AI features as launched integrations.</p><p>For partnership and company verification enquiries, contact <a style="color:var(--aqua);text-decoration:underline" href="mailto:founder@eazilo.site">founder@eazilo.site</a>.</p></div></div>
-</section>
-<section id="contact">
- <div class="contact-block"><div><div class="eyebrow">Partnerships & verification</div><h2>Let's build what matters.</h2><p>Technology partners, product discussions and business enquiries.</p></div><a class="cta primary" href="mailto:founder@eazilo.site?subject=Eazilo%20inquiry">founder@eazilo.site ↗</a></div>
-</section>
-<section id="privacy">
- <div class="sec-heading"><div class="eyebrow">Privacy</div><h2>Website privacy notice</h2><p>This is an informational, static website. It does not provide accounts, payment forms or embedded advertising. Eazilo does not intentionally collect personal information through forms on this page. The hosting and DNS providers may process standard access and security logs to operate the website. If you email us, your message is handled for responding to your enquiry. Contact: founder@eazilo.site.</p></div>
-</section>
-</main>
-<footer class="footer"><div class="logo" style="font-size:16px">EAZILO<span>!</span></div><div>Independent software studio · Sakarya, Türkiye · © 2026 Eazilo</div><div class="footer-nav"><a href="#products">Products</a><a href="#technology">Technology</a><a href="#about">About</a><a href="#privacy">Privacy</a><a href="mailto:founder@eazilo.site">Contact</a></div><p class="small">Eazilo is an independent development brand of the founder-operated business. No affiliation with the third-party platforms mentioned on this website is implied.</p></footer>
+<header class="hero" id="top">
+<div>
+<div class="smallcaps">Independent software & AI product studio · Türkiye</div>
+<h1>Eazilo builds practical <span class="gradient">AI-powered products.</span></h1>
+<p>We develop useful applications and intelligent experiences. From fragrance discovery and investment portfolio tracking to e-commerce analytics, EV routing and mobile gaming, we turn practical ideas into working products.</p>
+<div class="hero-actions"><a href="#products" class="btn primary">Explore products →</a><a href="#senlis" class="btn">See SENLIS</a></div>
+<div class="hero-points">
+<div><span class="picon">✦</span>Real engineering work</div>
+<div><span class="picon">ϟ</span>AI where it matters</div>
+<div><span class="picon">▥</span>Multiple product areas</div>
+<div><span class="picon">◈</span>Built in Türkiye</div>
 </div>
-</body>
-</html>
+</div>
+<div class="hero-art">
+<div class="hero-phone">
+<img src="assets/senlis.webp" alt="Illustrative SENLIS fragrance discovery mobile interface" onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+<div class="hero-placeholder" hidden><strong>SENLIS</strong><span>Find the fragrance that feels like you.</span><small style="margin-top:20px">Explore · Discover · Compare</small></div>
+</div>
+<span class="image-note">Illustrative product visualization · AI features in development</span>
+</div>
+</header>
+<main>
+<section id="senlis" class="featured" aria-labelledby="senlis-title">
+<div><div class="smallcaps">Our flagship AI product</div><h2 id="senlis-title">SENLIS</h2><div class="kicker">FRAGRANCE MEETS INTELLIGENCE</div><p>SENLIS is a fragrance discovery and data intelligence platform powered by a structured catalog. We are developing conversational recommendations, fragrance-note comparisons, similarity analysis and catalog quality workflows, with Claude API integration planned.</p><a href="#senlis-tech" class="btn" style="border-color:#dcbdc7;color:#492a4e">Explore SENLIS →</a></div>
+<div class="featured-list">
+<div class="feature-item"><div class="feature-icon">☏</div><div><strong>Conversational discovery</strong><span>Describe the scent you're looking for in your own words.</span></div></div>
+<div class="feature-item"><div class="feature-icon">✧</div><div><strong>Personalized recommendations</strong><span>Match fragrance profiles to individual preferences.</span></div></div>
+<div class="feature-item"><div class="feature-icon">◎</div><div><strong>Similarity analysis</strong><span>Explore related fragrance profiles and note families.</span></div></div>
+<div class="feature-item"><div class="feature-icon">▥</div><div><strong>Data intelligence</strong><span>Normalize and enrich structured fragrance data.</span></div></div>
+</div>
+</section>
+<section class="portfolio" id="products">
+<div class="heading-row"><div><div class="smallcaps">Our product portfolio</div><h2>Different challenges. One product studio.</h2></div><a href="#more" class="btn">View all products ↓</a></div>
+<div class="cards">
+<article class="card"><div class="card-media"><img src="assets/hisse.webp" alt="Illustrative Hisse Portföyüm app dashboard" loading="lazy"><span class="concept">Illustrative mockup</span></div><div class="card-body"><h3>Hisse Portföyüm</h3><p>Android BIST portfolio tracking, market performance, charts and notification systems. Signed release builds and test history are available.</p><div class="chips"><span>Android</span><span>Fintech tools</span><span class="status">Release built · store status unverified</span></div></div></article>
+<article class="card"><div class="card-media"><img src="assets/pazarpilot.webp" alt="Illustrative Pazarpilot marketplace analytics interface" loading="lazy"><span class="concept">Illustrative mockup</span></div><div class="card-body"><h3>Pazarpilot</h3><p>Marketplace analytics, shipping costs, commissions, order insights and sales performance for e-commerce businesses.</p><div class="chips"><span>E-commerce</span><span>Analytics</span><span class="status">In development</span></div></div></article>
+<article class="card"><div class="card-media"><img src="assets/sarj.webp" alt="Illustrative Şarj Yolum electric vehicle route planning interface" loading="lazy"><span class="concept">Illustrative mockup</span></div><div class="card-body"><h3>Şarj Yolum</h3><p>EV trip planning with vehicle range, battery level, charging-station discovery and AC/DC filters.</p><div class="chips"><span>Mobility</span><span>Android</span><span class="status">Prototype</span></div></div></article>
+<article class="card"><div class="card-media puf"><img src="assets/pufpuf.webp" alt="Illustrative PufPuf Arena game visual" loading="lazy"><span class="concept">Illustrative mockup</span></div><div class="card-body"><h3>PufPuf Arena</h3><p>A colorful, physics-based mobile arena game with soft animal characters, AI-controlled opponents and Android builds.</p><div class="chips"><span>Gaming</span><span>Android</span><span class="status">Playable prototype</span></div></div></article>
+</div>
+<div class="additional" id="more">
+<div class="morecard"><span class="picon">▥</span><h3>INNATIVE Stock Center</h3><p>Central inventory management and bundle-based stock calculations for Trendyol and ikas operations. A real business workflow under ongoing development.</p></div>
+<div class="morecard"><span class="picon">▤</span><h3>KDV Radar</h3><p>Marketplace product research with scheduled price snapshots, category filters and evaluation-trend analytics.</p></div>
+<div class="morecard"><span class="picon">✦</span><h3>More in development</h3><p>Additional prototypes and product ideas across Android, automation and practical data services.</p></div>
+</div>
+<p style="font-size:11px;color:#8291aa;margin:12px 0 0">Visuals on this site are illustrative concepts based on product directions. They are not actual app screenshots or evidence of live market data. Product stages are stated separately.</p>
+</section>
+<section id="senlis-tech">
+<div class="proof">
+<div><div class="smallcaps">Our approach</div><h2>Why Eazilo?</h2><p>We bring product ownership, practical business experience and iterative engineering together.</p></div>
+<div class="proof-item"><span class="picon">▣</span><strong>Working software</strong><span>Android builds, web services and versioned development history.</span></div>
+<div class="proof-item"><span class="picon">✦</span><strong>AI integration plans</strong><span>Claude API evaluation for SENLIS search, recommendation and data enrichment.</span></div>
+<div class="proof-item"><span class="picon">⌾</span><strong>Founder-led execution</strong><span>Independent product development, bootstrapped in Türkiye.</span></div>
+</div>
+</section>
+<section id="about" class="about">
+<div class="about-panel"><div class="smallcaps">Company & founder</div><h2>Built by an independent developer.</h2><p>Eazilo is the product and software development brand of <strong>Can Muslu</strong>, based in Sakarya, Türkiye. We develop software informed by hands-on experience in e-commerce, fragrance manufacturing and consumer-facing applications.</p><p>Eazilo is currently founder-funded and has not raised outside investment. We distinguish the Eazilo product brand from the founder's registered business identity for verification purposes.</p><p>Business verification or partnership questions: <a style="color:#285bf5;text-decoration:underline" href="mailto:founder@eazilo.site">founder@eazilo.site</a>.</p></div>
+<div class="about-panel"><div class="smallcaps">Flagship product · SENLIS</div><h2>Structured data meets discovery.</h2><p>SENLIS is being built around a large normalized fragrance catalog, with planned conversational discovery and product data intelligence. Claude API is part of our evaluation roadmap, not claimed as a live production integration.</p><div class="data-grid"><div><b>174K+</b><span>catalog products and variants (reported)</span></div><div><b>157K+</b><span>items with fragrance notes (reported)</span></div><div><b>2026</b><span>founder-operated venture</span></div></div><p style="font-size:12px">Catalog counts refer to the project's working dataset, not audited business revenue or customer counts.</p></div>
+</section>
+<section id="contact"><div class="contact"><div><div class="smallcaps" style="color:#c8daff">Partnerships & company verification</div><h2>Let's build useful things.</h2><p>Reach out about technology, products or collaboration.</p></div><a class="btn" href="mailto:founder@eazilo.site?subject=Eazilo%20contact">founder@eazilo.site ↗</a></div></section>
+<section id="privacy" style="padding:16px 0"><div class="smallcaps">Website privacy notice</div><p style="font-size:12px;color:#73809b;max-width:900px">This informational website has no sign-up form, payment collection or embedded advertising. Standard traffic and security logs may be processed by our hosting and DNS providers. Emails sent to founder@eazilo.site are used to respond to the inquiry. For questions, contact that address. Product images are design visualizations, not live user accounts or real customer data.</p></section>
+</main>
+<footer><div class="foot-row"><a href="#top" class="logo" style="font-size:24px"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span> Eazilo</a><span style="color:#7182a0;font-size:12px">Independent software and AI products</span><div class="navlinks"><a href="#products">Products</a><a href="#senlis">SENLIS</a><a href="#about">About</a><a href="#privacy">Privacy</a><a href="#contact">Contact</a></div></div><div class="fineprint">© 2026 Eazilo · Türkiye · eazilo.site · founder@eazilo.site. Eazilo is an independent software development brand; it is not affiliated with third-party brands referenced by product descriptions.</div></footer>
+</div>
+</body></html>
