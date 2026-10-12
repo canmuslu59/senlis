@@ -1,0 +1,3 @@
+2026-10-12: Continue the existing 20261007 queue until tasks_pending reaches zero.
+Pinned scanner: d9a1976433016e65a4afcad7189adb6a14b65caf.
+No new campaign, source-attempt reset, or product identity changes.

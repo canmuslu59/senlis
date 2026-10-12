@@ -1,0 +1,131 @@
+name: SENLIS Commerce v5 - Drain preserved queue
+run-name: SENLIS v5 queue after ${{ inputs.parent_run_id || 'bootstrap' }}
+on:
+  workflow_dispatch:
+    inputs:
+      parent_run_id:
+        description: Previous successful queue run
+        required: true
+        type: string
+      controller_sha:
+        description: Immutable controller commit
+        required: true
+        type: string
+      checkpoint_sha:
+        description: Published checkpoint commit of the parent
+        required: true
+        type: string
+      event_count:
+        description: Minimum preserved event count
+        required: true
+        type: string
+      chain_sha256:
+        description: Required event-chain prefix of the parent
+        required: true
+        type: string
+  push:
+    branches: [feature/commerce-global-v5-20261006]
+    paths: [tools/commerce_v5_queue_trigger.txt]
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: senlis-commerce-global-v5
+  cancel-in-progress: false
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  EXPECTED_CONTROLLER_SHA: ${{ inputs.controller_sha }}
+  PARENT_RUN_ID: ${{ inputs.parent_run_id }}
+  EXPECTED_CHECKPOINT_SHA: ${{ inputs.checkpoint_sha }}
+  EXPECTED_EVENT_COUNT: ${{ inputs.event_count }}
+  EXPECTED_CHAIN_SHA256: ${{ inputs.chain_sha256 }}
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    outputs:
+      checkpoint_sha: ${{ steps.checkpoint.outputs.checkpoint_sha }}
+      event_count: ${{ steps.checkpoint.outputs.event_count }}
+      chain_sha256: ${{ steps.checkpoint.outputs.chain_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: control
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: d9a1976433016e65a4afcad7189adb6a14b65caf
+          path: code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: data/commerce-v5-20261007
+          path: state
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r code/tools/commerce_v3_requirements.txt
+      - name: Bootstrap regression gates
+        if: github.event_name == 'push'
+        run: |
+          python -m unittest discover -s control/tests/commerce_v5_queue -q
+          cd code
+          python -m unittest discover -s tests/commerce_v3 -q
+          python -m unittest discover -s tests/commerce_v4 -q
+          python -m unittest discover -s tests/commerce_v5 -q
+      - name: Validate durable queue and execute one paced worker
+        id: checkpoint
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python control/tools/commerce_v5_queue.py scan --runtime code --state state
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: SENLIS-v5-queue-recovery-scan-${{ github.run_id }}-${{ github.run_attempt }}
+          path: state/data/commerce_v5/20261007
+          retention-days: 30
+  handoff:
+    needs: scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: control
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: d9a1976433016e65a4afcad7189adb6a14b65caf
+          path: code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: data/commerce-v5-20261007
+          path: state
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r code/tools/commerce_v3_requirements.txt
+      - name: Dispatch the next worker or export and finish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SCAN_CHECKPOINT_SHA: ${{ needs.scan.outputs.checkpoint_sha }}
+          SCAN_EVENT_COUNT: ${{ needs.scan.outputs.event_count }}
+          SCAN_CHAIN_SHA256: ${{ needs.scan.outputs.chain_sha256 }}
+        run: python control/tools/commerce_v5_queue.py handoff --runtime code --state state
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: SENLIS-v5-queue-progress-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            state/data/commerce_v5/20261007/summary.json
+            state/data/commerce_v5/20261007/queue_control.json
+            state/data/commerce_v5/20261007/exports_manifest.json
+            control/queue-handoff.json
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: SENLIS-v5-queue-recovery-handoff-${{ github.run_id }}-${{ github.run_attempt }}
+          path: state/data/commerce_v5/20261007
+          retention-days: 30

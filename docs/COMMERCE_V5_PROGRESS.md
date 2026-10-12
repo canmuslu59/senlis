@@ -118,3 +118,52 @@ run budget. The current 34 queued slots provide approximately 49 scan hours,
 so completion is not guaranteed within this run. Pending work must remain
 checkpointed; never claim completion based only on catalogue scope or all
 workflow jobs exiting successfully.
+
+## Drain the preserved queue — authorized 2026-10-12
+
+Run 37900782488 completed all 40 slots successfully on 2026-10-11 at 18:19 UTC.
+Its final checkpoint 000f21a6a1e469f7fd2e92c03e633854a06fa3bf still has 2202
+pending tasks and 1602 pending pages. Pages are 20543/22145 (92.766%); tasks
+29485/31687 (93.051%). Verified-price products: 3982; TR in-stock: 3707.
+The final worker's current-queue estimate was 10.78 hours, excluding undiscovered
+pages. Scope remains 174259; named-catalogue search coverage is not price coverage.
+
+Can explicitly requested queueing until finished. `commerce-queue-v5.yml` removes
+fixed slot exhaustion: a validation-only push bootstraps the first worker;
+each successful 90-minute worker checkpoints and dispatches one successor while
+pending tasks remain. The existing global concurrency group prevents overlapping
+writers. Failed jobs, failed checkpoint pushes, modified code, broken lineage,
+moving controller branches and ambiguous dispatches stop instead of looping.
+Rerun only a necessary failed job after checking recovery evidence. Never rerun
+the historical failed scanner 37799951233.
+
+Controller code and scanner code have separate checkouts. The scanner is pinned
+to d9a1976433016e65a4afcad7189adb6a14b65caf; its actual checkout SHA is verified
+before supplying that runtime identity. The campaign and runtime_revision files
+are unchanged. Full replay verifies every event, including the preserved prefix
+of 21856 events ending ec161b137aaa2f521995fba223d18a8d07ccb4dc0bb5ffeecef39cd087b93b7b.
+Completed/restricted tasks and their attempt limits are never reset.
+
+When tasks_pending reaches zero, the final handoff exports and stops. It may
+correctly report finished=true, complete=false because source restrictions and
+partial discovery remain. The existing audit includes Fragrantica host blocks
+and Trendyol robot-excluded addresses; this queue does not bypass either.
+
+Generated database/results files over 90 MiB are stored as 48 MiB pieces. The
+`exports_manifest.json` records each piece, byte count and SHA-256, plus the
+original file's digest. Reconstruct in the manifest's part order, for example:
+`cat commerce_v5.sqlite.gz.part-* > commerce_v5.sqlite.gz`, then compare its
+SHA-256 with the manifest before decompressing. Scope, plans, events, responses
+and other evidence files are never altered by packaging. Outputs stay on
+data/commerce-v5-20261007 under data/commerce_v5/20261007.
+
+Validation before publishing: 15 queue-controller tests and all 123 existing
+v3/v4/v5 regressions pass. Live dispatch and new durable progress must still be
+verified after the authorized trigger is published.
+
+Independent review found two consequential issues, both covered by new failing
+tests and fixed before publishing: successors now require their parent run to
+finish successfully with the same controller; parent and scan event-chain
+anchors are passed across jobs/runs and must remain present. Dispatch occurs
+after all checkpoint writes, with no required state push afterward. A successor
+whose parent's dispatch observation failed stops before any scanning.
