@@ -1,19 +1,19 @@
 {
   "method_version": "v5.0-global-evidence",
-  "updated_at": "2026-10-14T20:32:28.079477+00:00",
+  "updated_at": "2026-10-14T20:37:44.191538+00:00",
   "scope_total": 174259,
   "proven_searches": 174259,
   "search_scope": "successfully_read_named_catalogues_only",
   "total_pages": 27537,
-  "completed_pages": 26623,
-  "pending_pages": 914,
-  "page_progress_pct": 96.681,
-  "unresolved_pages": 2815,
+  "completed_pages": 26629,
+  "pending_pages": 908,
+  "page_progress_pct": 96.703,
+  "unresolved_pages": 2820,
   "unavailable_pages": 76,
   "tasks_total": 37079,
-  "tasks_completed": 35565,
-  "tasks_pending": 1514,
-  "task_progress_pct": 95.917,
+  "tasks_completed": 35571,
+  "tasks_pending": 1508,
+  "task_progress_pct": 95.933,
   "verified_price_products": 4555,
   "in_stock_price_products": 4307,
   "turkey_in_stock_products": 4306,
@@ -24,10 +24,10 @@
   },
   "partial_discovery_tasks": 8793,
   "task_status_counts": {
-    "done": 24611,
+    "done": 24612,
     "error": 8049,
-    "pending": 1514,
-    "restricted": 2824,
+    "pending": 1508,
+    "restricted": 2829,
     "unavailable": 81
   },
   "decision_reasons": {
@@ -47,7 +47,7 @@
     "main_product_data_missing": 3769,
     "offer_url_mismatch": 36,
     "currency_unsupported": 158,
-    "selected_variant_unproven": 78,
+    "selected_variant_unproven": 82,
     "dupe": 1675
   },
   "source_coverage": [
@@ -263,8 +263,8 @@
   "finished": false,
   "complete": false,
   "global_absence_proven": false,
-  "worker_seconds": 2925.5,
-  "worker_completed_tasks": 72,
-  "measured_remaining_hours_current_queue": 17.09,
+  "worker_seconds": 3241.6,
+  "worker_completed_tasks": 78,
+  "measured_remaining_hours_current_queue": 17.41,
   "eta_includes_undiscovered_pages": false
 }
