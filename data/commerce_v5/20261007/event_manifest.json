@@ -1,7 +1,7 @@
 {
   "campaign_sha256": "38b4bd2223e4a0008b3172665ef07e7a6a4e4730a2f381de0a561a0212d060e7",
-  "event_count": 32331,
-  "head_sha256": "8aa38c1fe4e03be326f01d3a0cb27f08bcb8f1691610a6d566601e60fbc81a94",
+  "event_count": 32340,
+  "head_sha256": "2ac1dafee88d3d893306d917b27f6a6245d091eb64a869a211b5c2966929e56f",
   "segments": [
     {
       "chain_sha256": "eb6eee68bf7f0cc73685ccce1f57d251629a5b898c2658b6a8136e5903f50eed",
@@ -10088,6 +10088,12 @@
       "event_count": 5,
       "file": "00001680-0f003083667332496e8497e81b7afd9e1af81a1c6242e19c8a1bcf7f0cdb72fc.jsonl.gz",
       "sha256": "0f003083667332496e8497e81b7afd9e1af81a1c6242e19c8a1bcf7f0cdb72fc"
+    },
+    {
+      "chain_sha256": "2ac1dafee88d3d893306d917b27f6a6245d091eb64a869a211b5c2966929e56f",
+      "event_count": 9,
+      "file": "00001681-6dd18b68642dfa5486cdff89047d46e68f904923cc6e7268a57f926d02867f6f.jsonl.gz",
+      "sha256": "6dd18b68642dfa5486cdff89047d46e68f904923cc6e7268a57f926d02867f6f"
     }
   ],
   "version": 1
